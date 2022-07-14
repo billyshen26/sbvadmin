@@ -1,0 +1,11 @@
+# Project exclude paths
+/adminserver/admin-mapper/target/
+/adminserver/admin-model/target/
+/adminserver/admin-service/target/
+/adminserver/admin-web/target/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
