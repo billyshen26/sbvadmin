@@ -10,7 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.shenfangtao</groupId>
-    <artifactId>sbvadmin</artifactId>
+    <artifactId>svbadmin</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>

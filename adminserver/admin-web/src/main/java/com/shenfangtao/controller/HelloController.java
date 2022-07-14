@@ -1,4 +1,4 @@
-package com.shenfangtao.admin.controller;
+package com.shenfangtao.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Notes:
  * Author: 涛声依旧 likeboat@163.com
- * Time: 2022/7/11 10:07
+ * Time: 2022/7/11 17:38
  */
 @RestController
 public class HelloController {
