@@ -1,17 +1,15 @@
 package com.shenfangtao.controller;
 
 import com.shenfangtao.model.User;
-import com.shenfangtao.service.UserService;
 import com.shenfangtao.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.math.BigInteger;
 import java.util.List;
 
 /**
- * Notes:
+ * Notes: 用户管理控制器
  * Author: 涛声依旧 likeboat@163.com
  * Time: 2022/7/13 11:22
  */
@@ -20,6 +18,7 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserServiceImpl userService;
+
 
     @GetMapping("")
     public List<User> getUsers(){

@@ -8,7 +8,7 @@ import java.math.BigInteger;
 import java.util.Date;
 
 /**
- * Notes:
+ * Notes: 用户模型
  * Author: 涛声依旧 likeboat@163.com
  * Time: 2022/7/12 20:07
  */
