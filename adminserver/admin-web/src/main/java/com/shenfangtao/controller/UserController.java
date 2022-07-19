@@ -22,7 +22,8 @@ public class UserController {
 
     @GetMapping("")
     public List<User> getUsers(){
-        return userService.list();
+        List<User> data = userService.getUsersWithRoles();
+        return data;
     }
 
     @PostMapping("")

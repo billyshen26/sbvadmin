@@ -1,9 +1,17 @@
 package com.shenfangtao.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shenfangtao.mapper.UserMapper;
 import com.shenfangtao.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Notes:
@@ -11,5 +19,32 @@ import org.springframework.stereotype.Service;
  * Time: 2022/7/13 17:53
  */
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService, UserDetailsService {
+    @Autowired
+    UserMapper userMapper;
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username",username);
+        User user = userMapper.selectOne(queryWrapper);
+        System.out.println(user);
+        if (user == null){
+            throw new UsernameNotFoundException("账户不存在");
+        }
+        user.setRoles(userMapper.getUserRolesByUid(user.getId()));
+        System.out.println(user);
+        return user;
+    }
+
+    /**
+     * Notes:  获得所有用户列表
+     * @param: []
+     * @return: java.util.List<com.shenfangtao.model.User>
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2022/7/18 22:38
+     **/
+    public List<User> getUsersWithRoles() {
+        return userMapper.getUsersWithRoles();
+    }
 }

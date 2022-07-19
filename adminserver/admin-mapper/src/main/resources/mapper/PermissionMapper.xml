@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shenfangtao.mapper.PermissionMapper">
+    <resultMap id="BaseResultMap" type="com.shenfangtao.model.Permission">
+        <id property="id" column="id"/>
+        <result property="pid" column="pid"/>
+        <result property="pattern" column="pattern"/>
+        <result property="method" column="method"/>
+        <result property="alias" column="alias"/>
+        <result property="description" column="description"/>
+        <collection property="roles" ofType="com.shenfangtao.model.Role">
+            <id property="id" column="rid"/>
+            <result property="name" column="rname"/>
+            <result property="alias" column="ralias"/>
+        </collection>
+    </resultMap>
+    <select id="getAllPermissions" resultMap="BaseResultMap">
+        SELECT p.*,r.id AS rid,r.name AS rname,r.alias AS ralias FROM permission p LEFT JOIN role_permission rp ON p.`id`=rp.`pid` LEFT JOIN role r ON rp.`rid`=r.`id`
+    </select>
+</mapper>
