@@ -4,7 +4,10 @@ import com.shenfangtao.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.Authentication;
@@ -13,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
@@ -33,6 +37,17 @@ public class SecurityConfiguration {
     @Autowired
     UserServiceImpl userService;
 
+    @Autowired
+    private AuthenticationConfiguration auth;
+    @Bean
+    public AuthenticationManager authenticationManager() throws Exception {
+        return auth.getAuthenticationManager();
+    }
+
+    @Autowired
+    private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
@@ -44,9 +59,8 @@ public class SecurityConfiguration {
                         return object;
                     }
                 })
-                .and()
-                .formLogin()
-                .loginProcessingUrl("/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/login").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .logout()
                 .logoutUrl("/logout")
@@ -70,8 +84,15 @@ public class SecurityConfiguration {
                     }
                 })
                 .and()
+                .addFilterBefore(new JwtLoginFilter("/login",authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(),UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable()
                 .userDetailsService(userService);
+        // 禁用缓存
+        http.headers().cacheControl();
+        //添加自定义未授权和未登录结果返回
+        http.exceptionHandling()
+                .authenticationEntryPoint(customAuthenticationEntryPoint);
         return http.build();
     }
 
@@ -84,4 +105,5 @@ public class SecurityConfiguration {
     CustomAccessDecisionManager cadm(){
         return new CustomAccessDecisionManager();
     }
+
 }
