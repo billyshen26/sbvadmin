@@ -1,6 +1,7 @@
 package com.shenfangtao.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shenfangtao.model.ResultFormat;
 import com.shenfangtao.model.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -20,6 +21,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Notes:
@@ -52,7 +55,12 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
                 .compact();
         resp.setContentType("application/json;charset=utf-8");
         PrintWriter out = resp.getWriter();
-        out.write(new ObjectMapper().writeValueAsString(jwt));
+        Map<String, Object> tokenMap = new HashMap<>();  // map自定义输出结构
+        tokenMap.put("token", jwt);
+        tokenMap.put("roles",authorities);
+        tokenMap.put("username", authResult.getName());
+        tokenMap.put("name", ((User) authResult.getPrincipal()).getName()); // 获得登录用户的其他信息
+        out.write(new ObjectMapper().writeValueAsString(ResultFormat.success(tokenMap)));
         out.flush();
         out.close();
     }

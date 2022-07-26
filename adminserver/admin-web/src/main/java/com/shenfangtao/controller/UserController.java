@@ -23,6 +23,7 @@ public class UserController {
     @GetMapping("")
     public List<User> getUsers(){
         List<User> data = userService.getUsersWithRoles();
+        int a = 9/0;
         return data;
     }
 

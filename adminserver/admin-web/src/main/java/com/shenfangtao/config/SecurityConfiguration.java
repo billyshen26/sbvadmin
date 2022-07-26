@@ -85,7 +85,7 @@ public class SecurityConfiguration {
                 })
                 .and()
                 .addFilterBefore(new JwtLoginFilter("/login",authenticationManager()), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtFilter(),UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtFilter(),UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable()
                 .userDetailsService(userService);
         // 禁用缓存
@@ -106,4 +106,11 @@ public class SecurityConfiguration {
         return new CustomAccessDecisionManager();
     }
 
+    /**
+     * JWT filter
+     */
+    @Bean
+    public JwtFilter jwtFilter(){
+        return new JwtFilter();
+    }
 }
