@@ -1,6 +1,6 @@
 package com.shenfangtao.config;
 
-import com.shenfangtao.service.UserServiceImpl;
+import com.shenfangtao.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -108,6 +107,7 @@ public class SecurityConfiguration {
 
     /**
      * JWT filter
+     * 这种写法可以解决filter中无法注入其他bean的问题
      */
     @Bean
     public JwtFilter jwtFilter(){

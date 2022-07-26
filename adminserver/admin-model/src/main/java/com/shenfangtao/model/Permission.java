@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
  * Time: 2022/7/15 11:09
  */
 @Data
-public class Permission {
+public class Permission implements Serializable {
     @TableId(type = IdType.AUTO)
     private BigInteger id;
     private BigInteger pid;

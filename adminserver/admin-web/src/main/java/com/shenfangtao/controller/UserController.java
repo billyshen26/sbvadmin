@@ -1,7 +1,7 @@
 package com.shenfangtao.controller;
 
 import com.shenfangtao.model.User;
-import com.shenfangtao.service.UserServiceImpl;
+import com.shenfangtao.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +23,7 @@ public class UserController {
     @GetMapping("")
     public List<User> getUsers(){
         List<User> data = userService.getUsersWithRoles();
-        int a = 9/0;
+//        int a = 9/0;
         return data;
     }
 

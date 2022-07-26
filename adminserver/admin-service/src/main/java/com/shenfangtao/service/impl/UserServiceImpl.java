@@ -1,9 +1,10 @@
-package com.shenfangtao.service;
+package com.shenfangtao.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shenfangtao.mapper.UserMapper;
 import com.shenfangtao.model.User;
+import com.shenfangtao.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -3,6 +3,7 @@ package com.shenfangtao.config;
 import com.shenfangtao.mapper.PermissionMapper;
 import com.shenfangtao.model.Permission;
 import com.shenfangtao.model.Role;
+import com.shenfangtao.service.impl.PermissionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -24,14 +25,14 @@ import java.util.List;
 public class CustomFilterInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
     AntPathMatcher antPathMatcher = new AntPathMatcher();
     @Autowired
-    PermissionMapper permissionMapper;
+    PermissionServiceImpl permissionService;
 
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
         FilterInvocation filterInvocation = (FilterInvocation) object;
         String requestUrl =filterInvocation.getRequestUrl(); // 请求url
         String method = filterInvocation.getHttpRequest().getMethod(); // 请求的方法
-        List<Permission> allPermission = permissionMapper.getAllPermissions();
+        List<Permission> allPermission = permissionService.getAllPermissions();
         List<String> roleArr = new ArrayList<String>();
         for (Permission permission : allPermission) {
             if(antPathMatcher.match(permission.getPattern(),requestUrl)){ // 先判断URL路径是否符合
