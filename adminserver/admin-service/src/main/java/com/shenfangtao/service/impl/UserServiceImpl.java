@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shenfangtao.mapper.UserMapper;
 import com.shenfangtao.model.User;
 import com.shenfangtao.service.UserService;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,6 +24,10 @@ import java.util.Map;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService, UserDetailsService {
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    RabbitTemplate rabbitTemplate;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
@@ -47,5 +52,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      **/
     public List<User> getUsersWithRoles() {
         return userMapper.getUsersWithRoles();
+    }
+
+
+    @Override
+    public boolean save(User entity) {
+        rabbitTemplate.convertAndSend("add-user", "add"+entity.getName());
+        return super.save(entity);
     }
 }
