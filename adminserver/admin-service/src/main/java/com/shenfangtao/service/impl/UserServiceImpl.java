@@ -57,7 +57,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public boolean save(User entity) {
-        rabbitTemplate.convertAndSend("add-user", "add"+entity.getName());
+        rabbitTemplate.convertAndSend("add-user", entity);
         return super.save(entity);
     }
 }

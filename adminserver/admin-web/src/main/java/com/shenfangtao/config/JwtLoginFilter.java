@@ -47,6 +47,7 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
             as.append(authority.getAuthority())
                     .append(",");
         }
+        Date expired = new Date(System.currentTimeMillis() + 10 * 60 * 1000);
         String jwt = Jwts.builder()
                 .claim("authorities", as)//配置用户角色
                 .setSubject(authResult.getName())
@@ -57,6 +58,7 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
         PrintWriter out = resp.getWriter();
         Map<String, Object> tokenMap = new HashMap<>();  // map自定义输出结构
         tokenMap.put("token", jwt);
+        tokenMap.put("expired", expired);
         tokenMap.put("roles",authorities);
         tokenMap.put("username", authResult.getName());
         tokenMap.put("name", ((User) authResult.getPrincipal()).getName()); // 获得登录用户的其他信息
