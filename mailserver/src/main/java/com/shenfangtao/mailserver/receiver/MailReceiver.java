@@ -41,18 +41,19 @@ public class MailReceiver {
         String mail = templateEngine.process("register.html", ctx);
 
         sendHtmlMail("493058179@qq.com",
-                "billyshen26@gmail.com",
-                "shenfangtao@imaodu.com",
-                "html邮件",
+                user.getEmail(),
+                "likeboat@163.com",
+                "svbadmin新用户注册邮件",
                 mail);
-
-//        sendSimpleMail("493058179@qq.com",
-//                "billyshen26@gmail.com",
-//                "shenfangtao@imaodu.com",
-//                user.getName(),
-//                user.getEmail());
     }
 
+    /**
+     * Notes:  发送html格式的邮件
+     * @param: [from, to, cc, subject, content]
+     * @return: void
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2022/7/29 17:00
+     **/
     public void sendHtmlMail(String from, String to, String cc, String subject, String content){
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
@@ -61,7 +62,7 @@ public class MailReceiver {
             helper.setTo(to);
             helper.setBcc(cc);
             helper.setSubject(subject);
-            helper.setText(content);
+            helper.setText(content,true);
             javaMailSender.send(message);
         } catch (MessagingException e) {
             throw new RuntimeException(e);
