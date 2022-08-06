@@ -3,6 +3,7 @@ package com.shenfangtao.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -10,7 +11,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -22,7 +25,7 @@ import java.util.List;
  * Time: 2022/7/12 20:07
  */
 @Data
-public class User implements UserDetails {
+public class User implements UserDetails , Serializable {
     @TableId(type = IdType.AUTO)
     private BigInteger id;
     private String name;
@@ -33,13 +36,16 @@ public class User implements UserDetails {
     private String username;
     private String password;
     private String avatar;
-    private Date last_login_at;
-    private String last_login_ip;
-    private Date created_at;
-    private Date updated_at;
-    private String mp_open_id;
-    private String union_id;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private LocalDateTime lastLoginAt;
+    private String lastLoginIp;
+    private String mpOpenId;
+    private String unionId;
     private Boolean locked;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private LocalDateTime createdAt;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private LocalDateTime updatedAt;
     @TableField(exist = false)
     private List<Role> roles;
     @Override

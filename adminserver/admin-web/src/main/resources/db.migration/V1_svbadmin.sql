@@ -1,4 +1,6 @@
-/*Table structure for table `user` */
+--
+-- 表的结构 `user`
+--
 
 DROP TABLE IF EXISTS `user`;
 
@@ -13,27 +15,29 @@ CREATE TABLE `user`
     `username`      varchar(255)         DEFAULT NULL COMMENT '用户名',
     `password`      varchar(255)         DEFAULT NULL COMMENT '密码',
     `avatar`        varchar(255)         DEFAULT NULL COMMENT '头像',
-    `last_login_at` timestamp NULL DEFAULT NULL COMMENT '最后登录时间',
+    `last_login_at` datetime NULL DEFAULT NULL COMMENT '最后登录时间',
     `last_login_ip` varchar(20) NOT NULL DEFAULT '' COMMENT '最后登录ip',
-    `created_at`    timestamp NULL DEFAULT NULL,
-    `updated_at`    timestamp NULL DEFAULT NULL,
     `mp_open_id`    varchar(64) NOT NULL DEFAULT '' COMMENT '微信open_id',
     `union_id`      varchar(64) NOT NULL DEFAULT '' COMMENT '微信union_id',
+    `created_at`    datetime NULL DEFAULT NULL,
+    `updated_at`    datetime NULL DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-/*Data for the table `user` */
+--
+-- 转存表中的数据 `user`
+--
 insert into `user` (`id`, `name`, `phone`, `email`, `enabled`, `locked`, `username`, `password`, `avatar`, `last_login_at`,
-                    `last_login_ip`, `created_at`, `updated_at`, `mp_open_id`, `union_id`)
+                    `last_login_ip`, `mp_open_id`, `union_id`, `created_at`, `updated_at`)
 values (1, '超级管理员', '13912341234', 'likeboat@163.com', 1, 0, 'root',
         '$2a$10$ySG2lkvjFHY5O0./CPIE1OI8VJsuKYEzOYzqIa7AJR6sEgSzUFOAm',
-        'https://img-home.csdnimg.cn/images/20201124032511.png', NULL, '', now(), now(), '', ''),
+        'https://img-home.csdnimg.cn/images/20201124032511.png', NULL, '', '', '', now(), now()),
        (2, '管理员', '13812341234', 'likeboat@126.com', 1, 0, 'admin',
         '$2a$10$ySG2lkvjFHY5O0./CPIE1OI8VJsuKYEzOYzqIa7AJR6sEgSzUFOAm',
-        'https://img-home.csdnimg.cn/images/20201124032511.png', NULL, '', now(), now(), '', ''),
+        'https://img-home.csdnimg.cn/images/20201124032511.png', NULL, '', '', '', now(), now()),
        (3, '普通用户', '13712341234', 'likeboat@sina.com', 1, 0, 'user',
         '$2a$10$ySG2lkvjFHY5O0./CPIE1OI8VJsuKYEzOYzqIa7AJR6sEgSzUFOAm',
-        'https://img-home.csdnimg.cn/images/20201124032511.png', NULL, '', now(), now(), '', '');
+        'https://img-home.csdnimg.cn/images/20201124032511.png', NULL, '', '', '', now(), now());
 
 --
 -- 表的结构 `role`
@@ -43,16 +47,16 @@ DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role`
 (
     `id`          bigint UNSIGNED NOT NULL AUTO_INCREMENT,
-    `name`        varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '英文名称',
-    `alias`       varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '中文名称',
+    `name`        varchar(64) NOT NULL COMMENT '英文名称',
+    `alias`       varchar(64) NOT NULL DEFAULT '' COMMENT '中文名称',
     `description` text COLLATE utf8mb4_unicode_ci COMMENT '描述',
-    `created_at`  timestamp NULL DEFAULT NULL,
-    `updated_at`  timestamp NULL DEFAULT NULL,
+    `created_at`  datetime NULL DEFAULT NULL,
+    `updated_at`  datetime NULL DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- 转存表中的数据 `roles`
+-- 转存表中的数据 `role`
 --
 
 INSERT INTO `role` (`id`, `name`, `alias`, `description`, `created_at`, `updated_at`)
@@ -90,12 +94,12 @@ CREATE TABLE `permission`
 (
     `id`          bigint UNSIGNED NOT NULL AUTO_INCREMENT,
     `pid`         bigint NOT NULL DEFAULT '0',
-    `pattern`        varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'url路径',
-    `method`      varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '请求方式',
-    `alias`       varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '中文名称',
+    `pattern`     varchar(128) NOT NULL COMMENT 'url路径',
+    `method`      varchar(10) NOT NULL COMMENT '请求方式',
+    `alias`       varchar(64) NOT NULL DEFAULT '' COMMENT '中文名称',
     `description` text COLLATE utf8mb4_unicode_ci COMMENT '描述',
-    `created_at`  timestamp NULL DEFAULT NULL,
-    `updated_at`  timestamp NULL DEFAULT NULL,
+    `created_at`  datetime NULL DEFAULT NULL,
+    `updated_at`  datetime NULL DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -131,3 +135,28 @@ INSERT INTO `role_permission` (`id`, `rid`, `pid`)
 VALUES (1, 1, 1),
        (2, 2, 2),
        (3, 3, 3);
+
+--
+-- 表的结构 `log`
+-- 记录操作日志和错误日志
+--
+
+DROP TABLE IF EXISTS `log`;
+
+CREATE TABLE `log`
+(
+    `id`            bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+    `uid`           bigint UNSIGNED NOT NULL COMMENT '操作用户id',
+    `username`      varchar(255)  DEFAULT NULL COMMENT '用户名',
+    `level`         tinyint(1) DEFAULT '1' COMMENT '日志等级:1为行为日志,2为错误日志',
+    `description`          varchar(255)  NULL DEFAULT NULL COMMENT '操作描述',
+    `req_param`     text  NULL COMMENT '请求参数',
+    `take_up_time`  int(64) NULL DEFAULT NULL COMMENT '耗时',
+    `method`        varchar(255)  NULL DEFAULT NULL COMMENT '操作方法',
+    `uri`           varchar(255)  NULL DEFAULT NULL COMMENT '请求url',
+    `ip`            varchar(50)  NULL DEFAULT NULL COMMENT '请求IP',
+    `version`       varchar(50)  NULL DEFAULT NULL COMMENT '版本号',
+    `created_at`    datetime NULL DEFAULT NULL,
+    `updated_at`    datetime NULL DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

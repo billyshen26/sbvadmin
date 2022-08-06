@@ -21,6 +21,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -46,7 +47,9 @@ public class JwtFilter extends OncePerRequestFilter {
                         .getBody();
                 String username = claims.getSubject();//获取当前登录用户名
                 List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get("authorities"));
+                BigInteger uid = new BigInteger(String.valueOf(claims.get("uid")));
                 UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, null, authorities);
+                token.setDetails(uid);
                 SecurityContextHolder.getContext().setAuthentication(token);
             }else{
                 System.out.println("令牌已失效");
@@ -55,7 +58,8 @@ public class JwtFilter extends OncePerRequestFilter {
             }
 
         }else{
-            SecurityContextHolder.getContext().setAuthentication(null); // 如果没有token，则清空认证，否则会使用上一次缓存的token
+            SecurityContextHolder.clearContext();// 如果没有token，则清空认证，否则会使用上一次缓存的token
+//            SecurityContextHolder.getContext().setAuthentication(null);
         }
         filterChain.doFilter(req,response);
     }

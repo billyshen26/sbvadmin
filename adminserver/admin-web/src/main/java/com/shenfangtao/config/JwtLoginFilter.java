@@ -48,8 +48,11 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
                     .append(",");
         }
         Date expired = new Date(System.currentTimeMillis() + 10 * 60 * 1000);
+        Map<String, Object> map = new HashMap<>();
+        map.put("authorities", as);
+        map.put("uid",((User) authResult.getPrincipal()).getId());
         String jwt = Jwts.builder()
-                .claim("authorities", as)//配置用户角色
+                .setClaims(map)//配置用户角色
                 .setSubject(authResult.getName())
                 .setExpiration(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
                 .signWith(SignatureAlgorithm.HS512,"sang@123")

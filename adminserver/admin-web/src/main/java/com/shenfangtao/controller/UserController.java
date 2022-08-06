@@ -2,6 +2,7 @@ package com.shenfangtao.controller;
 
 import com.shenfangtao.model.User;
 import com.shenfangtao.service.impl.UserServiceImpl;
+import com.shenfangtao.utils.SbvLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ public class UserController {
 
 
     @GetMapping("")
+    @SbvLog(desc = "users")
     public List<User> getUsers(){
         List<User> data = userService.getUsersWithRoles();
 //        int a = 9/0;
