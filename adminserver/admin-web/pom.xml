@@ -44,6 +44,11 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
+        <!--定时任务相关的依赖引入-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

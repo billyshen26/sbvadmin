@@ -9,3 +9,6 @@
 *.iws
 *.iml
 *.ipr
+
+### database backup ##
+/backup
