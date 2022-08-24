@@ -9,21 +9,21 @@ import lombok.Data;
  */
 @Data
 public class ResultFormat<T> {
-    private int status;
+    private int code;
     private String message;
-    private T data;
+    private T result;
 
     public static <T> ResultFormat<T> success(T data){
         ResultFormat<T> resultFormat = new ResultFormat<>();
-        resultFormat.setStatus(ErrorCode.SUCCESS.getCode());
+        resultFormat.setCode(ErrorCode.SUCCESS.getCode());
         resultFormat.setMessage(ErrorCode.SUCCESS.getMessage());
-        resultFormat.setData(data);
+        resultFormat.setResult(data);
         return resultFormat;
     }
 
     public static <T> ResultFormat<T> fail (int code, String message){
         ResultFormat<T> resultFormat = new ResultFormat<>();
-        resultFormat.setStatus(code);
+        resultFormat.setCode(code);
         resultFormat.setMessage(message);
         return resultFormat;
     }

@@ -58,11 +58,11 @@ public class SecurityConfiguration {
                         return object;
                     }
                 })
-                .antMatchers(HttpMethod.POST, "/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout()
-                .logoutUrl("/logout")
+                .logoutUrl("/api/logout")
                 .clearAuthentication(true)
                 .invalidateHttpSession(true)
                 .addLogoutHandler(new LogoutHandler() {
@@ -79,11 +79,11 @@ public class SecurityConfiguration {
                                                 HttpServletResponse resp,
                                                 Authentication auth)
                             throws IOException {
-                        resp.sendRedirect("/login");
+                        resp.sendRedirect("/api/login");
                     }
                 })
                 .and()
-                .addFilterBefore(new JwtLoginFilter("/login",authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtLoginFilter("/api/login",authenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtFilter(),UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable()
                 .userDetailsService(userService);

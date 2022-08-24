@@ -42,7 +42,7 @@ public class QuartzConfig {
     CronTriggerFactoryBean cronTrigger() {
         CronTriggerFactoryBean bean = new CronTriggerFactoryBean();
         bean.setJobDetail(dbBackupBean().getObject());
-        bean.setCronExpression("0 0/20 * * * ?"); // 20分钟一次，https://www.pppet.net/
+        bean.setCronExpression("0 0 0 13 * ? "); // 下午一点一次，https://www.pppet.net/
         return bean;
     }
 

@@ -36,7 +36,12 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
     }
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse resp) throws AuthenticationException, IOException, ServletException, IOException {
-        User user = new ObjectMapper().readValue(req.getInputStream(), User.class);
+        User user = null;
+        try {
+            user = new ObjectMapper().readValue(req.getInputStream(), User.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
     }
     @Override
@@ -47,10 +52,12 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
             as.append(authority.getAuthority())
                     .append(",");
         }
+
+        User user = (User) authResult.getPrincipal();
         Date expired = new Date(System.currentTimeMillis() + 10 * 60 * 1000);
         Map<String, Object> map = new HashMap<>();
         map.put("authorities", as);
-        map.put("uid",((User) authResult.getPrincipal()).getId());
+        map.put("uid",user.getId());
         String jwt = Jwts.builder()
                 .setClaims(map)//配置用户角色
                 .setSubject(authResult.getName())
@@ -64,7 +71,7 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
         tokenMap.put("expired", expired);
         tokenMap.put("roles",authorities);
         tokenMap.put("username", authResult.getName());
-        tokenMap.put("name", ((User) authResult.getPrincipal()).getName()); // 获得登录用户的其他信息
+        tokenMap.put("name", user.getName()); // 获得登录用户的其他信息
         out.write(new ObjectMapper().writeValueAsString(ResultFormat.success(tokenMap)));
         out.flush();
         out.close();

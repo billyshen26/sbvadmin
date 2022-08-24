@@ -3,6 +3,7 @@ package com.shenfangtao.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shenfangtao.mapper.UserMapper;
+import com.shenfangtao.model.Role;
 import com.shenfangtao.model.User;
 import com.shenfangtao.service.UserService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -59,5 +61,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public boolean save(User entity) {
         rabbitTemplate.convertAndSend("add-user", entity);
         return super.save(entity);
+    }
+
+    public List<Role> getUserRolesByUid(BigInteger id){
+        return userMapper.getUserRolesByUid(id);
     }
 }

@@ -2,11 +2,13 @@ package com.shenfangtao.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.shenfangtao.mapper.UserMapper;
+import com.shenfangtao.model.Role;
 import com.shenfangtao.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -17,5 +19,7 @@ import java.util.List;
 
 public interface UserService extends IService<User> {
     public List<User> getUsersWithRoles();
+
+    public List<Role> getUserRolesByUid(BigInteger id);
 
 }

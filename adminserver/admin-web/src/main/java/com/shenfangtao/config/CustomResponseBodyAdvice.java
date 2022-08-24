@@ -15,7 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import javax.annotation.Resource;
 
 /**
- * Notes:
+ * Notes: 格式化返回结果
  * Author: 涛声依旧 likeboat@163.com
  * Time: 2022/7/25 10:58
  */

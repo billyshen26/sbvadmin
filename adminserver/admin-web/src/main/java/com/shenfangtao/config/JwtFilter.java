@@ -1,12 +1,15 @@
 package com.shenfangtao.config;
 
+import com.shenfangtao.mapper.UserMapper;
 import com.shenfangtao.model.ErrorCode;
+import com.shenfangtao.model.User;
 import com.shenfangtao.utils.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,6 +36,9 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private  JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
+    UserMapper userMapper;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
@@ -48,7 +54,8 @@ public class JwtFilter extends OncePerRequestFilter {
                 String username = claims.getSubject();//获取当前登录用户名
                 List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get("authorities"));
                 BigInteger uid = new BigInteger(String.valueOf(claims.get("uid")));
-                UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, null, authorities);
+                User user  = userMapper.selectById(uid);
+                UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user, jwtToken, authorities);
                 token.setDetails(uid);
                 SecurityContextHolder.getContext().setAuthentication(token);
             }else{

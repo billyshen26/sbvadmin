@@ -6,7 +6,7 @@ package com.shenfangtao.model;
  * Time: 2022/7/22 17:35
  */
 public enum ErrorCode {
-    SUCCESS(20000,"ok"),
+    SUCCESS(0,"ok"),
     CODE_500(500,"服务器内部错误"),
     LOGIN_FAILED(401,"未认证"),
     TOKEN_INVALID(20001,"token 过期");

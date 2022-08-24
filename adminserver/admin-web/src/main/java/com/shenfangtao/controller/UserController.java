@@ -1,9 +1,13 @@
 package com.shenfangtao.controller;
 
+import com.shenfangtao.model.Role;
 import com.shenfangtao.model.User;
+import com.shenfangtao.model.UserInfo;
 import com.shenfangtao.service.impl.UserServiceImpl;
 import com.shenfangtao.utils.SbvLog;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
@@ -15,7 +19,7 @@ import java.util.List;
  * Time: 2022/7/13 11:22
  */
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
     @Autowired
     UserServiceImpl userService;
@@ -42,5 +46,22 @@ public class UserController {
     @DeleteMapping("/{id}")
     public boolean delUser(@PathVariable BigInteger id) {
         return userService.removeById(id);
+    }
+
+    @GetMapping("/getUserInfo")
+    public UserInfo getUserInfo(){
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserId(user.getId());
+        userInfo.setUsername(user.getUsername());
+        userInfo.setAvatar(user.getAvatar());
+        userInfo.setHomePath("/dashboard/analysis");
+        userInfo.setRealName(user.getName());
+        List<Role> roles = userService.getUserRolesByUid(user.getId());
+        userInfo.setRoles(roles);
+        userInfo.setToken((String)authentication.getCredentials());
+        return userInfo;
     }
 }

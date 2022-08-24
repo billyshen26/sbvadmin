@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
- * Notes:
+ * Notes: 获取全局异常信息
  * Author: 涛声依旧 likeboat@163.com
  * Time: 2022/7/26 10:16
  */
