@@ -8,10 +8,10 @@
 
     <resultMap id="BaseResultMap" type="com.shenfangtao.model.User">
         <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
         <result column="phone" property="phone" jdbcType="CHAR"/>
         <result column="email" property="email" jdbcType="VARCHAR"/>
-        <result column="enabled" property="enabled" jdbcType="BIT"/>
+        <result column="activated" property="activated" jdbcType="BIT"/>
         <result column="locked" property="locked" jdbcType="BIT"/>
         <result column="username" property="username" jdbcType="VARCHAR"/>
         <result column="avatar" property="avatar" jdbcType="VARCHAR"/>
@@ -28,7 +28,7 @@
         </collection>
     </resultMap>
     <select id="getUsersWithRoles" resultMap="UserWithRoles">
-        select user.id, user.name, user.phone, user.email, user.enabled, user.locked, user.username, user.avatar,
+        select user.id, user.nickname, user.phone, user.email, user.activated, user.locked, user.username, user.avatar,
         user.last_login_at,user.last_login_ip,user.created_at,user.updated_at,r.`id` as rid,r.`name` as rname,r.`alias` as ralias from user left join user_role ur on
         user.`id`=ur.`uid` left join role r on ur.`rid`=r.`id`
     </select>

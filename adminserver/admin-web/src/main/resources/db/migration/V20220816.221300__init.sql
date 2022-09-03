@@ -7,14 +7,14 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`
 (
     `id`            bigint UNSIGNED NOT NULL AUTO_INCREMENT,
-    `name`          varchar(32)          DEFAULT NULL COMMENT '姓名',
-    `phone`         char(11)             DEFAULT NULL COMMENT '手机号码',
-    `email`         varchar(64)          DEFAULT NULL COMMENT '邮箱',
-    `enabled`       tinyint(1) DEFAULT '1' COMMENT '激活状态:1为启用，0位禁用',
+    `nickname`          varchar(32) NOT NULL COMMENT '姓名',
+    `phone`         char(11)    NOT NULL DEFAULT '' COMMENT '手机号码',
+    `email`         varchar(64) NOT NULL DEFAULT '' COMMENT '邮箱',
+    `activated`     tinyint(1) DEFAULT '1' COMMENT '激活状态:1为启用，0位禁用',
     `locked`        tinyint(1) DEFAULT '0' COMMENT '是否被锁:1为已锁，0位未锁',
-    `username`      varchar(255)         DEFAULT NULL COMMENT '用户名',
-    `password`      varchar(255)         DEFAULT NULL COMMENT '密码',
-    `avatar`        varchar(255)         DEFAULT NULL COMMENT '头像',
+    `username`      varchar(255)     NOT NULL COMMENT '用户名',
+    `password`      varchar(255)     NOT NULL COMMENT '密码',
+    `avatar`        varchar(255)     NOT NULL DEFAULT '' COMMENT '头像',
     `last_login_at` datetime NULL DEFAULT NULL COMMENT '最后登录时间',
     `last_login_ip` varchar(20) NOT NULL DEFAULT '' COMMENT '最后登录ip',
     `mp_open_id`    varchar(64) NOT NULL DEFAULT '' COMMENT '微信open_id',
@@ -27,17 +27,17 @@ CREATE TABLE `user`
 --
 -- 转存表中的数据 `user`
 --
-insert into `user` (`id`, `name`, `phone`, `email`, `enabled`, `locked`, `username`, `password`, `avatar`, `last_login_at`,
+insert into `user` (`id`, `nickname`, `phone`, `email`, `activated`, `locked`, `username`, `password`, `avatar`, `last_login_at`,
                     `last_login_ip`, `mp_open_id`, `union_id`, `created_at`, `updated_at`)
 values (1, '超级管理员', '13912341234', 'likeboat@163.com', 1, 0, 'root',
         '$2a$10$ySG2lkvjFHY5O0./CPIE1OI8VJsuKYEzOYzqIa7AJR6sEgSzUFOAm',
-        'https://img-home.csdnimg.cn/images/20201124032511.png', NULL, '', '', '', now(), now()),
+        'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640', NULL, '', '', '', now(), now()),
        (2, '管理员', '13812341234', 'likeboat@126.com', 1, 0, 'admin',
         '$2a$10$ySG2lkvjFHY5O0./CPIE1OI8VJsuKYEzOYzqIa7AJR6sEgSzUFOAm',
-        'https://img-home.csdnimg.cn/images/20201124032511.png', NULL, '', '', '', now(), now()),
+        'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640', NULL, '', '', '', now(), now()),
        (3, '普通用户', '13712341234', 'likeboat@sina.com', 1, 0, 'user',
         '$2a$10$ySG2lkvjFHY5O0./CPIE1OI8VJsuKYEzOYzqIa7AJR6sEgSzUFOAm',
-        'https://img-home.csdnimg.cn/images/20201124032511.png', NULL, '', '', '', now(), now());
+        'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640', NULL, '', '', '', now(), now());
 
 --
 -- 表的结构 `role`
@@ -110,11 +110,13 @@ CREATE TABLE `permission`
 
 INSERT INTO `permission` (`id`, `pid`, `pattern`, `method`, `alias`, `description`, `created_at`, `updated_at`)
 VALUES (1, 0, '/**','ANY', '所有', '所有用户管理权限', now(), now()),
-       (2, 1, '/users/**','ANY', '用户管理', '所有用户管理权限', now(), now()),
-       (3, 2, '/users','GET', '用户列表', '获得用户列表', now(), now()),
-       (4, 2, '/users','POST', '新增用户', '新增一个用户', now(), now()),
-       (5, 2, '/users','PUT', '修改用户', '修改一个用户', now(), now()),
-       (6, 2, '/users','DELETE', '删除用户', '删除一个用户', now(), now());
+       (2, 1, '/api/users/**','ANY', '用户管理', '所有用户管理权限', now(), now()),
+       (3, 2, '/api/users','GET', '用户列表', '获得用户列表', now(), now()),
+       (4, 2, '/api/users','POST', '新增用户', '新增一个用户', now(), now()),
+       (5, 2, '/api/users','PUT', '修改用户', '修改一个用户', now(), now()),
+       (6, 2, '/api/users','DELETE', '删除用户', '删除一个用户', now(), now()),
+       (7, 1, '/api/getUserInfo','GET', '用户信息', '获得个人用户信息', now(), now()),
+       (8, 1, '/api/roles/**','ANY', '角色管理', '所有角色管理权限', now(), now());
 
 --
 -- 表的结构 `role_permission`
@@ -134,7 +136,9 @@ CREATE TABLE `role_permission`
 INSERT INTO `role_permission` (`id`, `rid`, `pid`)
 VALUES (1, 1, 1),
        (2, 2, 2),
-       (3, 3, 3);
+       (3, 3, 3),
+       (4, 3, 7),
+       (5, 2, 8);
 
 --
 -- 表的结构 `log`

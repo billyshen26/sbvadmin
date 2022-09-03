@@ -31,6 +31,9 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
         FilterInvocation filterInvocation = (FilterInvocation) object;
         String requestUrl =filterInvocation.getRequestUrl(); // 请求url
+        if (requestUrl.indexOf("?") != -1){
+            requestUrl =requestUrl.substring(0, requestUrl.indexOf("?")); // 去除问号及其后面的内容
+        }
         String method = filterInvocation.getHttpRequest().getMethod(); // 请求的方法
         List<Permission> allPermission = permissionService.getAllPermissions();
         List<String> roleArr = new ArrayList<String>();

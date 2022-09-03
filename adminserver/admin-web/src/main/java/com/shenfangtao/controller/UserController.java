@@ -8,8 +8,10 @@ import com.shenfangtao.utils.SbvLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -26,7 +28,6 @@ public class UserController {
 
 
     @GetMapping("")
-    @SbvLog(desc = "users")
     public List<User> getUsers(){
         List<User> data = userService.getUsersWithRoles();
 //        int a = 9/0;
@@ -34,7 +35,11 @@ public class UserController {
     }
 
     @PostMapping("")
-    public boolean addUser(@RequestBody User user){
+    @SbvLog(desc = "新增用户")
+    public boolean addUser(@RequestBody @Valid User user){
+//        if(bindingResult.hasErrors()){
+//            System.out.println(bindingResult.getAllErrors().get(0).getDefaultMessage());
+//        }
         return userService.save(user);
     }
 
@@ -48,20 +53,5 @@ public class UserController {
         return userService.removeById(id);
     }
 
-    @GetMapping("/getUserInfo")
-    public UserInfo getUserInfo(){
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUserId(user.getId());
-        userInfo.setUsername(user.getUsername());
-        userInfo.setAvatar(user.getAvatar());
-        userInfo.setHomePath("/dashboard/analysis");
-        userInfo.setRealName(user.getName());
-        List<Role> roles = userService.getUserRolesByUid(user.getId());
-        userInfo.setRoles(roles);
-        userInfo.setToken((String)authentication.getCredentials());
-        return userInfo;
-    }
+
 }

@@ -7,10 +7,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
@@ -28,12 +30,15 @@ import java.util.List;
 public class User implements UserDetails , Serializable {
     @TableId(type = IdType.AUTO)
     private BigInteger id;
-    private String name;
+    @NotNull(message = "昵称不能为空")
+    private String nickname;
     private String phone;
     private String email;
-    @Getter(value = AccessLevel.NONE)
-    private Boolean enabled;
+//    @Getter(value = AccessLevel.NONE)
+    private Boolean activated;
+    @NotNull(message = "用户名不能为空")
     private String username;
+    @NotNull(message = "密码不能为空")
     private String password;
     private String avatar;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -82,7 +87,6 @@ public class User implements UserDetails , Serializable {
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return activated;
     }
-
 }

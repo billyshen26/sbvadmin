@@ -46,6 +46,8 @@ public class SecurityConfiguration {
     @Autowired
     private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
+    @Autowired
+    CustomAccessDeniedHandler accessDeniedHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -58,7 +60,7 @@ public class SecurityConfiguration {
                         return object;
                     }
                 })
-                .antMatchers(HttpMethod.POST, "/api/login").permitAll()
+//                .antMatchers(HttpMethod.POST, "/api/login","/api/getUserInfo").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout()
@@ -92,6 +94,8 @@ public class SecurityConfiguration {
         //添加自定义未授权和未登录结果返回
         http.exceptionHandling()
                 .authenticationEntryPoint(customAuthenticationEntryPoint);
+        http.exceptionHandling()
+                .accessDeniedHandler(accessDeniedHandler);
         return http.build();
     }
 
