@@ -5,17 +5,29 @@
     <resultMap id="BaseResultMap" type="com.shenfangtao.model.Permission">
         <id property="id" column="id"/>
         <result property="pid" column="pid"/>
-        <result property="pattern" column="pattern"/>
-        <result property="method" column="method"/>
-        <result property="alias" column="alias"/>
+        <result property="requestUrl" column="request_url"/>
+        <result property="requestMethod" column="request_method"/>
+        <result property="name" column="name"/>
+        <result property="title" column="title"/>
         <result property="description" column="description"/>
+        <result property="path" column="path"/>
+        <result property="component" column="component"/>
+        <result property="icon" column="icon"/>
+        <result property="type" column="type"/>
+        <result property="status" column="status"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="createdAt" column="created_at"/>
         <collection property="roles" ofType="com.shenfangtao.model.Role">
             <id property="id" column="rid"/>
             <result property="name" column="rname"/>
-            <result property="alias" column="ralias"/>
+            <result property="nameZh" column="rname_zh"/>
         </collection>
     </resultMap>
     <select id="getAllPermissions" resultMap="BaseResultMap">
-        SELECT p.*,r.id AS rid,r.name AS rname,r.alias AS ralias FROM permission p LEFT JOIN role_permission rp ON p.`id`=rp.`pid` LEFT JOIN role r ON rp.`rid`=r.`id`
+        SELECT p.*,r.id AS rid,r.name AS rname,r.name_zh AS rname_zh FROM permission p LEFT JOIN role_permission rp ON p.`id`=rp.`pid` LEFT JOIN role r ON rp.`rid`=r.`id`
+    </select>
+
+    <select id="getPermissionsByUid" resultType="com.shenfangtao.model.Permission">
+        SELECT DISTINCT p.* FROM permission p LEFT JOIN role_permission rp ON p.`id`=rp.`pid` LEFT JOIN user_role ur  ON rp.`rid`=ur.`rid` WHERE ur.uid=#{id}
     </select>
 </mapper>

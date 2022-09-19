@@ -1,13 +1,14 @@
 package com.shenfangtao.controller;
 
+import com.shenfangtao.model.Permission;
 import com.shenfangtao.model.Role;
 import com.shenfangtao.model.User;
 import com.shenfangtao.service.impl.RoleServiceImpl;
+import com.shenfangtao.utils.SbvLog;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -23,6 +24,23 @@ public class RoleController {
 
     @GetMapping("")
     public List<Role> getRoles(){
-        return roleService.list();
+        return roleService.getRolesWithPermissions();
     }
+
+    @PostMapping("")
+    @SbvLog(desc = "新增角色")
+    public boolean addRole(@RequestBody @Valid Role role){
+        return roleService.save(role);
+    }
+
+    @PutMapping("/{id}")
+    public boolean editRole(@RequestBody Role role, @PathVariable Long id) {
+        role.setId(id);
+        return roleService.updateById(role);
+    }
+    @DeleteMapping("/{id}")
+    public boolean delRole(@PathVariable Long id) {
+        return roleService.removeById(id);
+    }
+
 }

@@ -1,8 +1,10 @@
 package com.shenfangtao.controller;
 
+import com.shenfangtao.model.Permission;
 import com.shenfangtao.model.Role;
 import com.shenfangtao.model.User;
 import com.shenfangtao.model.UserInfo;
+import com.shenfangtao.service.impl.PermissionServiceImpl;
 import com.shenfangtao.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -11,7 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Notes: 权限，用户信息相关
@@ -24,6 +30,16 @@ public class AuthController {
     @Autowired
     UserServiceImpl userService;
 
+    @Autowired
+    PermissionServiceImpl permissionService;
+
+    /**
+     * Notes:  获取个人信息
+     * @param: []
+     * @return: com.shenfangtao.model.UserInfo
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2022/9/5 21:30
+     **/
     @GetMapping("/getUserInfo")
     public UserInfo getUserInfo(){
         Authentication authentication =
@@ -33,11 +49,41 @@ public class AuthController {
         userInfo.setUserId(user.getId());
         userInfo.setUsername(user.getUsername());
         userInfo.setAvatar(user.getAvatar());
-        userInfo.setHomePath("/dashboard/analysis");
+        userInfo.setHomePath("/system/account");
         userInfo.setRealName(user.getNickname());
         List<Role> roles = userService.getUserRolesByUid(user.getId());
         userInfo.setRoles(roles);
         userInfo.setToken((String)authentication.getCredentials());
         return userInfo;
+    }
+
+    /**
+     * Notes:  获得个人所拥有的菜单
+     * @param: []
+     * @return: java.util.Map
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2022/9/5 21:43
+     **/
+    @GetMapping("/getMenuList")
+    public List<Map<String, Object>> getMenuList(){
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        return permissionService.getMenusByUid(user.getId());
+    }
+
+    /**
+     * Notes:  获得按钮权限点
+     * @param: []
+     * @return: java.util.List
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2022/9/6 16:54
+     **/
+    @GetMapping("/getPermCode")
+    public List getPermCode(){
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        return permissionService.getCodesByUid(user.getId());
     }
 }

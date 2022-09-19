@@ -48,8 +48,10 @@ CREATE TABLE `role`
 (
     `id`          bigint UNSIGNED NOT NULL AUTO_INCREMENT,
     `name`        varchar(64) NOT NULL COMMENT '英文名称',
-    `alias`       varchar(64) NOT NULL DEFAULT '' COMMENT '中文名称',
+    `name_zh`     varchar(64) NOT NULL DEFAULT '' COMMENT '中文名称',
     `description` text COLLATE utf8mb4_unicode_ci COMMENT '描述',
+    `status`      tinyint NOT NULL DEFAULT 1 COMMENT '状态:0-禁用;1-启用',
+    `order_no`    tinyint NOT NULL DEFAULT 1 COMMENT '排序',
     `created_at`  datetime NULL DEFAULT NULL,
     `updated_at`  datetime NULL DEFAULT NULL,
     PRIMARY KEY (`id`)
@@ -59,10 +61,10 @@ CREATE TABLE `role`
 -- 转存表中的数据 `role`
 --
 
-INSERT INTO `role` (`id`, `name`, `alias`, `description`, `created_at`, `updated_at`)
-VALUES (1, 'ROLE_root', '超级管理员', '超级管理员', now(), now()),
-       (2, 'ROLE_admin', '管理员', '普通管理员', now(), now()),
-       (3, 'ROLE_user', '普通用户', '普通用户', now(), now());
+INSERT INTO `role` (`id`, `name`, `name_zh`, `description`, `status`,`order_no`,`created_at`, `updated_at`)
+VALUES (1, 'ROLE_root', '超级管理员', '超级管理员',1,1, now(), now()),
+       (2, 'ROLE_admin', '管理员', '普通管理员',1,1, now(), now()),
+       (3, 'ROLE_user', '普通用户', '普通用户',1,1, now(), now());
 
 -- ----------------------------
 -- Table structure for user_role
@@ -87,6 +89,7 @@ VALUES (1, 1, 1),
 
 --
 -- 表的结构 `permission`
+-- 该表同时承担菜单功能
 --
 DROP TABLE IF EXISTS `permission`;
 
@@ -94,10 +97,18 @@ CREATE TABLE `permission`
 (
     `id`          bigint UNSIGNED NOT NULL AUTO_INCREMENT,
     `pid`         bigint NOT NULL DEFAULT '0',
-    `pattern`     varchar(128) NOT NULL COMMENT 'url路径',
-    `method`      varchar(10) NOT NULL COMMENT '请求方式',
-    `alias`       varchar(64) NOT NULL DEFAULT '' COMMENT '中文名称',
+    `request_url`     varchar(128) NOT NULL COMMENT '后端请求路径',
+    `request_method`  varchar(10) NOT NULL COMMENT '后端请求方式',
+    `name`        varchar(64) NOT NULL COMMENT '菜单名称',
+    `title`       varchar(64) NOT NULL DEFAULT '' COMMENT '菜单名称i18n',
     `description` text COLLATE utf8mb4_unicode_ci COMMENT '描述',
+    `path`        varchar(32) NOT NULL DEFAULT '' COMMENT '前端页面路径',
+    `component`   varchar(32) NOT NULL DEFAULT '' COMMENT '前端页面组件',
+    `icon`        varchar(32) NOT NULL DEFAULT '' COMMENT '图标',
+    `show_flag`   tinyint NOT NULL DEFAULT 1 COMMENT '是否显示:0-隐藏;1-显示',
+    `type`        tinyint NOT NULL DEFAULT 1 COMMENT '权限类型:0-目录;1-菜单;2-按钮',
+    `status`      tinyint NOT NULL DEFAULT 1 COMMENT '状态:0-禁用;1-启用',
+    `order_no`    tinyint NOT NULL DEFAULT 1 COMMENT '排序',
     `created_at`  datetime NULL DEFAULT NULL,
     `updated_at`  datetime NULL DEFAULT NULL,
     PRIMARY KEY (`id`)
@@ -105,18 +116,37 @@ CREATE TABLE `permission`
 
 --
 -- 转存表中的数据 `permission`
--- 这里的设计很关键，method即指http请求的方法，这样设计可以既实现标准的Restful api设计规范，又能做到权限控制到按钮级别
+-- 这里的设计很关键，request_method即指http请求的方法，这样设计可以既实现标准的Restful api设计规范，又能做到权限控制到按钮级别
 --
 
-INSERT INTO `permission` (`id`, `pid`, `pattern`, `method`, `alias`, `description`, `created_at`, `updated_at`)
-VALUES (1, 0, '/**','ANY', '所有', '所有用户管理权限', now(), now()),
-       (2, 1, '/api/users/**','ANY', '用户管理', '所有用户管理权限', now(), now()),
-       (3, 2, '/api/users','GET', '用户列表', '获得用户列表', now(), now()),
-       (4, 2, '/api/users','POST', '新增用户', '新增一个用户', now(), now()),
-       (5, 2, '/api/users','PUT', '修改用户', '修改一个用户', now(), now()),
-       (6, 2, '/api/users','DELETE', '删除用户', '删除一个用户', now(), now()),
-       (7, 1, '/api/getUserInfo','GET', '用户信息', '获得个人用户信息', now(), now()),
-       (8, 1, '/api/roles/**','ANY', '角色管理', '所有角色管理权限', now(), now());
+INSERT INTO `permission` (`id`, `pid`, `request_url`, `request_method`, `name`, `title`, `description`, `path`, `component`, `icon`, `show_flag`, `type`, `status`, `order_no`, `created_at`, `updated_at`)
+-- VALUES (1, 0, '/**','ANY', '所有', '所有用户管理权限', now(), now()),
+--        (2, 1, '/api/users/**','ANY', '用户管理', '所有用户管理权限', now(), now()),
+--        (3, 2, '/api/users','GET', '用户列表', '获得用户列表', now(), now()),
+--        (4, 2, '/api/users','POST', '新增用户', '新增一个用户', now(), now()),
+--        (5, 2, '/api/users','PUT', '修改用户', '修改一个用户', now(), now()),
+--        (6, 2, '/api/users','DELETE', '删除用户', '删除一个用户', now(), now()),
+--        (7, 1, '/api/getUserInfo','GET', '用户信息', '获得个人用户信息', now(), now()),
+--        (8, 1, '/api/roles/**','ANY', '角色管理', '所有角色管理权限', now(), now()),
+--        (9, 1, '/api/getMenuList','GET', '菜单列表', '获得个人所拥有的菜单', now(), now());
+VALUES (1, 0, '/api/dashboard','GET', 'Dashboard', 'routes.dashboard.dashboard','Dashboard目录','/dashboard','LAYOUT', 'bx:bx-home','1','0','1','1',now(), now()),
+       (2, 0, '/api/system','GET', '系统管理', 'routes.demo.system.moduleName','系统管理目录','/system','LAYOUT', 'ion:settings-outline','1','0','1','1',now(), now()),
+       (3, 2, '/api/users','GET', '账号管理', 'routes.demo.system.account','账号管理菜单','account','/demo/system/account/index', '','1','1','1','1',now(), now()),
+       (4, 3, '/api/users','POST', '新增账号', '','新增账号按钮','','', '','1','2','1','1',now(), now()),
+       (5, 2, '/api/users','GET', '菜单管理', 'routes.demo.system.menu','菜单管理菜单','menu','/demo/system/menu/index', '','1','1','1','1',now(), now()),
+       (6, 5, '/api/users','POST', '新增菜单', '','新增菜单按钮','','', '','1','2','1','1',now(), now()),
+       (7, 2, '/api/users','GET', '角色管理', 'routes.demo.system.role','角色管理菜单','role','/demo/system/role/index', '','1','1','1','1',now(), now());
+--        (5, 0, '/api/basic','GET', 'Basic', '','基础权限目录','/basic','LAYOUT', '','0','1','1',now(), now()),
+--        (6, 5, '/api/getUserInfo','GET', 'UserInfo', '','用户信息按钮','','', '','2','1','1',now(), now());
+--        (7, 5, '/api/getMenuList','GET', 'MenuList', '','用户信息按钮','','', '','2','1','1',now(), now());
+--        (2, 1, '/api/users/**','ANY', '用户管理', '所有用户管理权限', now(), now()),
+--        (3, 2, '/api/users','GET', '用户列表', '获得用户列表', now(), now()),
+--        (4, 2, '/api/users','POST', '新增用户', '新增一个用户', now(), now()),
+--        (5, 2, '/api/users','PUT', '修改用户', '修改一个用户', now(), now()),
+--        (6, 2, '/api/users','DELETE', '删除用户', '删除一个用户', now(), now()),
+--        (7, 1, '/api/getUserInfo','GET', '用户信息', '获得个人用户信息', now(), now()),
+--        (8, 1, '/api/roles/**','ANY', '角色管理', '所有角色管理权限', now(), now()),
+--        (9, 1, '/api/getMenuList','GET', '菜单列表', '获得个人所拥有的菜单', now(), now());
 
 --
 -- 表的结构 `role_permission`
@@ -137,8 +167,11 @@ INSERT INTO `role_permission` (`id`, `rid`, `pid`)
 VALUES (1, 1, 1),
        (2, 2, 2),
        (3, 3, 3),
-       (4, 3, 7),
-       (5, 2, 8);
+       (4, 2, 4),
+       (5, 3, 2),
+       (6, 2, 5),
+       (7, 2, 6),
+       (8, 2, 7);
 
 --
 -- 表的结构 `log`

@@ -34,13 +34,17 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
         if (requestUrl.indexOf("?") != -1){
             requestUrl =requestUrl.substring(0, requestUrl.indexOf("?")); // 去除问号及其后面的内容
         }
+        // 过滤掉一些所有人都需要的权限点
+        if (requestUrl.equals("/api/getUserInfo") || requestUrl.equals("/api/getMenuList") || requestUrl.equals("/api/getPermCode")){
+            return SecurityConfig.createList("ROLE_LOGIN");
+        }
         String method = filterInvocation.getHttpRequest().getMethod(); // 请求的方法
         List<Permission> allPermission = permissionService.getAllPermissions();
         List<String> roleArr = new ArrayList<String>();
         for (Permission permission : allPermission) {
-            if(antPathMatcher.match(permission.getPattern(),requestUrl)){ // 先判断URL路径是否符合
-                if ("ANY".equals(permission.getMethod())
-                        || method.equals(permission.getMethod())){  // 再判断方法是否符合
+            if(antPathMatcher.match(permission.getRequestUrl(),requestUrl)){ // 先判断URL路径是否符合
+                if ("ANY".equals(permission.getRequestMethod())
+                        || method.equals(permission.getRequestMethod())){  // 再判断方法是否符合
                     List<Role> roles = permission.getRoles();
                     for (int i = 0; i < roles.size(); i++) {
                         roleArr.add(roles.get(i).getName());

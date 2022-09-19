@@ -2,7 +2,10 @@ package com.shenfangtao.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.shenfangtao.model.Role;
+import com.shenfangtao.model.User;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Notes:
@@ -10,5 +13,5 @@ import org.springframework.stereotype.Service;
  * Time: 2022/8/31 13:45
  */
 public interface RoleService  extends IService<Role> {
-
+    public List<Role> getRolesWithPermissions();
 }

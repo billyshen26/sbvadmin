@@ -24,12 +24,12 @@
         <collection property="roles" ofType="com.shenfangtao.model.Role">
             <id column="rid" property="id"/>
             <result column="rname" property="name"/>
-            <result column="ralias" property="alias"/>
+            <result column="rname_zh" property="nameZh"/>
         </collection>
     </resultMap>
     <select id="getUsersWithRoles" resultMap="UserWithRoles">
         select user.id, user.nickname, user.phone, user.email, user.activated, user.locked, user.username, user.avatar,
-        user.last_login_at,user.last_login_ip,user.created_at,user.updated_at,r.`id` as rid,r.`name` as rname,r.`alias` as ralias from user left join user_role ur on
+        user.last_login_at,user.last_login_ip,user.created_at,user.updated_at,r.`id` as rid,r.`name` as rname,r.`name_zh` as rname_zh from user left join user_role ur on
         user.`id`=ur.`uid` left join role r on ur.`rid`=r.`id`
     </select>
 </mapper>

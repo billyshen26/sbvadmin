@@ -87,6 +87,6 @@ public class User implements UserDetails , Serializable {
 
     @Override
     public boolean isEnabled() {
-        return activated;
+            return activated;
     }
 }
