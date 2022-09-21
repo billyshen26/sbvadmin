@@ -29,7 +29,7 @@ import java.util.List;
 @Data
 public class User implements UserDetails , Serializable {
     @TableId(type = IdType.AUTO)
-    private BigInteger id;
+    private Long id;
     @NotNull(message = "昵称不能为空")
     private String nickname;
     private String phone;
@@ -51,6 +51,9 @@ public class User implements UserDetails , Serializable {
     private LocalDateTime createdAt;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime updatedAt;
+
+    @TableField(exist = false)
+    private List<Integer> roleIds; // 方便前端显示，分配用户角色
     @TableField(exist = false)
     private List<Role> roles;
     @Override

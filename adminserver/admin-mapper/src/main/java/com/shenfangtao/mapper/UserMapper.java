@@ -22,7 +22,7 @@ public interface UserMapper extends BaseMapper<User> {
      * Author: 涛声依旧 likeboat@163.com
      * Time: 2022/7/15 11:36
      **/
-    List<Role> getUserRolesByUid(BigInteger id);
+    List<Role> getUserRolesByUid(Long id);
 
     /**
      * Notes:  获取用户列表，及其包含的角色信息

@@ -2,6 +2,7 @@ package com.shenfangtao.config;
 
 import com.shenfangtao.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,6 +50,7 @@ public class SecurityConfiguration {
 
     @Autowired
     CustomAccessDeniedHandler accessDeniedHandler;
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -99,6 +102,16 @@ public class SecurityConfiguration {
         return http.build();
     }
 
+    /**
+     * 配置要忽略的路径
+     */
+    @Bean
+    WebSecurityCustomizer webSecurityCustomizer() {
+        // 忽略 /error 页面
+        return web -> web.ignoring().antMatchers("/error","/index.html","/assets/**","/_app.config.js","/resource/**")
+                // 忽略常见的静态资源路径
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
     @Bean
     CustomFilterInvocationSecurityMetadataSource cfisms() {
         return new CustomFilterInvocationSecurityMetadataSource();

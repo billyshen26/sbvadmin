@@ -17,7 +17,7 @@ public class UserInfo {
 //    private String password;
     private String realName;
     private String token;
-    private BigInteger userId;
+    private Long userId;
     private String username;
     private List<Role> roles;
 }

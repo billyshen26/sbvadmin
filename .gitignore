@@ -3,6 +3,10 @@
 /adminserver/admin-model/target/
 /adminserver/admin-service/target/
 /adminserver/admin-web/target/
+/mailserver/target/
+/mailserver/target/
+/mailserver/target/
+/mailserver/target/
 
 ### IntelliJ IDEA ###
 .idea
@@ -13,3 +17,4 @@
 ### database backup ##
 /backup
 /logs
+/adminserver/admin-web/logs/

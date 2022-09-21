@@ -1,8 +1,6 @@
 package com.shenfangtao.controller;
 
-import com.shenfangtao.model.Role;
-import com.shenfangtao.model.User;
-import com.shenfangtao.model.UserInfo;
+import com.shenfangtao.model.*;
 import com.shenfangtao.service.impl.UserServiceImpl;
 import com.shenfangtao.utils.SbvLog;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,14 +40,16 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public boolean editUser(@RequestBody User user, @PathVariable BigInteger id) {
+    public boolean editUser(@RequestBody User user, @PathVariable Long id) {
         user.setId(id);
         return userService.updateById(user);
     }
     @DeleteMapping("/{id}")
-    public boolean delUser(@PathVariable BigInteger id) {
+    public Object delUser(@PathVariable Long id) {
+        if (id == 1L){
+            return ResultFormat.fail(ErrorCode.ROOT_CANT_DELETE.getCode(),ErrorCode.ROOT_CANT_DELETE.getMessage());
+        }
         return userService.removeById(id);
     }
-
 
 }

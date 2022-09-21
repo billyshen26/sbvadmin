@@ -30,5 +30,5 @@ public interface PermissionMapper  extends BaseMapper<Permission> {
      * Author: 涛声依旧 likeboat@163.com
      * Time: 2022/9/7 20:32
      **/
-    List<Permission> getPermissionsByUid(BigInteger id);
+    List<Permission> getPermissionsByUid(Long id);
 }

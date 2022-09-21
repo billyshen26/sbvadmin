@@ -27,7 +27,7 @@ public interface PermissionService extends IService<Permission> {
      * Author: 涛声依旧 likeboat@163.com
      * Time: 2022/9/9 16:30
      **/
-    public List<Map<String, Object>> getMenusByUid(BigInteger id);
+    public List<Map<String, Object>> getMenusByUid(Long id);
 
     /**
      * Notes:  获取当前用户id的所有按钮
@@ -36,7 +36,7 @@ public interface PermissionService extends IService<Permission> {
      * Author: 涛声依旧 likeboat@163.com
      * Time: 2022/9/9 16:30
      **/
-    public List<String> getCodesByUid(BigInteger id);
+    public List<String> getCodesByUid(Long id);
 
     /**
      * Notes:  获取当前用户id的所有权限，简单来说权限分为菜单和按钮两种
@@ -46,7 +46,7 @@ public interface PermissionService extends IService<Permission> {
      * Time: 2022/9/9 16:54
      **/
 //    @Cacheable(key = "#id")
-    public List<Permission> getPermissionsByUid(BigInteger id);
+    public List<Permission> getPermissionsByUid(Long id);
 
     /**
      * Notes:  获得树型结构的权限点

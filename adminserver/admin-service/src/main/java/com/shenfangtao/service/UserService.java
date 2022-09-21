@@ -20,6 +20,6 @@ import java.util.List;
 public interface UserService extends IService<User> {
     public List<User> getUsersWithRoles();
 
-    public List<Role> getUserRolesByUid(BigInteger id);
+    public List<Role> getUserRolesByUid(Long id);
 
 }

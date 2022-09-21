@@ -34,7 +34,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
      * Time: 2022/9/19 16:38
      **/
     @Override
-    public List<Map<String, Object>> getMenusByUid(BigInteger id) {
+    public List<Map<String, Object>> getMenusByUid(Long id) {
         List<Permission> permissionList = getPermissionsByUid(id);
         List<Permission> allPermissionList = getAllPermissions();
         List<Permission> fathers = new ArrayList<>();
@@ -58,7 +58,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     }
 
     @Override
-    public List<String> getCodesByUid(BigInteger id) {
+    public List<String> getCodesByUid(Long id) {
         List<Permission> permissionList = getPermissionsByUid(id);
         List<String> codeList = new ArrayList<String>();
         for (Permission permission : permissionList) {
@@ -70,7 +70,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     }
 
     @Override
-    public List<Permission> getPermissionsByUid(BigInteger id) {
+    public List<Permission> getPermissionsByUid(Long id) {
         List<Permission> permissionList = permissionMapper.getPermissionsByUid(id);
         return permissionList;
     }
