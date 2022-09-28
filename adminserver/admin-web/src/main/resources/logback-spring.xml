@@ -6,8 +6,11 @@
        debug:       当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。
      -->
 
-    <!-- 定义日志文件的存储地址 -->
-    <springProperty scope="context" name="LOG_HOME" source="log.path"/>
+    <!-- 定义日志文件的存储地址，需要使用监听类完成这个任务，无法systemctl中无法使用 -->
+    <!--<springProperty scope="context" name="LOG_HOME" source="log.path"/>-->
+    <!-- 将监听类加入到xml -->
+    <contextListener class="com.shenfangtao.config.CustomLogContextListener" />
+
     <springProperty scope="context" name="APP_NAME"  source="spring.application.name"/>
     <!-- 格式化输出：
         %d          表示日期，
