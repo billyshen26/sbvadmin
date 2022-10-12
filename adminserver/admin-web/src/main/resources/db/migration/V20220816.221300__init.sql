@@ -120,15 +120,6 @@ CREATE TABLE `permission`
 --
 
 INSERT INTO `permission` (`id`, `pid`, `request_url`, `request_method`, `name`, `title`, `description`, `path`, `component`, `icon`, `show_flag`, `type`, `status`, `order_no`, `created_at`, `updated_at`)
--- VALUES (1, 0, '/**','ANY', '所有', '所有用户管理权限', now(), now()),
---        (2, 1, '/api/users/**','ANY', '用户管理', '所有用户管理权限', now(), now()),
---        (3, 2, '/api/users','GET', '用户列表', '获得用户列表', now(), now()),
---        (4, 2, '/api/users','POST', '新增用户', '新增一个用户', now(), now()),
---        (5, 2, '/api/users','PUT', '修改用户', '修改一个用户', now(), now()),
---        (6, 2, '/api/users','DELETE', '删除用户', '删除一个用户', now(), now()),
---        (7, 1, '/api/getUserInfo','GET', '用户信息', '获得个人用户信息', now(), now()),
---        (8, 1, '/api/roles/**','ANY', '角色管理', '所有角色管理权限', now(), now()),
---        (9, 1, '/api/getMenuList','GET', '菜单列表', '获得个人所拥有的菜单', now(), now());
 VALUES (1, 0, '/api/dashboard','GET', 'Dashboard', 'routes.dashboard.dashboard','Dashboard目录','/dashboard','LAYOUT', 'bx:bx-home','1','0','1','1',now(), now()),
        (2, 0, '/api/system','GET', '系统管理', 'routes.demo.system.moduleName','系统管理目录','/system','LAYOUT', 'ion:settings-outline','1','0','1','1',now(), now()),
        (3, 2, '/api/users','GET', '账号管理', 'routes.demo.system.account','账号管理菜单','account','/demo/system/account/index', '','1','1','1','1',now(), now()),
@@ -136,17 +127,7 @@ VALUES (1, 0, '/api/dashboard','GET', 'Dashboard', 'routes.dashboard.dashboard',
        (5, 2, '/api/users','GET', '菜单管理', 'routes.demo.system.menu','菜单管理菜单','menu','/demo/system/menu/index', '','1','1','1','1',now(), now()),
        (6, 5, '/api/users','POST', '新增菜单', '','新增菜单按钮','','', '','1','2','1','1',now(), now()),
        (7, 2, '/api/users','GET', '角色管理', 'routes.demo.system.role','角色管理菜单','role','/demo/system/role/index', '','1','1','1','1',now(), now());
---        (5, 0, '/api/basic','GET', 'Basic', '','基础权限目录','/basic','LAYOUT', '','0','1','1',now(), now()),
---        (6, 5, '/api/getUserInfo','GET', 'UserInfo', '','用户信息按钮','','', '','2','1','1',now(), now());
---        (7, 5, '/api/getMenuList','GET', 'MenuList', '','用户信息按钮','','', '','2','1','1',now(), now());
---        (2, 1, '/api/users/**','ANY', '用户管理', '所有用户管理权限', now(), now()),
---        (3, 2, '/api/users','GET', '用户列表', '获得用户列表', now(), now()),
---        (4, 2, '/api/users','POST', '新增用户', '新增一个用户', now(), now()),
---        (5, 2, '/api/users','PUT', '修改用户', '修改一个用户', now(), now()),
---        (6, 2, '/api/users','DELETE', '删除用户', '删除一个用户', now(), now()),
---        (7, 1, '/api/getUserInfo','GET', '用户信息', '获得个人用户信息', now(), now()),
---        (8, 1, '/api/roles/**','ANY', '角色管理', '所有角色管理权限', now(), now()),
---        (9, 1, '/api/getMenuList','GET', '菜单列表', '获得个人所拥有的菜单', now(), now());
+
 
 --
 -- 表的结构 `role_permission`

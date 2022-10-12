@@ -35,7 +35,7 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
             requestUrl =requestUrl.substring(0, requestUrl.indexOf("?")); // 去除问号及其后面的内容
         }
         // 过滤掉一些所有人都需要的权限点
-        if (requestUrl.equals("/") ||requestUrl.equals("/api/getUserInfo") || requestUrl.equals("/api/getMenuList") || requestUrl.equals("/api/getPermCode")){
+        if (requestUrl.equals("/api/getUserInfo") || requestUrl.equals("/api/getMenuList") || requestUrl.equals("/api/getPermCode")){
             return SecurityConfig.createList("ROLE_LOGIN");
         }
         String method = filterInvocation.getHttpRequest().getMethod(); // 请求的方法

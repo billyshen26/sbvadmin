@@ -88,7 +88,8 @@ public class SecurityConfiguration {
                     }
                 })
                 .and()
-                .addFilterBefore(new JwtLoginFilter("/api/login",authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtLoginFilter(), UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(new JwtLoginFilter("/api/login",authenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtFilter(),UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable()
                 .userDetailsService(userService);
@@ -108,7 +109,7 @@ public class SecurityConfiguration {
     @Bean
     WebSecurityCustomizer webSecurityCustomizer() {
         // 忽略 /error 页面
-        return web -> web.ignoring().antMatchers("/error","/index.html","/assets/**","/_app.config.js","/resource/**")
+        return web -> web.ignoring().antMatchers("/","/error","/index.html","/assets/**","/_app.config.js","/resource/**")
                 // 忽略常见的静态资源路径
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
@@ -130,4 +131,7 @@ public class SecurityConfiguration {
     public JwtFilter jwtFilter(){
         return new JwtFilter();
     }
+
+    @Bean
+    public JwtLoginFilter jwtLoginFilter() throws Exception {return new JwtLoginFilter("/api/login",authenticationManager()); }
 }

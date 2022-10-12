@@ -35,11 +35,13 @@ public class PermissionController {
         return permissionService.save(permission);
     }
 
+    @SbvLog(desc = "修改权限点")
     @PutMapping("/{id}")
     public boolean editPermission(@RequestBody Permission permission, @PathVariable Long id) {
         permission.setId(id);
         return permissionService.updateById(permission);
     }
+    @SbvLog(desc = "删除权限点")
     @DeleteMapping("/{id}")
     public boolean delPermission(@PathVariable Long id) {
         return permissionService.removeById(id);

@@ -1,10 +1,13 @@
 package com.shenfangtao.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shenfangtao.mapper.UserMapper;
 import com.shenfangtao.model.ResultFormat;
 import com.shenfangtao.model.User;
+import com.shenfangtao.utils.IpUtil;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,6 +15,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -19,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,6 +37,10 @@ import java.util.Map;
  * Time: 2022/7/20 20:28
  */
 public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
+
+    @Autowired
+    UserMapper userMapper;
+
     protected JwtLoginFilter(String defaultFilterProcessesUrl, AuthenticationManager authenticationManager) {
         super(new AntPathRequestMatcher(defaultFilterProcessesUrl));
         setAuthenticationManager(authenticationManager);
@@ -75,6 +86,15 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
         out.write(new ObjectMapper().writeValueAsString(ResultFormat.success(tokenMap)));
         out.flush();
         out.close();
+
+        //更新登录信息
+        user.setLastLoginAt(LocalDateTime.now());
+        // 获取RequestAttributes
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        // 从获取RequestAttributes中获取HttpServletRequest的信息
+        HttpServletRequest request = (HttpServletRequest) requestAttributes.resolveReference(RequestAttributes.REFERENCE_REQUEST);
+        user.setLastLoginIp(IpUtil.getIpRequest(request));
+        userMapper.updateById(user);
     }
     protected void unsuccessfulAuthentication(HttpServletRequest req, HttpServletResponse resp, AuthenticationException failed) throws IOException, ServletException {
         resp.setContentType("application/json;charset=utf-8");

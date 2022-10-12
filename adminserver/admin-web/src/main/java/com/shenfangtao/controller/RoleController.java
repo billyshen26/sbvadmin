@@ -1,8 +1,6 @@
 package com.shenfangtao.controller;
 
-import com.shenfangtao.model.Permission;
-import com.shenfangtao.model.Role;
-import com.shenfangtao.model.User;
+import com.shenfangtao.model.*;
 import com.shenfangtao.service.impl.RoleServiceImpl;
 import com.shenfangtao.utils.SbvLog;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +31,17 @@ public class RoleController {
         return roleService.save(role);
     }
 
+    @SbvLog(desc = "修改角色")
     @PutMapping("/{id}")
-    public boolean editRole(@RequestBody Role role, @PathVariable Long id) {
+    public Object editRole(@RequestBody Role role, @PathVariable Long id) {
+        if (id == 1L){
+            return ResultFormat.fail(ErrorCode.ROOT_CANT_UPDATE.getCode(),ErrorCode.ROOT_CANT_UPDATE.getMessage());
+        }
         role.setId(id);
         return roleService.updateById(role);
     }
+
+    @SbvLog(desc = "删除角色")
     @DeleteMapping("/{id}")
     public boolean delRole(@PathVariable Long id) {
         return roleService.removeById(id);

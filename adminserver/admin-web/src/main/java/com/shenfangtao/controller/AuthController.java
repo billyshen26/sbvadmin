@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -33,6 +34,17 @@ public class AuthController {
     @Autowired
     PermissionServiceImpl permissionService;
 
+    /**
+     * Notes:  解决访问必须带index.html的问题
+     * @param: []
+     * @return: org.springframework.web.servlet.ModelAndView
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2022/9/29 21:54
+     **/
+    @GetMapping("/")
+    public ModelAndView index(){
+        return new ModelAndView("redirect:/index.html");
+    }
     /**
      * Notes:  获取个人信息
      * @param: []
