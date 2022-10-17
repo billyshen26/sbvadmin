@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 echo 'restart sbvadmin'
-systemctl restart sbvadmin
+echo ${USER}
+sudo systemctl restart sbvadmin
