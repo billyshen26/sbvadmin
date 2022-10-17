@@ -14,9 +14,9 @@ pipeline {
                 sh 'mvn -B -DskipTests clean package'
             }
         }
-        stage('Deliver') {
+        stage('Restart') {
             steps {
-                sh 'java --version'
+                sh 'systemctl restart sbvadmin'
             }
         }
     }
