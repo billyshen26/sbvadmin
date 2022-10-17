@@ -17,7 +17,7 @@ pipeline {
         }
         stage('Restart') {
             steps {
-                sh 'chown -R tomcat:tomcat target'
+                sh 'chown -R tomcat:tomcat /root/.jenkins/workspace/sbvadmin/adminserver/admin-web/target'
                 sh 'systemctl restart sbvadmin'
             }
         }
