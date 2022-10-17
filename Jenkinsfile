@@ -16,7 +16,7 @@ pipeline {
         }
         stage('Restart') {
             steps {
-                sh 'systemctl restart sbvadmin'
+                sh './jenkins/scripts/restart.sh'
             }
         }
     }
