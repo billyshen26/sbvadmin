@@ -17,6 +17,7 @@ pipeline {
         }
         stage('Restart') {
             steps {
+                sh 'chown -R tomcat:tomcat target'
                 sh 'systemctl restart sbvadmin'
             }
         }
