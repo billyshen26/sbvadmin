@@ -14,7 +14,8 @@ public enum ErrorCode {
     BAD_REQUEST(400, "参数异常"),
 
     ROOT_CANT_DELETE(20001, "超级管理员不能被删除"),
-    ROOT_CANT_UPDATE(20002, "超级管理员不能被修改");
+    ROOT_CANT_UPDATE(20002, "超级管理员不能被修改"),
+    PERMISSION_CANT_DELETE(20003, "预定权限点不能被删除");
 
     /**自定义状态码**/
     private final int code;

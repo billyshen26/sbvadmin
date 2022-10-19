@@ -1,6 +1,8 @@
 package com.shenfangtao.controller;
 
+import com.shenfangtao.model.ErrorCode;
 import com.shenfangtao.model.Permission;
+import com.shenfangtao.model.ResultFormat;
 import com.shenfangtao.model.User;
 import com.shenfangtao.service.impl.PermissionServiceImpl;
 import com.shenfangtao.service.impl.UserServiceImpl;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +46,11 @@ public class PermissionController {
     }
     @SbvLog(desc = "删除权限点")
     @DeleteMapping("/{id}")
-    public boolean delPermission(@PathVariable Long id) {
+    public Object delPermission(@PathVariable Long id) {
+        Long[] preDefinedPermissons = {1L,2L,3L,4L,5L,6L,7L};
+        if (Arrays.asList(preDefinedPermissons).contains(id)){
+            return ResultFormat.fail(ErrorCode.PERMISSION_CANT_DELETE.getCode(),ErrorCode.PERMISSION_CANT_DELETE.getMessage());
+        }
         return permissionService.removeById(id);
     }
 }
