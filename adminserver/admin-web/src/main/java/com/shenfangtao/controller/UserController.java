@@ -46,6 +46,7 @@ public class UserController {
         return userService.updateById(user);
     }
     @DeleteMapping("/{id}")
+    @SbvLog(desc = "删除用户")
     public Object delUser(@PathVariable Long id) {
         if (id == 1L){
             return ResultFormat.fail(ErrorCode.ROOT_CANT_DELETE.getCode(),ErrorCode.ROOT_CANT_DELETE.getMessage());
