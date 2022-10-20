@@ -40,6 +40,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
+    @SbvLog(desc = "修改用户")
     public boolean editUser(@RequestBody User user, @PathVariable Long id) {
         user.setId(id);
         return userService.updateById(user);
