@@ -10,6 +10,11 @@ pipeline {
     agent any
 
     stages {
+        stage('UpdateFrontend') {
+            steps {
+                sh './jenkins/scripts/updateFrontend.sh'
+            }
+        }
         stage('Build') {
             steps {
                 sh 'mvn -B -DskipTests clean package'
