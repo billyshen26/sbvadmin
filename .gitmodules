@@ -1,0 +1,3 @@
+[submodule "sbvadmin-vben"]
+	path = sbvadmin-vben
+	url = https://github.com/billyshen26/sbvadmin-vben
