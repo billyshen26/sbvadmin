@@ -5,4 +5,4 @@
 账号：root
 密码：123
 
-前端代码仓库：[svbadmin-vben](https://github.com/billyshen26/svbadmin-vben)
+前端代码仓库：[sbvadmin-vben](https://github.com/billyshen26/sbvadmin-vben)
