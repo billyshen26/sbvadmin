@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
-echo 'update frontend'
-#git submodule init
-#git submodule update
+echo 'build frontend'
 cd sbvadmin-vben
-#git pull origin main
-yarn --version
+#yarn  安装依赖，只需执行一次
 yarn build
