@@ -8,5 +8,6 @@ echo 'update dist'
 cd adminserver/admin-web/src/main/resources/static
 rm -fr *
 cd ../../../../../../sbvadmin-vben
+cp -a dist/* ../adminserver/admin-web/src/main/resources/static/
 pwd
 
