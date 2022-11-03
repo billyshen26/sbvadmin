@@ -61,7 +61,7 @@ public class JwtFilter extends OncePerRequestFilter {
                         .getBody();
                 String username = claims.getSubject();//获取当前登录用户名
                 List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get("authorities"));
-                BigInteger uid = new BigInteger(String.valueOf(claims.get("uid")));
+                Long uid = Long.valueOf(String.valueOf(claims.get("uid")));
                 User user  = userMapper.selectById(uid);
                 UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user, jwtToken, authorities);
                 token.setDetails(uid);
