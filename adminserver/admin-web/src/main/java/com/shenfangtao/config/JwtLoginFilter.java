@@ -1,18 +1,24 @@
 package com.shenfangtao.config;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shenfangtao.mapper.UserMapper;
+import com.shenfangtao.model.Log;
 import com.shenfangtao.model.ResultFormat;
 import com.shenfangtao.model.User;
+import com.shenfangtao.service.impl.LogServiceImpl;
 import com.shenfangtao.utils.IpUtil;
+import com.shenfangtao.utils.SbvLog;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.context.request.RequestAttributes;
@@ -25,11 +31,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Method;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Notes:
@@ -40,6 +45,9 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    LogServiceImpl logService;
 
     protected JwtLoginFilter(String defaultFilterProcessesUrl, AuthenticationManager authenticationManager) {
         super(new AntPathRequestMatcher(defaultFilterProcessesUrl));
@@ -95,6 +103,25 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
         HttpServletRequest request = (HttpServletRequest) requestAttributes.resolveReference(RequestAttributes.REFERENCE_REQUEST);
         user.setLastLoginIp(IpUtil.getIpRequest(request));
         userMapper.updateById(user);
+
+        // 加入登录日志
+        Log log = Log.builder().build();
+        log.setDescription("用户成功登录");
+        // 请求信息
+        log.setMethod("JwtLoginFilter");
+        log.setReqParam("");
+        log.setUri(request.getRequestURI());
+        log.setIp(IpUtil.getIpRequest(request));
+        // 用户信息
+        log.setUid(user.getId());
+        log.setUsername(authResult.getName());
+        // 时间信息
+        log.setCreatedAt(LocalDateTime.now());
+        log.setUpdatedAt(LocalDateTime.now());
+        log.setVersion("1.0");
+        log.setTakeUpTime(0L);
+        log.setLevel(Log.ACTION_LEVEL);
+        logService.save(log);
     }
     protected void unsuccessfulAuthentication(HttpServletRequest req, HttpServletResponse resp, AuthenticationException failed) throws IOException, ServletException {
         resp.setContentType("application/json;charset=utf-8");

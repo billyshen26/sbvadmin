@@ -21,8 +21,8 @@ public class Log {
     public static final int ERROR_LEVEL = 2;
 
     @TableId(type = IdType.AUTO)
-    private BigInteger id;
-    private BigInteger uid;
+    private Long id;
+    private Long uid;
     private String username;
     private Integer level;
     private String description;

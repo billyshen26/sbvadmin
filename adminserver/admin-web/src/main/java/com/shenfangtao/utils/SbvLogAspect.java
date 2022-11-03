@@ -79,7 +79,7 @@ public class SbvLogAspect {
 
         // 用户信息
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        BigInteger uid = (BigInteger) authentication.getDetails();
+        Long uid = (Long) authentication.getDetails();
         log.setUid(uid);
         log.setUsername(authentication.getName());
 
