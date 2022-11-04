@@ -40,6 +40,9 @@ public class SbvLogAspect {
     @Autowired
     LogServiceImpl logService;
 
+    @Value("${application.version}")
+    private String version;
+
     // 被增强类中的被增强的方法
     @Pointcut(value = "@annotation(com.shenfangtao.utils.SbvLog)")
     public void logAnnotation(){
@@ -90,13 +93,7 @@ public class SbvLogAspect {
         // 时间信息
         log.setCreatedAt(LocalDateTime.now());
         log.setUpdatedAt(LocalDateTime.now());
-        String version = SpringBootVersion.getVersion();
-        System.out.println(version);
-        String implementationVersion = SpringApplication.class.getPackage().getImplementationVersion();
-
-        System.out.println(implementationVersion);
-
-        log.setVersion(implementationVersion);
+        log.setVersion(version);
         log.setTakeUpTime(System.currentTimeMillis() - takeUpTime.get());
 
         log.setLevel(Log.ACTION_LEVEL);
