@@ -13,6 +13,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -48,6 +49,9 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
 
     @Autowired
     LogServiceImpl logService;
+
+    @Value("${application.version}")
+    private String version;
 
     protected JwtLoginFilter(String defaultFilterProcessesUrl, AuthenticationManager authenticationManager) {
         super(new AntPathRequestMatcher(defaultFilterProcessesUrl));
@@ -118,7 +122,7 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
         // 时间信息
         log.setCreatedAt(LocalDateTime.now());
         log.setUpdatedAt(LocalDateTime.now());
-        log.setVersion("1.0");
+        log.setVersion(version);
         log.setTakeUpTime(0L);
         log.setLevel(Log.ACTION_LEVEL);
         logService.save(log);
