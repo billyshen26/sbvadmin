@@ -1,16 +1,20 @@
 package com.shenfangtao.service.impl;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.shenfangtao.mapper.LogMapper;
 import com.shenfangtao.model.Log;
-import com.shenfangtao.service.LogService;
+import com.shenfangtao.mapper.LogMapper;
+import com.shenfangtao.service.ILogService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
- * Notes:
- * Author: 涛声依旧 likeboat@163.com
- * Time: 2022/8/2 17:06
+ * <p>
+ *  服务实现类
+ * </p>
+ *
+ * @author billy
+ * @since 2022-11-08
  */
 @Service
-public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogService {
+public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements ILogService {
+
 }

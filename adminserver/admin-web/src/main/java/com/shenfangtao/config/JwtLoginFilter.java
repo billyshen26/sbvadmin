@@ -109,7 +109,8 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
         userMapper.updateById(user);
 
         // 加入登录日志
-        Log log = Log.builder().build();
+//        Log log = Log.builder().build();
+        Log log = new Log();
         log.setDescription("用户成功登录");
         // 请求信息
         log.setMethod("JwtLoginFilter");
@@ -123,7 +124,7 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
         log.setCreatedAt(LocalDateTime.now());
         log.setUpdatedAt(LocalDateTime.now());
         log.setVersion(version);
-        log.setTakeUpTime(0L);
+        log.setTakeUpTime(0);
         log.setLevel(Log.ACTION_LEVEL);
         logService.save(log);
     }

@@ -65,7 +65,8 @@ public class SbvLogAspect {
         // 从获取RequestAttributes中获取HttpServletRequest的信息
         HttpServletRequest request = (HttpServletRequest) requestAttributes.resolveReference(RequestAttributes.REFERENCE_REQUEST);
 
-        Log log = Log.builder().build();
+//        Log log = Log.builder().build();
+        Log log = new Log();
         // 从切面织入点处通过反射机制获取织入点处的方法
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         // 获取切入点所在的方法
@@ -94,7 +95,7 @@ public class SbvLogAspect {
         log.setCreatedAt(LocalDateTime.now());
         log.setUpdatedAt(LocalDateTime.now());
         log.setVersion(version);
-        log.setTakeUpTime(System.currentTimeMillis() - takeUpTime.get());
+        log.setTakeUpTime((int)(System.currentTimeMillis() - takeUpTime.get()));
 
         log.setLevel(Log.ACTION_LEVEL);
 

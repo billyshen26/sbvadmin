@@ -1,14 +1,16 @@
 package com.shenfangtao.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.shenfangtao.model.Log;
-import org.apache.ibatis.annotations.Mapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
- * Notes:
- * Author: 涛声依旧 likeboat@163.com
- * Time: 2022/8/2 17:03
+ * <p>
+ *  Mapper 接口
+ * </p>
+ *
+ * @author billy
+ * @since 2022-11-08
  */
-@Mapper
 public interface LogMapper extends BaseMapper<Log> {
+
 }

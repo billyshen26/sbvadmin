@@ -1,0 +1,22 @@
+import { BasicPageParams, BasicFetchResult } from '/@/api/model/baseModel';
+// 模型
+export interface ${entity} {
+#foreach($field in ${table.fields})
+  #if(${field.propertyType.equals("boolean")})
+    #set($type="boolean")
+  #elseif(${field.propertyType.equals("Integer")} || ${field.propertyType.equals("Long")})
+    #set($type="number")
+  #else
+    #set($type="string")
+  #end
+  ${field.propertyName}: ${type};
+#end
+}
+
+export type ${entity}Params = BasicPageParams & {
+  id: number;
+  createdAt: string;
+};
+
+// 列表集合
+export type ${entity}List = BasicFetchResult<${entity}>;

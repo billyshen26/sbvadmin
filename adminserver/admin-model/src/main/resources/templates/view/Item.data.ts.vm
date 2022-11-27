@@ -1,0 +1,58 @@
+import { BasicColumn } from '/@/components/Table';
+import { FormSchema } from '/@/components/Table';
+
+## ----------  列表页字段  ----------
+export const columns: BasicColumn[] = [
+#foreach($field in ${table.fields})
+  {
+    title: '${field.comment}',
+    dataIndex: '${field.propertyName}',
+#if(${field.keyFlag})
+    sorter: true,
+#end
+  },
+#end
+];
+
+## ----------  搜索字段(固定)  ----------
+export const searchFormSchema: FormSchema[] = [
+  {
+    field: 'id',
+    label: 'ID',
+    component: 'Input',
+    colProps: { span: 8 },
+  },
+  {
+    field: 'createdAt',
+    component: 'RangePicker',
+    label: '创建日期',
+    colProps: { span: 8 },
+  },
+];
+
+## ----------  新增修改字段  ----------
+export const formSchema: FormSchema[] = [
+#foreach($field in ${table.fields})
+    #if(${field.propertyType.equals("boolean")} ||
+        ${field.propertyType.equals("Long")} ||
+        ${field.propertyType.equals("Byte")} ||
+        ${field.propertyType.equals("Integer")})
+        #set($component="InputNumber")
+    #elseif(${field.propertyType.equals("LocalDateTime")})
+        #set($component="DatePicker")
+    #else
+        #set($component="Input")
+    #end
+  {
+    field: '${field.propertyName}',
+    label: '${field.comment}',
+    component: '${component}',
+    #if(${field.keyFlag})
+    dynamicDisabled: true,
+    #end
+    #if(!${field.metaInfo.nullable} && !${field.keyFlag})
+    required: true,
+    #end
+  },
+#end
+];

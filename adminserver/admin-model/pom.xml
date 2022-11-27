@@ -32,12 +32,12 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.5.2</version>
+            <version>3.5.1</version>
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-generator</artifactId>
-            <version>3.5.3</version>
+            <version>3.5.1</version>
         </dependency>
         <!-- velocity -->
         <dependency>
@@ -76,4 +76,15 @@
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/java/com/shenfangtao/generator</directory>
+                <includes>
+                    <include>*.ftl</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 </project>

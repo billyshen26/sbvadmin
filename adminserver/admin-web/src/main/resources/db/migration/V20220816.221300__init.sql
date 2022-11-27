@@ -6,8 +6,8 @@ DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE `user`
 (
-    `id`            bigint UNSIGNED NOT NULL AUTO_INCREMENT,
-    `nickname`          varchar(32) NOT NULL COMMENT '姓名',
+    `id`            bigint UNSIGNED NOT NULL COMMENT 'ID' AUTO_INCREMENT,
+    `nickname`      varchar(32) NOT NULL COMMENT '姓名',
     `phone`         char(11)    NOT NULL DEFAULT '' COMMENT '手机号码',
     `email`         varchar(64) NOT NULL DEFAULT '' COMMENT '邮箱',
     `activated`     tinyint(1) DEFAULT '1' COMMENT '激活状态:1为启用，0位禁用',
@@ -19,8 +19,8 @@ CREATE TABLE `user`
     `last_login_ip` varchar(20) NOT NULL DEFAULT '' COMMENT '最后登录ip',
     `mp_open_id`    varchar(64) NOT NULL DEFAULT '' COMMENT '微信open_id',
     `union_id`      varchar(64) NOT NULL DEFAULT '' COMMENT '微信union_id',
-    `created_at`    datetime NULL DEFAULT NULL,
-    `updated_at`    datetime NULL DEFAULT NULL,
+    `created_at`    datetime NULL DEFAULT NULL COMMENT '创建时间',
+    `updated_at`    datetime NULL DEFAULT NULL COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -46,14 +46,14 @@ DROP TABLE IF EXISTS `role`;
 
 CREATE TABLE `role`
 (
-    `id`          bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+    `id`          bigint UNSIGNED NOT NULL COMMENT 'ID' AUTO_INCREMENT,
     `name`        varchar(64) NOT NULL COMMENT '英文名称',
     `name_zh`     varchar(64) NOT NULL DEFAULT '' COMMENT '中文名称',
     `description` text COLLATE utf8mb4_unicode_ci COMMENT '描述',
     `status`      tinyint NOT NULL DEFAULT 1 COMMENT '状态:0-禁用;1-启用',
     `order_no`    tinyint NOT NULL DEFAULT 1 COMMENT '排序',
-    `created_at`  datetime NULL DEFAULT NULL,
-    `updated_at`  datetime NULL DEFAULT NULL,
+    `created_at`  datetime NULL DEFAULT NULL COMMENT '创建时间',
+    `updated_at`  datetime NULL DEFAULT NULL COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -72,7 +72,7 @@ VALUES (1, 'ROLE_root', '超级管理员', '超级管理员',1,1, now(), now()),
 DROP TABLE IF EXISTS `user_role`;
 CREATE TABLE `user_role`
 (
-    `id`  int NOT NULL AUTO_INCREMENT,
+    `id`  int NOT NULL COMMENT 'ID' AUTO_INCREMENT,
     `uid` bigint DEFAULT NULL COMMENT '用户外键',
     `rid` bigint DEFAULT NULL COMMENT '角色外键',
     PRIMARY KEY (`id`)
@@ -95,7 +95,7 @@ DROP TABLE IF EXISTS `permission`;
 
 CREATE TABLE `permission`
 (
-    `id`          bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+    `id`          bigint UNSIGNED NOT NULL COMMENT 'ID' AUTO_INCREMENT,
     `pid`         bigint NOT NULL DEFAULT '0',
     `request_url`     varchar(128) NOT NULL COMMENT '后端请求路径',
     `request_method`  varchar(10) NOT NULL COMMENT '后端请求方式',
@@ -109,8 +109,8 @@ CREATE TABLE `permission`
     `type`        tinyint NOT NULL DEFAULT 1 COMMENT '权限类型:0-目录;1-菜单;2-按钮',
     `status`      tinyint NOT NULL DEFAULT 1 COMMENT '状态:0-禁用;1-启用',
     `order_no`    tinyint NOT NULL DEFAULT 1 COMMENT '排序',
-    `created_at`  datetime NULL DEFAULT NULL,
-    `updated_at`  datetime NULL DEFAULT NULL,
+    `created_at`  datetime NULL DEFAULT NULL COMMENT '创建时间',
+    `updated_at`  datetime NULL DEFAULT NULL COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -135,7 +135,7 @@ VALUES (1, 0, '/api/dashboard','GET', 'Dashboard', 'routes.dashboard.dashboard',
 DROP TABLE IF EXISTS `role_permission`;
 CREATE TABLE `role_permission`
 (
-    `id`  int NOT NULL AUTO_INCREMENT,
+    `id`  int NOT NULL COMMENT 'ID' AUTO_INCREMENT,
     `rid` bigint DEFAULT NULL COMMENT '角色外键',
     `pid` bigint DEFAULT NULL COMMENT '权限外键',
     PRIMARY KEY (`id`)
@@ -162,18 +162,18 @@ DROP TABLE IF EXISTS `log`;
 
 CREATE TABLE `log`
 (
-    `id`            bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+    `id`            bigint UNSIGNED NOT NULL COMMENT 'ID' AUTO_INCREMENT,
     `uid`           bigint UNSIGNED NOT NULL COMMENT '操作用户id',
     `username`      varchar(255)  DEFAULT NULL COMMENT '用户名',
-    `level`         tinyint(1) DEFAULT '1' COMMENT '日志等级:1为行为日志,2为错误日志',
-    `description`          varchar(255)  NULL DEFAULT NULL COMMENT '操作描述',
+    `level`         tinyint DEFAULT '1' COMMENT '日志等级:1为行为日志,2为错误日志',
+    `description`   varchar(255)  NULL DEFAULT NULL COMMENT '操作描述',
     `req_param`     text  NULL COMMENT '请求参数',
     `take_up_time`  int(64) NULL DEFAULT NULL COMMENT '耗时',
     `method`        varchar(255)  NULL DEFAULT NULL COMMENT '操作方法',
     `uri`           varchar(255)  NULL DEFAULT NULL COMMENT '请求url',
     `ip`            varchar(50)  NULL DEFAULT NULL COMMENT '请求IP',
     `version`       varchar(50)  NULL DEFAULT NULL COMMENT '版本号',
-    `created_at`    datetime NULL DEFAULT NULL,
-    `updated_at`    datetime NULL DEFAULT NULL,
+    `created_at`    datetime NULL DEFAULT NULL COMMENT '创建时间',
+    `updated_at`    datetime NULL DEFAULT NULL COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

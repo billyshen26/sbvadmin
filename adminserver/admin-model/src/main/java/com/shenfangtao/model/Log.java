@@ -2,38 +2,86 @@ package com.shenfangtao.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Builder;
-import lombok.Data;
-
-import java.math.BigInteger;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-/**
- * Notes:
- * Author: 涛声依旧 likeboat@163.com
- * Time: 2022/8/2 14:41
- */
-@Data
-@Builder
-public class Log {
-    public static final int ACTION_LEVEL = 1;
-    public static final int ERROR_LEVEL = 2;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
-    @TableId(type = IdType.AUTO)
+/**
+ * <p>
+ * 
+ * </p>
+ *
+ * @author billy
+ * @since 2022-11-08
+ */
+@Getter
+@Setter
+//@Builder
+public class Log implements Serializable {
+    public static final Byte ACTION_LEVEL = 1;
+    public static final Byte ERROR_LEVEL = 2;
+    private static final long serialVersionUID = 1L;
+
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
+
+    /**
+     * 操作用户id
+     */
     private Long uid;
+
+    /**
+     * 用户名
+     */
     private String username;
-    private Integer level;
+
+    /**
+     * 日志等级:1为行为日志,2为错误日志
+     */
+    private Byte level;
+
+    /**
+     * 操作描述
+     */
     private String description;
+
+    /**
+     * 请求参数
+     */
     private String reqParam;
-    private Long takeUpTime;
+
+    /**
+     * 耗时
+     */
+    private Integer takeUpTime;
+
+    /**
+     * 操作方法
+     */
     private String method;
+
+    /**
+     * 请求url
+     */
     private String uri;
+
+    /**
+     * 请求IP
+     */
     private String ip;
+
+    /**
+     * 版本号
+     */
     private String version;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+//    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+//    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
 }
