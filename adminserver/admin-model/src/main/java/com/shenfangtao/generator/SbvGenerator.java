@@ -75,8 +75,12 @@ public class SbvGenerator {
     }
 
     /**
-     * 前端代码生成，自定义
-     */
+     * Notes:  前端代码生成，自定义
+     * @param:
+     * @return:
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2022/11/27 21:32
+     **/
     public final class EnhanceFreemarkerTemplateEngine extends VelocityTemplateEngine {
 
         @Override
