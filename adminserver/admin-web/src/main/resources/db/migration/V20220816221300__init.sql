@@ -176,4 +176,4 @@ CREATE TABLE `log`
     `created_at`    datetime NULL DEFAULT NULL COMMENT '创建时间',
     `updated_at`    datetime NULL DEFAULT NULL COMMENT '修改时间',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci comment='日志';

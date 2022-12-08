@@ -6,6 +6,7 @@ import com.shenfangtao.utils.SbvLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,6 +44,8 @@ public class UserController {
     @SbvLog(desc = "修改用户")
     public boolean editUser(@RequestBody User user, @PathVariable Long id) {
         user.setId(id);
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // 密码加密
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userService.updateById(user);
     }
     @DeleteMapping("/{id}")

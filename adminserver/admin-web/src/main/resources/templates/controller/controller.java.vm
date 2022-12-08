@@ -1,0 +1,23 @@
+package ${package.Controller};
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+#if(${superControllerClassPackage})
+import ${superControllerClassPackage};
+#end
+import com.shenfangtao.model.${entity};
+import com.shenfangtao.service.impl.${entity}ServiceImpl;
+
+/**
+ * $!{table.comment} 前端控制器
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@RestController
+@RequestMapping("/api/${table.entityPath}s")
+public class ${table.controllerName} extends ${superControllerClass}<${entity}ServiceImpl, ${entity}> {
+
+
+}
+

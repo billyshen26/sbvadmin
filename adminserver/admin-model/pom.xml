@@ -80,7 +80,7 @@
     <build>
         <resources>
             <resource>
-                <directory>src/main/java/com/shenfangtao/generator</directory>
+                <directory>../admin-web/src/main/java/com/shenfangtao/gen/generator</directory>
                 <includes>
                     <include>*.ftl</include>
                 </includes>
