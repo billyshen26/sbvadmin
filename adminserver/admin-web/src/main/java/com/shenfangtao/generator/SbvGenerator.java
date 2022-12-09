@@ -177,20 +177,4 @@ public class SbvGenerator {
             }
         }
     }
-
-    @Test
-    public void test (){
-        //获取文件名
-        String filename = "public/uploads/captures/202212071719361.jpg";
-        String caselsh = filename.substring(0,filename.lastIndexOf("."));
-        String caselsh2 = filename.substring(1,filename.lastIndexOf("."));
-        System.out.println(caselsh);
-        System.out.println(caselsh2);
-        String[] strArray = filename.split("\\.");
-        int suffixIndex = strArray.length -1;
-        System.out.println(strArray[suffixIndex]);
-
-    }
-
-
 }
