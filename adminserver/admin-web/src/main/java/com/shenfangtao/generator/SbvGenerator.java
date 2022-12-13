@@ -1,12 +1,15 @@
 package com.shenfangtao.generator;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
+import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.engine.VelocityTemplateEngine;
 import com.baomidou.mybatisplus.generator.fill.Column;
+import com.shenfangtao.mapper.PermissionMapper;
 import com.shenfangtao.model.Permission;
 import com.shenfangtao.service.impl.PermissionServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -26,11 +29,11 @@ import java.util.*;
  * Author: 涛声依旧 likeboat@163.com
  * Time: 2022/9/7 15:53
  */
-//@SpringBootTest
+@SpringBootTest
 public class SbvGenerator {
 
     @Autowired
-    public PermissionServiceImpl permissionService;
+    public PermissionMapper permissionMapper;
 
     private List<String> inputTables;
     @Test
@@ -39,6 +42,11 @@ public class SbvGenerator {
 //                .globalConfig(builder -> builder.outputDir("/Users/billyshen/Documents/idea_workspace/gened"))
 ////                .strategyConfig(builder -> builder.addInclude("permission"))
 //                .execute();
+        /**
+         * Notes:  1.生成低代码文件
+         * Author: 涛声依旧 likeboat@163.com
+         * Time: 2022/12/13 17:15
+         **/
         String dir = System.getProperty("user.dir");
         System.out.println(dir);
         FastAutoGenerator.create("jdbc:mysql:///sbvadmin", "sbvadminuser", "Sbvadmin")
@@ -78,12 +86,17 @@ public class SbvGenerator {
             .templateEngine(new EnhanceFreemarkerTemplateEngine())
             .execute();
 
-
-        moveFiels(); //把自动生成的文件放到对应的位置
+        /**
+         * Notes:  2.把自动生成的文件放到对应的位置
+         * Author: 涛声依旧 likeboat@163.com
+         * Time: 2022/12/13 17:15
+         **/
+        moveFiels();
     }
 
+
     /**
-     * Notes:  前端代码生成，自定义
+     * Notes:  内部类，前端代码生成，自定义
      * @param:
      * @return:
      * Author: 涛声依旧 likeboat@163.com
@@ -109,6 +122,8 @@ public class SbvGenerator {
                 this.outputFile(new File(fileName), objectMap, value);
             });
 
+
+
 //            // 生成菜单 废弃  使用flyway生成
 //            Permission permission = new Permission();
 //            permission.setComponent("/sbvadmin/" + tableName + File.separator + entityName + "Index.vue");
@@ -121,6 +136,31 @@ public class SbvGenerator {
 //            permission.setStatus((byte) 1); // 默认启用
 //            permission.setTitle("routes." + entityName + "." + tableName); // 使用i18n配置标题名称
 //            permissionService.save(permission);
+        }
+
+        /**
+         * Notes:  自定义map，主要为了解决flyway sql中主键id的获取
+         * @param: [config, tableInfo]
+         * @return: java.util.Map<java.lang.String,java.lang.Object>
+         * Author: 涛声依旧 likeboat@163.com
+         * Time: 2022/12/12 21:52
+         **/
+        @Override
+        public Map<String, Object> getObjectMap(@NotNull ConfigBuilder config, @NotNull TableInfo tableInfo) {
+            // 获取实体类名字
+            String entityName = tableInfo.getEntityName();
+            // 获取object map
+            Map<String, Object> objectMap = super.getObjectMap(config, tableInfo);
+
+            // 创建wapper，查询当前permission表中主键最大值
+            QueryWrapper<Permission> wrapper = new QueryWrapper<>();
+            wrapper.select("max(id) as id");
+            Permission permission = permissionMapper.selectOne(wrapper);
+            System.out.println("maxId=" + permission.getId());
+
+            // 自定义permission自增主键
+            objectMap.put("permissionId", permission.getId() + 1);
+            return objectMap;
         }
     }
 
