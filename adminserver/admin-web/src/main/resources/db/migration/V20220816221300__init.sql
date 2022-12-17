@@ -103,7 +103,7 @@ CREATE TABLE `permission`
     `title`       varchar(64) NOT NULL DEFAULT '' COMMENT '菜单名称i18n',
     `description` text COLLATE utf8mb4_unicode_ci COMMENT '描述',
     `path`        varchar(32) NOT NULL DEFAULT '' COMMENT '前端页面路径',
-    `component`   varchar(32) NOT NULL DEFAULT '' COMMENT '前端页面组件',
+    `component`   varchar(128) NOT NULL DEFAULT '' COMMENT '前端页面组件',
     `icon`        varchar(32) NOT NULL DEFAULT '' COMMENT '图标',
     `show_flag`   tinyint NOT NULL DEFAULT 1 COMMENT '是否显示:0-隐藏;1-显示',
     `type`        tinyint NOT NULL DEFAULT 1 COMMENT '权限类型:0-目录;1-菜单;2-按钮',

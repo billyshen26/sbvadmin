@@ -27,7 +27,7 @@ public class CustomLogContextListener extends ContextAwareBase implements Logger
         ApplicationHome home = new ApplicationHome(getClass());
         File jarFile = null;
         try{
-            jarFile = home.getSource();
+            jarFile = home.getSource() != null ?  home.getSource() : home.getDir();
             String parent = jarFile.getParent();
             System.out.println(parent);
 

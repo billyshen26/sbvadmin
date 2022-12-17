@@ -14,15 +14,14 @@ import com.shenfangtao.model.Permission;
 import com.shenfangtao.service.impl.PermissionServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.validation.constraints.NotNull;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
 
 /**
  * Notes: 用于生成低代码
@@ -36,12 +35,23 @@ public class SbvGenerator {
     public PermissionMapper permissionMapper;
 
     private List<String> inputTables;
+
+    @Value("${spring.datasource.url}")
+    private String url;
+
+    @Value("${spring.datasource.username}")
+    private String username;
+
+    @Value("${spring.datasource.password}")
+    private String password;
+
     @Test
     public void genCode() {
 //        FastAutoGenerator.create("jdbc:mysql:///sbvadmin", "sbvadminuser", "Sbvadmin")
 //                .globalConfig(builder -> builder.outputDir("/Users/billyshen/Documents/idea_workspace/gened"))
 ////                .strategyConfig(builder -> builder.addInclude("permission"))
 //                .execute();
+
         /**
          * Notes:  1.生成低代码文件
          * Author: 涛声依旧 likeboat@163.com
@@ -49,7 +59,7 @@ public class SbvGenerator {
          **/
         String dir = System.getProperty("user.dir");
         System.out.println(dir);
-        FastAutoGenerator.create("jdbc:mysql:///sbvadmin", "sbvadminuser", "Sbvadmin")
+        FastAutoGenerator.create(url, username, password)
             .globalConfig(builder -> {
                 builder.author("billy") // 设置作者
                     .disableOpenDir() //禁止打开输出目录
@@ -108,11 +118,27 @@ public class SbvGenerator {
             String entityName = tableInfo.getEntityName();
             String tableName = tableInfo.getName();
             String otherPath = this.getPathInfo(OutputFile.other);
+            try {
+                Thread.sleep(1000); // 休眠一秒，解决版本重复问题
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime = sdf.format(new Date());
+
+            // 自定义map，主要为了解决flyway sql中主键id的获取
+            // 创建wapper，查询当前permission表中主键最大值
+            QueryWrapper<Permission> wrapper = new QueryWrapper<>();
+            wrapper.select("max(id) as id");
+            Permission permission = permissionMapper.selectOne(wrapper);
+            System.out.println("maxId=" + permission.getId());
+            // 自定义permission自增主键
+            objectMap.put("permissionId", permission.getId() + inputTables.indexOf(tableName) + 1);
+
+
             customFile.forEach((key, value) -> {
                 VueFileEnum vueFile = VueFileEnum.valueOf(key);
                 String fileName = null;
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-                String currentTime = sdf.format(new Date());
                 if (vueFile.getDir() == "view")
                     fileName = otherPath + File.separator + vueFile.getDir() + File.separator + tableName + File.separator + entityName + vueFile.getFileName();
                 else if (vueFile.getDir() == "sql")
@@ -145,23 +171,23 @@ public class SbvGenerator {
          * Author: 涛声依旧 likeboat@163.com
          * Time: 2022/12/12 21:52
          **/
-        @Override
-        public Map<String, Object> getObjectMap(@NotNull ConfigBuilder config, @NotNull TableInfo tableInfo) {
-            // 获取实体类名字
-            String entityName = tableInfo.getEntityName();
-            // 获取object map
-            Map<String, Object> objectMap = super.getObjectMap(config, tableInfo);
-
-            // 创建wapper，查询当前permission表中主键最大值
-            QueryWrapper<Permission> wrapper = new QueryWrapper<>();
-            wrapper.select("max(id) as id");
-            Permission permission = permissionMapper.selectOne(wrapper);
-            System.out.println("maxId=" + permission.getId());
-
-            // 自定义permission自增主键
-            objectMap.put("permissionId", permission.getId() + 1);
-            return objectMap;
-        }
+//        @Override
+//        public Map<String, Object> getObjectMap(@NotNull ConfigBuilder config, @NotNull TableInfo tableInfo) {
+//            // 获取实体类名字
+//            String entityName = tableInfo.getEntityName();
+//            // 获取object map
+//            Map<String, Object> objectMap = super.getObjectMap(config, tableInfo);
+//
+//            // 创建wapper，查询当前permission表中主键最大值
+//            QueryWrapper<Permission> wrapper = new QueryWrapper<>();
+//            wrapper.select("max(id) as id");
+//            Permission permission = permissionMapper.selectOne(wrapper);
+//            System.out.println("maxId=" + permission.getId());
+//
+//            // 自定义permission自增主键
+//            objectMap.put("permissionId", permission.getId() + 1);
+//            return objectMap;
+//        }
     }
 
     // 处理 all 情况
@@ -216,5 +242,39 @@ public class SbvGenerator {
                 System.out.println("正式执行命令：" + command + "有IO异常");
             }
         }
+    }
+
+    /**
+     * Notes:  生成flyway的sql文件，方便版本管理
+     * @param: []
+     * @return: void
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2022/12/15 20:02
+     **/
+    @Test
+    public void genFlywaySql() throws IOException, InterruptedException {
+
+        Scanner input = new Scanner(System.in);
+        System.out.println("请输入表名，多个英文逗号分隔");
+        String tableName = input.nextLine();
+
+        inputTables = Arrays.asList(tableName.split(","));
+        for (String inputTable : inputTables) {
+            Thread.sleep(1000); // 休眠一秒，解决版本重复问题
+            String fileData = "--\n" +
+                    "-- Structure for " + inputTable + "\n" +
+                    "--";
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime = sdf.format(new Date());
+            String fileName = "src" + File.separator +"main" + File.separator + "resources" +
+                    File.separator + "db" +  File.separator +
+                    "migration" +  File.separator +
+                    "V" + currentTime + "__create_table_" + inputTable + ".sql";
+            FileOutputStream fos = new FileOutputStream(fileName);
+            fos.write(fileData.getBytes());
+            fos.flush();
+            fos.close();
+        }
+
     }
 }

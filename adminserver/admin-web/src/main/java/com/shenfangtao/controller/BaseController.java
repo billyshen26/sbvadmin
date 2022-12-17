@@ -32,14 +32,18 @@ public class BaseController<S extends IService<T>, T> {
                              @RequestParam(value="createdAt[]" ,required=false) String[] createdAt,
                              @RequestParam(value="field" ,required=false) String field,
                              @RequestParam(value="order" ,required=false) String order,
-                             @RequestParam Integer page,
-                             @RequestParam Integer pageSize){
+                             @RequestParam(value="page" ,required=false) Integer page,
+                             @RequestParam(value="pageSize" ,required=false) Integer pageSize){
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         if (id != null) // id精准搜索
             queryWrapper.eq("id",id);
         if (createdAt != null) // 创建日期范围搜索
             queryWrapper.between("created_at",createdAt[0],createdAt[1]);
 
+        if (page == null){ // 如果未提供分页信息，则默认读取10000行数据
+            page = 1;
+            pageSize = 10000;
+        }
         Page<T> itemPage = new Page<>(page,pageSize);
         if (field != null){ // 排序
             if (order.equals("ascend"))

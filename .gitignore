@@ -16,5 +16,5 @@
 
 ### database backup ##
 /backup
-/logs
+/adminserver/logs/
 /adminserver/admin-web/logs/

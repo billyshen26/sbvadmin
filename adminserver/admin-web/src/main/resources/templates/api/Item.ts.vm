@@ -1,5 +1,5 @@
 import { defHttp } from '/@/utils/http/axios';
-import { ${entity}, ${entity}Params, ${entity}List } from './Item.ts${entity}Model';
+import { ${entity}, ${entity}Params, ${entity}List } from './model/${entity}Model';
 
 enum Api {
   ${entity}s = '/${table.name}s',
@@ -9,5 +9,6 @@ export const get${entity}List = (params: ${entity}Params) => {
   return defHttp.get<${entity}List>({ url: Api.${entity}s, params });
 };
 export const add${entity} = (data: ${entity}) => defHttp.post<${entity}>({ url: Api.${entity}s, data });
-export const edit${entity} = (data: ${entity}) => defHttp.put<${entity}>({ url: Api.${entity}s + '/' + data.id, data });
+export const edit${entity} = (data: ${entity}) =>
+  defHttp.put<${entity}>({ url: Api.${entity}s + '/' + data.id, data });
 export const del${entity} = (id: number) => defHttp.delete({ url: Api.${entity}s + '/' + id });

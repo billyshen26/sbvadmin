@@ -69,7 +69,10 @@
                 createMessage.success(res);
               })
               .finally(() => {
-                emit('success');
+                emit('success', {
+                  isUpdate: unref(isUpdate),
+                  values: { ...values, id: rowId.value },
+                });
               });
           }
           closeModal();
