@@ -77,6 +77,11 @@ public class Log implements Serializable {
     private String ip;
 
     /**
+     * 请求地址
+     */
+    private String address;
+
+    /**
      * 版本号
      */
     private String version;

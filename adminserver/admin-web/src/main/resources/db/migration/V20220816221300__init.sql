@@ -122,11 +122,11 @@ CREATE TABLE `permission`
 INSERT INTO `permission` (`id`, `pid`, `request_url`, `request_method`, `name`, `title`, `description`, `path`, `component`, `icon`, `show_flag`, `type`, `status`, `order_no`, `created_at`, `updated_at`)
 VALUES (1, 0, '/api/dashboard','GET', 'Dashboard', 'routes.dashboard.dashboard','Dashboard目录','/dashboard','LAYOUT', 'bx:bx-home','1','0','1','1',now(), now()),
        (2, 0, '/api/system','GET', '系统管理', 'routes.demo.system.moduleName','系统管理目录','/system','LAYOUT', 'ion:settings-outline','1','0','1','1',now(), now()),
-       (3, 2, '/api/users','GET', '账号管理', 'routes.demo.system.account','账号管理菜单','account','/demo/system/account/index', '','1','1','1','1',now(), now()),
+       (3, 2, '/api/users','GET', '账号管理', 'routes.demo.system.account','账号管理菜单','account','/sbvadmin/user/UserIndex', '','1','1','1','1',now(), now()),
        (4, 3, '/api/users','POST', '新增账号', '','新增账号按钮','','', '','1','2','1','1',now(), now()),
-       (5, 2, '/api/users','GET', '菜单管理', 'routes.demo.system.menu','菜单管理菜单','menu','/demo/system/menu/index', '','1','1','1','1',now(), now()),
+       (5, 2, '/api/users','GET', '菜单管理', 'routes.demo.system.menu','菜单管理菜单','menu','/sbvadmin/menu/MenuIndex', '','1','1','1','1',now(), now()),
        (6, 5, '/api/users','POST', '新增菜单', '','新增菜单按钮','','', '','1','2','1','1',now(), now()),
-       (7, 2, '/api/users','GET', '角色管理', 'routes.demo.system.role','角色管理菜单','role','/demo/system/role/index', '','1','1','1','1',now(), now());
+       (7, 2, '/api/users','GET', '角色管理', 'routes.demo.system.role','角色管理菜单','role','/sbvadmin/role/RoleIndex', '','1','1','1','1',now(), now());
 
 
 --
@@ -171,6 +171,7 @@ CREATE TABLE `log`
     `method`        varchar(255)  NULL DEFAULT NULL COMMENT '操作方法',
     `uri`           varchar(255)  NULL DEFAULT NULL COMMENT '请求url',
     `ip`            varchar(50)  NULL DEFAULT NULL COMMENT '请求IP',
+    `address`       varchar(50)  NULL DEFAULT NULL COMMENT '请求地址',
     `version`       varchar(50)  NULL DEFAULT NULL COMMENT '版本号',
     `created_at`    datetime NULL DEFAULT NULL COMMENT '创建时间',
     `updated_at`    datetime NULL DEFAULT NULL COMMENT '修改时间',

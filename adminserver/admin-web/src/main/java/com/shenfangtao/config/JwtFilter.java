@@ -57,8 +57,7 @@ public class JwtFilter extends OncePerRequestFilter {
         if (jwtToken != null){
             jwtToken = jwtToken.replace("Bearer","");
             if (!jwtTokenUtil.isTokenExpired(jwtToken)) {
-                Claims claims = Jwts.parser().setSigningKey("sang@123").parseClaimsJws(jwtToken)
-                        .getBody();
+                Claims claims = jwtTokenUtil.parserToken(jwtToken);
                 String username = claims.getSubject();//获取当前登录用户名
                 List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get("authorities"));
                 Long uid = Long.valueOf(String.valueOf(claims.get("uid")));

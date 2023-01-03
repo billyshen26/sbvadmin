@@ -1,6 +1,13 @@
 package com.shenfangtao.utils;
 
 import javax.servlet.http.HttpServletRequest;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Test;
 
 /**
  * Notes:
@@ -36,5 +43,26 @@ public class IpUtil {
         }
 
         return ip;
+    }
+
+    /**
+     * 根据IP地址获取地理位置
+     * @param ip
+     * @return
+     */
+    public static String getAddressByIP(String ip) {
+        if ("local".equals(ip)) {
+            return "局域网，无法获取位置";
+        }
+        String url = "https://sp0.baidu.com/8aQDcjqpAAV3otqbppnN2DJv/api.php?resource_id=6006&format=json&query=" + ip;
+        HttpResponse res = HttpRequest.get(url).execute();
+        if (200 != res.getStatus()) {
+            return "获取位置失败";
+        } else {
+            JSONObject resJson = JSONUtil.parseObj(res.body());
+            JSONArray resArr = JSONUtil.parseArray(resJson.getStr("data"));
+            resJson =  JSONUtil.parseObj("" + resArr.get(0));
+            return resJson.getStr("location");
+        }
     }
 }

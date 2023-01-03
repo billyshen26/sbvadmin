@@ -8,6 +8,7 @@ import com.shenfangtao.model.ResultFormat;
 import com.shenfangtao.model.User;
 import com.shenfangtao.service.impl.LogServiceImpl;
 import com.shenfangtao.utils.IpUtil;
+import com.shenfangtao.utils.JwtTokenUtil;
 import com.shenfangtao.utils.SbvLog;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -53,6 +54,9 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
     @Value("${application.version}")
     private String version;
 
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
     protected JwtLoginFilter(String defaultFilterProcessesUrl, AuthenticationManager authenticationManager) {
         super(new AntPathRequestMatcher(defaultFilterProcessesUrl));
         setAuthenticationManager(authenticationManager);
@@ -77,16 +81,11 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
         }
 
         User user = (User) authResult.getPrincipal();
-        Date expired = new Date(System.currentTimeMillis() + 100 * 60 * 1000);
+        Date expired = new Date(System.currentTimeMillis() + 3 * 60 * 1000); // 3分钟
         Map<String, Object> map = new HashMap<>();
-        map.put("authorities", as);
-        map.put("uid",user.getId());
-        String jwt = Jwts.builder()
-                .setClaims(map)//配置用户角色
-                .setSubject(authResult.getName())
-                .setExpiration(new Date(System.currentTimeMillis() + 100 * 60 * 1000))
-                .signWith(SignatureAlgorithm.HS512,"sang@123")
-                .compact();
+        map.put("authorities", as); // 配置用户角色
+        map.put("uid",user.getId()); // 配置用户id
+        String jwt = jwtTokenUtil.genToken(map,authResult.getName(),expired);
         resp.setContentType("application/json;charset=utf-8");
         PrintWriter out = resp.getWriter();
         Map<String, Object> tokenMap = new HashMap<>();  // map自定义输出结构
@@ -116,7 +115,9 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
         log.setMethod("JwtLoginFilter");
         log.setReqParam("");
         log.setUri(request.getRequestURI());
-        log.setIp(IpUtil.getIpRequest(request));
+        String ip = IpUtil.getIpRequest(request);
+        log.setIp(ip);
+        log.setAddress(IpUtil.getAddressByIP(ip));
         // 用户信息
         log.setUid(user.getId());
         log.setUsername(authResult.getName());

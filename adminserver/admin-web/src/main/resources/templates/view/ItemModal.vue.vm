@@ -47,7 +47,7 @@
           const { createMessage } = useMessage();
           if (unref(isUpdate)) {
             edit${entity}(values)
-              .then((res) => {
+              .then((res: any) => {
                 createMessage.success(res);
               })
               .catch((res) => {
@@ -62,7 +62,7 @@
               });
           } else {
             add${entity}(values)
-              .then((res) => {
+              .then((res: any) => {
                 createMessage.success(res);
               })
               .catch((res) => {
