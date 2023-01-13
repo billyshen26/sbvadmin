@@ -5,6 +5,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -19,6 +20,12 @@ import java.util.Map;
 @Component
 public class JwtTokenUtil {
 
+    @Value("${spring.jwt.signingKey}")
+    private String signingKey;
+
+    @Value("${spring.jwt.expire}")
+    private Integer expire;
+
     /**
      * 判断token是否已经失效
      */
@@ -30,7 +37,7 @@ public class JwtTokenUtil {
         Claims claims;
         try {
             claims = Jwts.parser()
-                    .setSigningKey("sang@123") // 设置标识名
+                    .setSigningKey(signingKey) // 设置标识名
                     .parseClaimsJws(token)  //解析token
                     .getBody();
         } catch (ExpiredJwtException e) {
@@ -51,9 +58,8 @@ public class JwtTokenUtil {
                 .setClaims(claims)
                 .setSubject(subject)
                 .setExpiration(date)
-                .signWith(SignatureAlgorithm.HS512,"sang@123")
+                .signWith(SignatureAlgorithm.HS512,signingKey)
                 .compact();
-
     }
 
     /**
@@ -64,7 +70,19 @@ public class JwtTokenUtil {
      * Time: 2022/12/30 16:50
      **/
     public Claims parserToken(String token){
-        return Jwts.parser().setSigningKey("sang@123").parseClaimsJws(token)
+        return Jwts.parser().setSigningKey(signingKey).parseClaimsJws(token)
                 .getBody();
+    }
+
+    /**
+     * Notes:  生成token过期时间
+     * @param: []
+     * @return: java.util.Date
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/1/13 09:34
+     **/
+    public Date getExpiredDate(){
+        Date expired = new Date(System.currentTimeMillis() + expire);
+        return expired;
     }
 }

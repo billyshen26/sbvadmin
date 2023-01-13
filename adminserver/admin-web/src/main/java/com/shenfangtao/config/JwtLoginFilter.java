@@ -81,7 +81,7 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
         }
 
         User user = (User) authResult.getPrincipal();
-        Date expired = new Date(System.currentTimeMillis() + 3 * 60 * 1000); // 3分钟
+        Date expired = jwtTokenUtil.getExpiredDate();
         Map<String, Object> map = new HashMap<>();
         map.put("authorities", as); // 配置用户角色
         map.put("uid",user.getId()); // 配置用户id
