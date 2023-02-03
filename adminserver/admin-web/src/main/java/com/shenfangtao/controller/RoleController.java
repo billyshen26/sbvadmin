@@ -34,9 +34,9 @@ public class RoleController {
     @SbvLog(desc = "修改角色")
     @PutMapping("/{id}")
     public Object editRole(@RequestBody Role role, @PathVariable Long id) {
-        if (id == 1L){
-            return ResultFormat.fail(ErrorCode.ROOT_CANT_UPDATE.getCode(),ErrorCode.ROOT_CANT_UPDATE.getMessage());
-        }
+//        if (id == 1L){
+//            return ResultFormat.fail(ErrorCode.ROOT_CANT_UPDATE.getCode(),ErrorCode.ROOT_CANT_UPDATE.getMessage());
+//        }
         role.setId(id);
         return roleService.updateById(role);
     }

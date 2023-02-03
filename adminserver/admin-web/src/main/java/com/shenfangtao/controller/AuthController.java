@@ -59,10 +59,15 @@ public class AuthController {
         User user = (User) authentication.getPrincipal();
         UserInfo userInfo = new UserInfo();
         userInfo.setUserId(user.getId());
+        userInfo.setId(user.getId());
         userInfo.setUsername(user.getUsername());
         userInfo.setAvatar(user.getAvatar());
+//        userInfo.setAvatar("202212071539173.jpg");
         userInfo.setHomePath("/system/account");
         userInfo.setRealName(user.getNickname());
+        userInfo.setNickname(user.getNickname());
+        userInfo.setEmail(user.getEmail());
+        userInfo.setPhone(user.getPhone());
         List<Role> roles = userService.getUserRolesByUid(user.getId());
         userInfo.setRoles(roles);
         userInfo.setToken((String)authentication.getCredentials());

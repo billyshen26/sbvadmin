@@ -26,6 +26,9 @@
             <result column="rname" property="name"/>
             <result column="rname_zh" property="nameZh"/>
         </collection>
+        <collection property="roleIds" ofType="Integer">
+            <id column="rid"/>
+        </collection>
     </resultMap>
     <select id="getUsersWithRoles" resultMap="UserWithRoles">
         select user.id, user.nickname, user.phone, user.email, user.activated, user.locked, user.username, user.avatar,

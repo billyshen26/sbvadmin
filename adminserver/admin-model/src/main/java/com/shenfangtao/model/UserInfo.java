@@ -15,9 +15,13 @@ public class UserInfo {
     private String avatar;
     private String homePath;
 //    private String password;
-    private String realName;
+    private String nickname;
+    private String realName;// 同nickname，方便前端代码编写
     private String token;
     private Long userId;
+    private Long id; // 同userId，方便前端代码编写
     private String username;
+    private String email;
+    private String phone;
     private List<Role> roles;
 }

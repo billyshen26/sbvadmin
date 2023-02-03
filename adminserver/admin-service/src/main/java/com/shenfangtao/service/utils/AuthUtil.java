@@ -48,6 +48,7 @@ public class AuthUtil {
                 Map<String, Object> metaChildMap = new HashMap<>();
                 metaChildMap.put("title",permission.getTitle());
                 metaChildMap.put("icon",permission.getIcon());
+                metaChildMap.put("hideMenu",permission.getShowFlag()==0?true:false);
 
                 menuChildMap.put("meta",metaChildMap);
                 menuChildMap.put("children",findChildren(permission.getId(),permissionList));

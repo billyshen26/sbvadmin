@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Notes: 用户管理控制器
@@ -28,6 +30,7 @@ public class UserController {
 
     @GetMapping("")
     public List<User> getUsers(){
+
         return userService.getUsersWithRoles();
     }
 
@@ -44,8 +47,10 @@ public class UserController {
     @SbvLog(desc = "修改用户")
     public boolean editUser(@RequestBody User user, @PathVariable Long id) {
         user.setId(id);
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // 密码加密
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (user.getPassword() != null){
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // 密码加密
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         return userService.updateById(user);
     }
     @DeleteMapping("/{id}")
@@ -56,5 +61,4 @@ public class UserController {
         }
         return userService.removeById(id);
     }
-
 }

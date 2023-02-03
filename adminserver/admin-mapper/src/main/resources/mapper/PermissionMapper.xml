@@ -14,6 +14,7 @@
         <result property="component" column="component"/>
         <result property="icon" column="icon"/>
         <result property="type" column="type"/>
+        <result property="showFlag" column="show_flag"/>
         <result property="status" column="status"/>
         <result property="orderNo" column="order_no"/>
         <result property="createdAt" column="created_at"/>

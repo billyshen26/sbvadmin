@@ -51,7 +51,7 @@ public class IpUtil {
      * @return
      */
     public static String getAddressByIP(String ip) {
-        if ("local".equals(ip)) {
+        if ("local".equals(ip) || "0:0:0:0:0:0:0:1".equals(ip)) {
             return "局域网，无法获取位置";
         }
         String url = "https://sp0.baidu.com/8aQDcjqpAAV3otqbppnN2DJv/api.php?resource_id=6006&format=json&query=" + ip;
