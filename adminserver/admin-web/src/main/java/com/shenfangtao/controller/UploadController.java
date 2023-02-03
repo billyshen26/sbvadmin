@@ -54,14 +54,15 @@ public class UploadController {
         if (!dest.exists()){ //如果不存在
             Files.copy(file.getInputStream(), dest.toPath()); //创建文件
         }
+        String host = environment.getProperty("server.host");
         String port = environment.getProperty("server.port");
-        String hostAddress = null;
-        try {
-            hostAddress = Inet4Address.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+//        String hostAddress = null;
+//        try {
+//            hostAddress = Inet4Address.getLocalHost().getHostAddress();
+//        } catch (UnknownHostException e) {
+//            e.printStackTrace();
+//        }
 
-        return "http://" + hostAddress + ":" + port + File.separator + uploadsDirName + File.separator + fileName;
+        return host + ":" + port + File.separator + uploadsDirName + File.separator + fileName;
     }
 }
