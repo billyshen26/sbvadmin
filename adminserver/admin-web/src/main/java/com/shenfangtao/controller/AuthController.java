@@ -7,6 +7,7 @@ import com.shenfangtao.model.UserInfo;
 import com.shenfangtao.service.impl.PermissionServiceImpl;
 import com.shenfangtao.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.File;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +30,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 public class AuthController {
+
+    @Autowired
+    Environment environment;
+
     @Autowired
     UserServiceImpl userService;
 
@@ -54,6 +60,9 @@ public class AuthController {
      **/
     @GetMapping("/getUserInfo")
     public UserInfo getUserInfo(){
+        String host = environment.getProperty("server.host");
+        String port = environment.getProperty("server.port");
+
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
@@ -61,8 +70,7 @@ public class AuthController {
         userInfo.setUserId(user.getId());
         userInfo.setId(user.getId());
         userInfo.setUsername(user.getUsername());
-        userInfo.setAvatar(user.getAvatar());
-//        userInfo.setAvatar("202212071539173.jpg");
+        userInfo.setAvatar(host + ":" + port + File.separator + user.getAvatar());
         userInfo.setHomePath("/system/account");
         userInfo.setRealName(user.getNickname());
         userInfo.setNickname(user.getNickname());
