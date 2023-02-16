@@ -8,9 +8,8 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { formSchema } from './${entity}.data';
-
   import { edit${entity}, add${entity} } from '/@/api/sbvadmin/${entity}';
-  import { useMessage } from '/@/hooks/web/useMessage';
+
   export default defineComponent({
     name: '${entity}Modal',
     components: { BasicModal, BasicForm },
@@ -44,14 +43,13 @@
         try {
           const values = await validate();
           setModalProps({ confirmLoading: true });
-          const { createMessage } = useMessage();
           if (unref(isUpdate)) {
             edit${entity}(values)
-              .then((res: any) => {
-                createMessage.success(res);
+              .then((res) => {
+                console.log(res);
               })
               .catch((res) => {
-                createMessage.success(res);
+                console.log(res);
               })
               .finally(() => {
                 closeModal();
@@ -62,11 +60,11 @@
               });
           } else {
             add${entity}(values)
-              .then((res: any) => {
-                createMessage.success(res);
+              .then((res) => {
+                console.log(res);
               })
               .catch((res) => {
-                createMessage.success(res);
+                console.log(res);
               })
               .finally(() => {
                 emit('success', {

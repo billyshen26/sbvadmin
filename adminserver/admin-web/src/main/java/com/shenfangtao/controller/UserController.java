@@ -1,5 +1,8 @@
 package com.shenfangtao.controller;
 
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.shenfangtao.model.ErrorCode;
 import com.shenfangtao.model.ResultFormat;
 import com.shenfangtao.model.User;
@@ -8,6 +11,8 @@ import com.shenfangtao.utils.SbvLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -70,5 +75,22 @@ public class UserController {
             return ResultFormat.fail(ErrorCode.ROOT_CANT_DELETE.getCode(), ErrorCode.ROOT_CANT_DELETE.getMessage());
         }
         return userService.removeById(id);
+    }
+
+    @PostMapping("/changePassword")
+    @SbvLog(desc = "修改个人密码")
+    public Object changePassword(@RequestBody String data) {
+        JSONObject jsonObject = JSONUtil.parseObj(data);
+        if (jsonObject.getShort("id") == 1) {
+            return ResultFormat.fail(ErrorCode.ROOT_CANT_UPDATE.getCode(), ErrorCode.ROOT_CANT_UPDATE.getMessage());
+        }
+        User user = userService.getById(jsonObject.getShort("id"));
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // 密码加密
+        if(!passwordEncoder.matches(jsonObject.getStr("passwordOld"),user.getPassword())){
+            return "旧密码错误";
+        }
+        // 修改密码
+        user.setPassword(passwordEncoder.encode(jsonObject.getStr("passwordNew")));
+        return userService.updateById(user);
     }
 }
