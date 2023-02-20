@@ -32,9 +32,8 @@
 [CHANGELOG](./CHANGELOG.zh_CN.md)
 
 ## QQ群
-提供一个交流的QQ群，有问题可以在此提问:
+提供一个交流的QQ群，有问题可以在此提问:550742781
 <div align="center">
-<h1>550742781</h1>
 <img alt="Sbvadmin QQ" width="200" height="200" src="https://github.com/billyshen26/sbvadmin/blob/master/qq.png"><br><br>
 </div>
 
