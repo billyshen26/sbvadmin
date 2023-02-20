@@ -33,7 +33,7 @@
 
 ## QQ群
 提供一个交流的QQ群，有问题可以在此提问:550742781
-<div align="center">
+<div align="left">
 <img alt="Sbvadmin QQ" width="200" height="200" src="https://github.com/billyshen26/sbvadmin/blob/master/qq.png"><br><br>
 </div>
 
