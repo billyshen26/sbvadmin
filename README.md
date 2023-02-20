@@ -31,6 +31,11 @@
 ## 更新日志
 [CHANGELOG](./CHANGELOG.zh_CN.md)
 
+## QQ群
+提供一个交流的QQ群，有问题可以在此提问： 550742781
+![qq.png](qq.png)
+
+
 ## 知识点
 ### 获取springboot应用的版本号
 在application.properties中加入
