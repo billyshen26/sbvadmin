@@ -25,10 +25,12 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         ApplicationHome h = new ApplicationHome(getClass());
         File jarF = h.getSource();
-        String dirPath = jarF.getParentFile().toString() + File.separator + uploadsPath + File.separator;
+        if (jarF != null){
+            String dirPath = jarF.getParentFile().toString() + File.separator + uploadsPath + File.separator;
 
-        registry.addResourceHandler(File.separator + uploadsPath + File.separator + "**")
-                .addResourceLocations("file:///" + dirPath,
-                        "file:///" + dirPath); //  file后面的“///” 是了解决后面路径不生效问题
+            registry.addResourceHandler(File.separator + uploadsPath + File.separator + "**")
+                    .addResourceLocations("file:///" + dirPath,
+                            "file:///" + dirPath); //  file后面的“///” 是了解决后面路径不生效问题
+        }
     }
 }

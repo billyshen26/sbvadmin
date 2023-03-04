@@ -26,10 +26,10 @@ public interface UserMapper extends BaseMapper<User> {
 
     /**
      * Notes:  获取用户列表，及其包含的角色信息
-     * @param: []
+     * @param: 根据机构id,获取用户
      * @return: java.util.List<com.shenfangtao.model.User>
      * Author: 涛声依旧 likeboat@163.com
      * Time: 2022/7/15 16:33
      **/
-    List<User> getUsersWithRoles();
+    List<User> getUsersWithRoles(Long did);
 }

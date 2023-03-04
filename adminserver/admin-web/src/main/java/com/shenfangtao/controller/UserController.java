@@ -3,11 +3,17 @@ package com.shenfangtao.controller;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shenfangtao.model.ErrorCode;
 import com.shenfangtao.model.ResultFormat;
 import com.shenfangtao.model.User;
 import com.shenfangtao.service.impl.UserServiceImpl;
 import com.shenfangtao.utils.SbvLog;
+import org.springframework.amqp.AmqpConnectException;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,16 +37,17 @@ public class UserController {
     Environment environment;
 
     @Autowired
+    RabbitTemplate rabbitTemplate;
+
+    @Autowired
     UserServiceImpl userService;
 
-
     @GetMapping("")
-    public List<User> getUsers() {
+    public List<User> getUsers(@RequestParam(value="deptId" ,required=false) Long did) {
         String host = environment.getProperty("server.host");
         String port = environment.getProperty("server.port");
-        List<User> users = userService.getUsersWithRoles();
-        for (User user :
-                users) {
+        List<User> users = userService.getUsersWithRoles(did);
+        for (User user : users) {
             if (!user.getAvatar().contains("http")) {
                 user.setAvatar(host + ":" + port + File.separator + user.getAvatar()); // 补充域名和端口
             }
@@ -50,11 +57,18 @@ public class UserController {
 
     @PostMapping("")
     @SbvLog(desc = "新增用户")
-    public boolean addUser(@RequestBody @Valid User user) {
-//        if(bindingResult.hasErrors()){
-//            System.out.println(bindingResult.getAllErrors().get(0).getDefaultMessage());
-//        }
-        return userService.save(user);
+    public Object addUser(@RequestBody @Valid User user) {
+        String message = null;
+        // 1.将用户添加到数据库
+        if (!userService.save(user))
+            return ResultFormat.fail(ErrorCode.FAILED.getCode(), ErrorCode.FAILED.getMessage());
+        // 2.将用户添加事件发送到mq，用于后续邮件通知
+        try {
+            rabbitTemplate.convertAndSend("add-user", user);
+        } catch (AmqpConnectException e) {
+            return ResultFormat.fail(ErrorCode.RABBITMQ_NOT_ACTIVE.getCode(), ErrorCode.RABBITMQ_NOT_ACTIVE.getMessage());
+        }
+        return true;
     }
 
     @PutMapping("/{id}")
@@ -65,7 +79,7 @@ public class UserController {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // 密码加密
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        return userService.updateById(user);
+        return userService.updateById(user); // TODO 修改角色机构
     }
 
     @DeleteMapping("/{id}")

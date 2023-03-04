@@ -15,6 +15,7 @@ import java.io.Serializable;
  * Time: 2022/9/18 20:03
  **/
 @Data
+@TableName("sys_role_permission")
 public class RolePermission implements Serializable {
 
     private static final long serialVersionUID = 1L;

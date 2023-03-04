@@ -1,10 +1,10 @@
 --
--- 表的结构 `user`
+-- 表的结构 `sys_user`
 --
 
-DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `sys_user`;
 
-CREATE TABLE `user`
+CREATE TABLE `sys_user`
 (
     `id`            bigint UNSIGNED NOT NULL COMMENT 'ID' AUTO_INCREMENT,
     `nickname`      varchar(32) NOT NULL COMMENT '姓名',
@@ -22,12 +22,12 @@ CREATE TABLE `user`
     `created_at`    datetime NULL DEFAULT NULL COMMENT '创建时间',
     `updated_at`    datetime NULL DEFAULT NULL COMMENT '修改时间',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci comment='用户';
 
 --
--- 转存表中的数据 `user`
+-- 转存表中的数据 `sys_user`
 --
-insert into `user` (`id`, `nickname`, `phone`, `email`, `activated`, `locked`, `username`, `password`, `avatar`, `last_login_at`,
+insert into `sys_user` (`id`, `nickname`, `phone`, `email`, `activated`, `locked`, `username`, `password`, `avatar`, `last_login_at`,
                     `last_login_ip`, `mp_open_id`, `union_id`, `created_at`, `updated_at`)
 values (1, '超级管理员', '13912341234', 'likeboat@163.com', 1, 0, 'root',
         '$2a$10$ySG2lkvjFHY5O0./CPIE1OI8VJsuKYEzOYzqIa7AJR6sEgSzUFOAm',
@@ -40,11 +40,11 @@ values (1, '超级管理员', '13912341234', 'likeboat@163.com', 1, 0, 'root',
         'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640', NULL, '', '', '', now(), now());
 
 --
--- 表的结构 `role`
+-- 表的结构 `sys_role`
 --
-DROP TABLE IF EXISTS `role`;
+DROP TABLE IF EXISTS `sys_role`;
 
-CREATE TABLE `role`
+CREATE TABLE `sys_role`
 (
     `id`          bigint UNSIGNED NOT NULL COMMENT 'ID' AUTO_INCREMENT,
     `name`        varchar(64) NOT NULL COMMENT '英文名称',
@@ -55,45 +55,45 @@ CREATE TABLE `role`
     `created_at`  datetime NULL DEFAULT NULL COMMENT '创建时间',
     `updated_at`  datetime NULL DEFAULT NULL COMMENT '修改时间',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci comment='角色';
 
 --
--- 转存表中的数据 `role`
+-- 转存表中的数据 `sys_role`
 --
 
-INSERT INTO `role` (`id`, `name`, `name_zh`, `description`, `status`,`order_no`,`created_at`, `updated_at`)
+INSERT INTO `sys_role` (`id`, `name`, `name_zh`, `description`, `status`,`order_no`,`created_at`, `updated_at`)
 VALUES (1, 'ROLE_root', '超级管理员', '超级管理员',1,1, now(), now()),
        (2, 'ROLE_admin', '管理员', '普通管理员',1,1, now(), now()),
        (3, 'ROLE_user', '普通用户', '普通用户',1,1, now(), now());
 
 -- ----------------------------
--- Table structure for user_role
+-- Table structure for sys_user_role
 -- ----------------------------
-DROP TABLE IF EXISTS `user_role`;
-CREATE TABLE `user_role`
+DROP TABLE IF EXISTS `sys_user_role`;
+CREATE TABLE `sys_user_role`
 (
     `id`  int NOT NULL COMMENT 'ID' AUTO_INCREMENT,
     `uid` bigint DEFAULT NULL COMMENT '用户外键',
     `rid` bigint DEFAULT NULL COMMENT '角色外键',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci comment='用户角色';
 
 -- ----------------------------
--- Records of user_role
+-- Records of sys_user_role
 -- ----------------------------
-INSERT INTO `user_role` (`id`, `uid`, `rid`)
+INSERT INTO `sys_user_role` (`id`, `uid`, `rid`)
 VALUES (1, 1, 1),
        (2, 2, 2),
        (3, 3, 3),
        (4, 2, 3);
 
 --
--- 表的结构 `permission`
+-- 表的结构 `sys_permission`
 -- 该表同时承担菜单功能
 --
-DROP TABLE IF EXISTS `permission`;
+DROP TABLE IF EXISTS `sys_permission`;
 
-CREATE TABLE `permission`
+CREATE TABLE `sys_permission`
 (
     `id`          bigint UNSIGNED NOT NULL COMMENT 'ID' AUTO_INCREMENT,
     `pid`         bigint NOT NULL DEFAULT '0',
@@ -112,14 +112,14 @@ CREATE TABLE `permission`
     `created_at`  datetime NULL DEFAULT NULL COMMENT '创建时间',
     `updated_at`  datetime NULL DEFAULT NULL COMMENT '修改时间',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci comment='权限';
 
 --
--- 转存表中的数据 `permission`
+-- 转存表中的数据 `sys_permission`
 -- 这里的设计很关键，request_method即指http请求的方法，这样设计可以既实现标准的Restful api设计规范，又能做到权限控制到按钮级别
 --
 
-INSERT INTO `permission` (`id`, `pid`, `request_url`, `request_method`, `name`, `title`, `description`, `path`, `component`, `icon`, `show_flag`, `type`, `status`, `order_no`, `created_at`, `updated_at`)
+INSERT INTO `sys_permission` (`id`, `pid`, `request_url`, `request_method`, `name`, `title`, `description`, `path`, `component`, `icon`, `show_flag`, `type`, `status`, `order_no`, `created_at`, `updated_at`)
 VALUES (1, 0, '/api/dashboard','GET', 'Dashboard', 'routes.dashboard.dashboard','Dashboard目录','/dashboard','LAYOUT', 'bx:bx-home','1','0','1','1',now(), now()),
        (2, 0, '/api/system','GET', '系统管理', 'routes.demo.system.moduleName','系统管理目录','/system','LAYOUT', 'ion:settings-outline','1','0','1','1',now(), now()),
        (3, 2, '/api/users','GET', '账号管理', 'routes.demo.system.account','账号管理菜单','account','/sbvadmin/user/UserIndex', '','1','1','1','1',now(), now()),
@@ -130,21 +130,21 @@ VALUES (1, 0, '/api/dashboard','GET', 'Dashboard', 'routes.dashboard.dashboard',
 
 
 --
--- 表的结构 `role_permission`
+-- 表的结构 `sys_role_permission`
 --
-DROP TABLE IF EXISTS `role_permission`;
-CREATE TABLE `role_permission`
+DROP TABLE IF EXISTS `sys_role_permission`;
+CREATE TABLE `sys_role_permission`
 (
     `id`  int NOT NULL COMMENT 'ID' AUTO_INCREMENT,
     `rid` bigint DEFAULT NULL COMMENT '角色外键',
     `pid` bigint DEFAULT NULL COMMENT '权限外键',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci comment='角色权限';
 
 -- ----------------------------
--- Records of user_role
+-- Records of sys_role_permission
 -- ----------------------------
-INSERT INTO `role_permission` (`id`, `rid`, `pid`)
+INSERT INTO `sys_role_permission` (`id`, `rid`, `pid`)
 VALUES (1, 1, 1),
        (2, 1, 2),
        (3, 1, 3),
@@ -153,13 +153,13 @@ VALUES (1, 1, 1),
        (6, 1, 6),
        (7, 1, 7);
 --
--- 表的结构 `log`
+-- 表的结构 `sys_log`
 -- 记录操作日志和错误日志
 --
 
-DROP TABLE IF EXISTS `log`;
+DROP TABLE IF EXISTS `sys_log`;
 
-CREATE TABLE `log`
+CREATE TABLE `sys_log`
 (
     `id`            bigint UNSIGNED NOT NULL COMMENT 'ID' AUTO_INCREMENT,
     `uid`           bigint UNSIGNED NOT NULL COMMENT '操作用户id',
@@ -177,3 +177,83 @@ CREATE TABLE `log`
     `updated_at`    datetime NULL DEFAULT NULL COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci comment='日志';
+
+-- ----------------------------
+-- Table structure for sys_config
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_config`;
+CREATE TABLE `sys_config` (
+    `id`          bigint UNSIGNED NOT NULL COMMENT 'ID' AUTO_INCREMENT,
+    `symbol`      varchar(100) NOT NULL UNIQUE COMMENT '配置标识',
+    `value`       text COLLATE utf8mb4_unicode_ci COMMENT  '配置值',
+    `name`        varchar(100) NOT NULL COMMENT '配置名',
+    `description` text COLLATE utf8mb4_unicode_ci COMMENT '描述',
+    `order_no`    int(11) NULL DEFAULT 0 COMMENT '排序',
+    `created_at`  datetime NULL DEFAULT NULL COMMENT '创建时间',
+    `updated_at`  datetime NULL DEFAULT NULL COMMENT '修改时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci comment='配置';
+
+-- ----------------------------
+-- Table structure for sys_dict
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_dict`;
+CREATE TABLE `sys_dict` (
+    `id`            bigint UNSIGNED NOT NULL COMMENT 'ID' AUTO_INCREMENT,
+    `pid`           bigint UNSIGNED NOT NULL COMMENT '父级ID',
+    `type`          varchar(100) NOT NULL COMMENT '字典类型',
+    `value`         varchar(100) NOT NULL COMMENT '字典值',
+    `label`         varchar(100) NOT NULL COMMENT '字典名',
+    `description`   text COLLATE utf8mb4_unicode_ci COMMENT '描述',
+    `order_no`      int(11) NULL DEFAULT 0 COMMENT '排序',
+    `created_at`    datetime NULL DEFAULT NULL COMMENT '创建时间',
+    `updated_at`    datetime NULL DEFAULT NULL COMMENT '修改时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci comment='字典';
+
+-- ----------------------------
+-- Table structure for sys_dept
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_dept`;
+CREATE TABLE `sys_dept` (
+    `id`            bigint UNSIGNED NOT NULL COMMENT 'ID' AUTO_INCREMENT,
+    `pid`           bigint UNSIGNED NOT NULL COMMENT '上级机构ID，一级机构为0',
+    `name`          varchar(50) DEFAULT NULL COMMENT '机构名称',
+    `order_no`      int(11) NULL DEFAULT 0 COMMENT '排序',
+    `created_at`    datetime NULL DEFAULT NULL COMMENT '创建时间',
+    `updated_at`    datetime NULL DEFAULT NULL COMMENT '修改时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci comment='机构';
+
+-- ----------------------------
+-- Records of sys_role_permission
+-- ----------------------------
+INSERT INTO `sys_dept` (`id`, `pid`, `name`, `order_no`, `created_at`, `updated_at`)
+VALUES (1, 0, '研发中心', 0, now(), now()),
+       (2, 1, '软件部', 0, now(), now()),
+       (3, 1, '硬件部', 0, now(), now()),
+       (4, 0, '销售中心', 0, now(), now()),
+       (5, 4, '华东大区', 0, now(), now()),
+       (6, 4, '华南大区', 0, now(), now());
+
+
+-- ----------------------------
+-- Table structure for sys_user_dept
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_user_dept`;
+CREATE TABLE `sys_user_dept`
+(
+    `id`  int NOT NULL COMMENT 'ID' AUTO_INCREMENT,
+    `uid` bigint DEFAULT NULL COMMENT '用户外键',
+    `did` bigint DEFAULT NULL COMMENT '机构外键',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci comment='用户机构';
+
+-- ----------------------------
+-- Records of sys_user_dept
+-- ----------------------------
+INSERT INTO `sys_user_dept` (`id`, `uid`, `did`)
+VALUES (1, 1, 1),
+       (2, 1, 4),
+       (3, 2, 2),
+       (4, 3, 3);

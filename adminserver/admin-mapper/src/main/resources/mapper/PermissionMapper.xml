@@ -25,10 +25,10 @@
         </collection>
     </resultMap>
     <select id="getAllPermissions" resultMap="BaseResultMap">
-        SELECT p.*,r.id AS rid,r.name AS rname,r.name_zh AS rname_zh FROM permission p LEFT JOIN role_permission rp ON p.`id`=rp.`pid` LEFT JOIN role r ON rp.`rid`=r.`id`
+        SELECT p.*,r.id AS rid,r.name AS rname,r.name_zh AS rname_zh FROM sys_permission p LEFT JOIN sys_role_permission rp ON p.`id`=rp.`pid` LEFT JOIN sys_role r ON rp.`rid`=r.`id`
     </select>
 
     <select id="getPermissionsByUid" resultType="com.shenfangtao.model.Permission">
-        SELECT DISTINCT p.* FROM permission p LEFT JOIN role_permission rp ON p.`id`=rp.`pid` LEFT JOIN user_role ur  ON rp.`rid`=ur.`rid` WHERE ur.uid=#{id}
+        SELECT DISTINCT p.* FROM sys_permission p LEFT JOIN sys_role_permission rp ON p.`id`=rp.`pid` LEFT JOIN sys_user_role ur  ON rp.`rid`=ur.`rid` WHERE ur.uid=#{id}
     </select>
 </mapper>

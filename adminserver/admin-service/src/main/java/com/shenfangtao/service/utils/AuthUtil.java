@@ -59,7 +59,7 @@ public class AuthUtil {
         Collections.sort(children, new Comparator<Map<String, Object>>() {
             public int compare(Map<String, Object> o1, Map<String, Object> o2) {
                 Integer name1 = Integer.valueOf(o1.get("orderNo").toString()) ;//name1是从你list里面拿出来的一个
-                Integer name2 = Integer.valueOf(o2.get("orderNo").toString()) ; //name1是从你list里面拿出来的第二个name
+                Integer name2 = Integer.valueOf(o2.get("orderNo").toString()) ; //name2是从你list里面拿出来的第二个name
                 return name1.compareTo(name2);
             }
         });

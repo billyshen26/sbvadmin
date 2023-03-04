@@ -3,6 +3,7 @@ package com.shenfangtao.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -27,6 +28,7 @@ import java.util.List;
  * Time: 2022/7/12 20:07
  */
 @Data
+@TableName("sys_user")
 public class User implements UserDetails , Serializable {
     @TableId(type = IdType.AUTO)
     private Long id;
@@ -56,6 +58,13 @@ public class User implements UserDetails , Serializable {
     private List<Integer> roleIds; // 方便前端显示，分配用户角色
     @TableField(exist = false)
     private List<Role> roles;
+
+    @TableField(exist = false)
+    private List<Integer> deptIds; // 方便前端显示，分配用户机构
+    @TableField(exist = false)
+    private List<Dept> depts;
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();

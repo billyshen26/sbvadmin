@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shenfangtao.mapper.UserMapper">
     <select id="getUserRolesByUid" resultType="com.shenfangtao.model.Role">
-        select * from role r,user_role ur where r.id=ur.rid and ur.uid=#{id}
+        select * from sys_role r,sys_user_role ur where r.id=ur.rid and ur.uid=#{id}
     </select>
 
     <resultMap id="BaseResultMap" type="com.shenfangtao.model.User">
@@ -29,10 +29,24 @@
         <collection property="roleIds" ofType="Integer">
             <id column="rid"/>
         </collection>
+        <collection property="depts" ofType="com.shenfangtao.model.Dept">
+            <id column="did" property="id"/>
+            <result column="dname" property="name"/>
+        </collection>
+        <collection property="deptIds" ofType="Integer">
+            <id column="did"/>
+        </collection>
     </resultMap>
     <select id="getUsersWithRoles" resultMap="UserWithRoles">
-        select user.id, user.nickname, user.phone, user.email, user.activated, user.locked, user.username, user.avatar,
-        user.last_login_at,user.last_login_ip,user.created_at,user.updated_at,r.`id` as rid,r.`name` as rname,r.`name_zh` as rname_zh from user left join user_role ur on
-        user.`id`=ur.`uid` left join role r on ur.`rid`=r.`id`
+        select u.id, u.nickname, u.phone, u.email, u.activated, u.locked, u.username, u.avatar,u.last_login_at,
+               u.last_login_ip,u.created_at,u.updated_at,r.`id` as rid,r.`name` as rname,r.`name_zh` as rname_zh,
+               d.name as dname,d.`id` as did
+        from sys_user u left join sys_user_role ur on u.`id`=ur.`uid`
+            left join sys_role r on ur.`rid`=r.`id`
+            left join sys_user_dept ud on u.`id`=ud.`uid`
+            left join sys_dept d on d.`id`=ud.`did`
+        <if test="did!=null and did!=''">
+            where d.id = #{did}
+        </if>
     </select>
 </mapper>

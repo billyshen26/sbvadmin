@@ -14,6 +14,6 @@
         </collection>
     </resultMap>
     <select id="getRolesWithPermissions" resultMap="RoleWithPermissions">
-        SELECT r.*,rp.pid FROM role r LEFT JOIN role_permission rp ON r.`id`=rp.`rid`
+        SELECT r.*,rp.pid FROM sys_role r LEFT JOIN sys_role_permission rp ON r.`id`=rp.`rid`
     </select>
 </mapper>

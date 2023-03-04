@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,6 +24,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Getter
 @Setter
 //@Builder
+@TableName("sys_log")
 public class Log implements Serializable {
     public static final Byte ACTION_LEVEL = 1;
     public static final Byte ERROR_LEVEL = 2;
