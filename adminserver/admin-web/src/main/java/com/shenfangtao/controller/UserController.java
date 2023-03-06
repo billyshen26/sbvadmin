@@ -11,6 +11,7 @@ import com.shenfangtao.model.ErrorCode;
 import com.shenfangtao.model.ResultFormat;
 import com.shenfangtao.model.User;
 import com.shenfangtao.service.impl.UserServiceImpl;
+import com.shenfangtao.service.utils.CommonUtil;
 import com.shenfangtao.utils.SbvLog;
 import org.springframework.amqp.AmqpConnectException;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -48,9 +49,10 @@ public class UserController {
         String port = environment.getProperty("server.port");
         List<User> users = userService.getUsersWithRoles(did);
         for (User user : users) {
-            if (!user.getAvatar().contains("http")) {
-                user.setAvatar(host + ":" + port + File.separator + user.getAvatar()); // 补充域名和端口
-            }
+//            if (!user.getAvatar().contains("http")) {
+//                user.setAvatar(host + ":" + port + File.separator + user.getAvatar()); // 补充域名和端口
+//            }
+            user.setAvatar(CommonUtil.getAvatarUrl(user.getAvatar()));
         }
         return users;
     }

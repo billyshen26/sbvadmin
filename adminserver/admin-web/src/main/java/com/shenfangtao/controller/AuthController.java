@@ -6,6 +6,7 @@ import com.shenfangtao.model.User;
 import com.shenfangtao.model.UserInfo;
 import com.shenfangtao.service.impl.PermissionServiceImpl;
 import com.shenfangtao.service.impl.UserServiceImpl;
+import com.shenfangtao.service.utils.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
@@ -31,8 +32,7 @@ import java.util.Map;
 @RequestMapping("/api")
 public class AuthController {
 
-    @Autowired
-    Environment environment;
+
 
     @Autowired
     UserServiceImpl userService;
@@ -60,9 +60,6 @@ public class AuthController {
      **/
     @GetMapping("/getUserInfo")
     public UserInfo getUserInfo(){
-        String host = environment.getProperty("server.host");
-        String port = environment.getProperty("server.port");
-
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
@@ -70,8 +67,8 @@ public class AuthController {
         userInfo.setUserId(user.getId());
         userInfo.setId(user.getId());
         userInfo.setUsername(user.getUsername());
-        userInfo.setAvatar(host + ":" + port + File.separator + user.getAvatar());
-        userInfo.setHomePath("/system/account");
+        userInfo.setAvatar(CommonUtil.getAvatarUrl(user.getAvatar()));
+        userInfo.setHomePath("/dashboard/workbench"); // 默认去到工作台
         userInfo.setRealName(user.getNickname());
         userInfo.setNickname(user.getNickname());
         userInfo.setEmail(user.getEmail());
