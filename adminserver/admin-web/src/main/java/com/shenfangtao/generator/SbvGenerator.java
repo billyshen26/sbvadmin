@@ -45,6 +45,10 @@ public class SbvGenerator {
     @Value("${spring.datasource.password}")
     private String password;
 
+
+    @Value("${spring.application.name}")
+    private String name;
+
     @Test
     public void genCode() {
 //        FastAutoGenerator.create("jdbc:mysql:///sbvadmin", "sbvadminuser", "Sbvadmin")
@@ -60,7 +64,7 @@ public class SbvGenerator {
         String dir = System.getProperty("user.dir");
         FastAutoGenerator.create(url, username, password)
             .globalConfig(builder -> {
-                builder.author("billy") // 设置作者
+                builder.author(name) // 设置作者
                     .disableOpenDir() //禁止打开输出目录
                     .outputDir("src/main/java/com/shenfangtao/generator/tempFiles"); // 指定输出目录
             })
