@@ -37,6 +37,8 @@
 <img alt="Sbvadmin QQ" width="200" height="200" src="https://github.com/billyshen26/sbvadmin/blob/master/qq.png"><br><br>
 </div>
 
+---
+
 ## 知识点
 ### 获取springboot应用的版本号
 在application.properties中加入
