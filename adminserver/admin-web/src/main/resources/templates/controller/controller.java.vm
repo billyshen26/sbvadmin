@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 #if(${superControllerClassPackage})
 import ${superControllerClassPackage};
 #end
-import com.shenfangtao.model.${entity};
-import com.shenfangtao.service.impl.${entity}ServiceImpl;
+    ${entity};
+import com.sbvadmin.service.impl.${entity}ServiceImpl;
 
 /**
  * $!{table.comment} 前端控制器

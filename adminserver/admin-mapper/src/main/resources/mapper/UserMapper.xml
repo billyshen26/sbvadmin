@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.shenfangtao.mapper.UserMapper">
-    <select id="getUserRolesByUid" resultType="com.shenfangtao.model.Role">
+<mapper namespace="com.sbvadmin.mapper.UserMapper">
+    <select id="getUserRolesByUid" resultType="com.sbvadmin.model.Role">
         select * from sys_role r,sys_user_role ur where r.id=ur.rid and ur.uid=#{id}
     </select>
 
-    <resultMap id="BaseResultMap" type="com.shenfangtao.model.User">
+    <resultMap id="BaseResultMap" type="com.sbvadmin.model.User">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
         <result column="phone" property="phone" jdbcType="CHAR"/>
@@ -20,8 +20,8 @@
         <result column="created_at" property="createdAt" jdbcType="TIMESTAMP"/>
         <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP"/>
     </resultMap>
-    <resultMap id="UserWithRoles" type="com.shenfangtao.model.User" extends="BaseResultMap">
-        <collection property="roles" ofType="com.shenfangtao.model.Role">
+    <resultMap id="UserWithRoles" type="com.sbvadmin.model.User" extends="BaseResultMap">
+        <collection property="roles" ofType="com.sbvadmin.model.Role">
             <id column="rid" property="id"/>
             <result column="rname" property="name"/>
             <result column="rname_zh" property="nameZh"/>
@@ -29,7 +29,7 @@
         <collection property="roleIds" ofType="Integer">
             <id column="rid"/>
         </collection>
-        <collection property="depts" ofType="com.shenfangtao.model.Dept">
+        <collection property="depts" ofType="com.sbvadmin.model.Dept">
             <id column="did" property="id"/>
             <result column="dname" property="name"/>
         </collection>

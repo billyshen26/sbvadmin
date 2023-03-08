@@ -9,7 +9,7 @@
     <!-- 定义日志文件的存储地址，需要使用监听类完成这个任务，无法systemctl中无法使用 -->
     <!--<springProperty scope="context" name="LOG_HOME" source="log.path"/>-->
     <!-- 将监听类加入到xml -->
-    <contextListener class="com.shenfangtao.config.CustomLogContextListener" />
+    <contextListener class="com.sbvadmin.config.CustomLogContextListener" />
 
     <springProperty scope="context" name="APP_NAME"  source="spring.application.name"/>
     <!-- 格式化输出：

@@ -9,7 +9,7 @@
         <version>2.7.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.shenfangtao</groupId>
+    <groupId>com.sbvadmin</groupId>
     <artifactId>svbadmin</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
