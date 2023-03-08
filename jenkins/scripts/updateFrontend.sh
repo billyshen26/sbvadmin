@@ -4,10 +4,15 @@
 #cd sbvadmin-vben
 #yarn  安装依赖，只需执行一次
 #yarn build
-echo 'update dist'
-cd adminserver/admin-web/src/main/resources/static
-rm -fr *
-cd ../../../../../../sbvadmin-vben
-cp -a dist/* ../adminserver/admin-web/src/main/resources/static/
+
+#这种方式需要把dist加入前端的版本控制，同时要加入sbvadmin-vben子模块
+#echo 'update dist'
+#cd adminserver/admin-web/src/main/resources/static
+#rm -fr *
+#cd ../../../../../../sbvadmin-vben
+#cp -a dist/* ../adminserver/admin-web/src/main/resources/static/
+
+# 暂时就在本地的提交脚本里写吧
+
 
 
