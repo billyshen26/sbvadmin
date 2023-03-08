@@ -63,7 +63,7 @@ public class SecurityConfiguration {
                         return object;
                     }
                 })
-//                .antMatchers(HttpMethod.POST, "/api/login","/api/getUserInfo").permitAll()
+//                .antMatchers(HttpMethod.POST, "/api/login","/api/configs/getConfigBySymbol").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout()

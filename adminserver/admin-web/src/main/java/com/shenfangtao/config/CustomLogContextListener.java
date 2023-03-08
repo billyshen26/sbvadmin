@@ -29,7 +29,6 @@ public class CustomLogContextListener extends ContextAwareBase implements Logger
         try{
             jarFile = home.getSource() != null ?  home.getSource() : home.getDir();
             String parent = jarFile.getParent();
-            System.out.println(parent);
 
             String path = jarFile.getParentFile().toString();
             System.out.println("CustomLogContextListener_start_filePath:"+path);

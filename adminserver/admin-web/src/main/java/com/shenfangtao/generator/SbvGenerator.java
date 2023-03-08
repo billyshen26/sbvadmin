@@ -58,7 +58,6 @@ public class SbvGenerator {
          * Time: 2022/12/13 17:15
          **/
         String dir = System.getProperty("user.dir");
-        System.out.println(dir);
         FastAutoGenerator.create(url, username, password)
             .globalConfig(builder -> {
                 builder.author("billy") // 设置作者

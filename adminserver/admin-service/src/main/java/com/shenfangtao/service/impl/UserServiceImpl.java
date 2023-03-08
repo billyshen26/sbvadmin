@@ -48,12 +48,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username",username);
         User user = userMapper.selectOne(queryWrapper);
-        System.out.println(user);
         if (user == null){
             throw new UsernameNotFoundException("账户不存在");
         }
         user.setRoles(userMapper.getUserRolesByUid(user.getId()));
-        System.out.println(user);
         return user;
     }
 

@@ -14,7 +14,6 @@ class AdminWebApplicationTests {
     @Test
     void contextLoads() throws IOException, InterruptedException {
         String sysName = System.getProperty("os.name").toLowerCase();
-        System.out.println(sysName);
         String userDir = System.getProperty("user.dir");
         // 判断要backup文件是否存在
         File file = new File(userDir + "/backup");
@@ -22,7 +21,6 @@ class AdminWebApplicationTests {
             file.mkdirs();
         }
 
-        System.out.println(userDir);
         String cmd = "java -version";
         Process exec = Runtime.getRuntime().exec(cmd);
 

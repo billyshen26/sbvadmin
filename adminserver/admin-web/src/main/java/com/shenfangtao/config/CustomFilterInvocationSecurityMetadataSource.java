@@ -34,10 +34,14 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
         if (requestUrl.indexOf("?") != -1){
             requestUrl =requestUrl.substring(0, requestUrl.indexOf("?")); // 去除问号及其后面的内容
         }
+        System.out.println(requestUrl);
+        boolean test = requestUrl.equals("/api/configs/getConfigBySymbol");
+        System.out.println(test);
         // 过滤掉一些所有人都需要的权限点
         if (requestUrl.equals("/api/getUserInfo")
                 || requestUrl.equals("/api/getMenuList")
-                || requestUrl.equals("/api/getPermCode")) {
+                || requestUrl.equals("/api/getPermCode")
+                || requestUrl.equals("/api/configs/getConfigBySymbol")) {
             return SecurityConfig.createList("ROLE_LOGIN");
         }
         String method = filterInvocation.getHttpRequest().getMethod(); // 请求的方法

@@ -52,8 +52,17 @@ public class JwtFilter extends OncePerRequestFilter {
 
 //    public void doFilterInternal(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
+        //获取请求路径
+        String path = req.getRequestURI();
+        //获取请求方式
+//        String method = req.getMethod();
+//        if ("/api/configs/getConfigBySymbol".equals(path) && "POST".equals(method)) {
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
+
         String jwtToken = req.getHeader("authorization");
-        System.out.println(jwtToken);
+        System.out.println("jwtToken:" + jwtToken);
         if (jwtToken != null){
             jwtToken = jwtToken.replace("Bearer","");
             if (!jwtTokenUtil.isTokenExpired(jwtToken)) {
