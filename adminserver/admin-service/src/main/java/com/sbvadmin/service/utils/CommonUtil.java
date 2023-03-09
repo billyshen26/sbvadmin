@@ -1,6 +1,9 @@
 package com.sbvadmin.service.utils;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.sbvadmin.model.Config;
 import com.sbvadmin.model.Dept;
+import com.sbvadmin.service.impl.ConfigServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -20,11 +23,16 @@ public class CommonUtil {
     static
     Environment environment;
 
+    @Autowired
+    static
+    ConfigServiceImpl configService;
+
 
     // 解决静态方法使用Spirng注入空指针问题 https://www.jianshu.com/p/94da6fed473f
     @Autowired
-    public CommonUtil(Environment environment){
+    public CommonUtil(Environment environment, ConfigServiceImpl configService){
         CommonUtil.environment = environment;
+        CommonUtil.configService = configService;
     }
 
     /**
@@ -65,5 +73,24 @@ public class CommonUtil {
             return  host + ":" + port + File.separator + avatar; // 补充域名和端口
         }
         return avatar;
+    }
+
+
+
+    /**
+     * Notes:  获取配置项
+     * @param: [symbol]
+     * @return: java.lang.String
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/3/9 09:32
+     **/
+    public static String getConfigBySymbol(String symbol){
+        QueryWrapper<Config> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("symbol", symbol);
+        Config config = configService.getOne(queryWrapper);
+        if (config != null)
+            return config.getValue();
+        else
+            return "暂未配置";
     }
 }
