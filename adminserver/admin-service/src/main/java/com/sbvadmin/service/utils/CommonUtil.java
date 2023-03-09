@@ -91,6 +91,6 @@ public class CommonUtil {
         if (config != null)
             return config.getValue();
         else
-            return "暂未配置";
+            return Config.defaultConfig;
     }
 }

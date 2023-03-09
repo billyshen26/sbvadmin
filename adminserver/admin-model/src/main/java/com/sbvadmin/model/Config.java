@@ -22,6 +22,9 @@ import lombok.Setter;
 @TableName("sys_config")
 public class Config implements Serializable {
 
+
+    public static final String defaultConfig = "暂未配置";
+
     private static final long serialVersionUID = 1L;
 
     /**
