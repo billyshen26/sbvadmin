@@ -46,7 +46,7 @@ public class PermissionController {
     public Object delPermission(@PathVariable Long id) {
         Long[] preDefinedPermissons = {1L,2L,3L,4L,5L,6L,7L};
         if (Arrays.asList(preDefinedPermissons).contains(id)){
-            return ResultFormat.fail(ErrorCode.PERMISSION_CANT_DELETE.getCode(),ErrorCode.PERMISSION_CANT_DELETE.getMessage());
+            return ResultFormat.fail(ErrorCode.PERMISSION_CANT_DELETE);
         }
         return permissionService.removeById(id);
     }

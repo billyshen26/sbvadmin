@@ -13,6 +13,13 @@ public class ResultFormat<T> {
     private String message;
     private T result;
 
+    /**
+     * Notes:  返回成功
+     * @param: [data]
+     * @return: com.sbvadmin.model.ResultFormat<T>
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/3/9 10:31
+     **/
     public static <T> ResultFormat<T> success(T data){
         ResultFormat<T> resultFormat = new ResultFormat<>();
         resultFormat.setCode(ErrorCode.SUCCESS.getCode());
@@ -21,10 +28,31 @@ public class ResultFormat<T> {
         return resultFormat;
     }
 
-    public static <T> ResultFormat<T> fail (int code, String message){
+    /**
+     * Notes:  返回失败，包含自定义的message
+     * @param: [errorCode, message]
+     * @return: com.sbvadmin.model.ResultFormat<T>
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/3/9 10:31
+     **/
+    public static <T> ResultFormat<T> fail (ErrorCode errorCode, String message){
         ResultFormat<T> resultFormat = new ResultFormat<>();
-        resultFormat.setCode(code);
+        resultFormat.setCode(errorCode.getCode());
         resultFormat.setMessage(message);
+        return resultFormat;
+    }
+
+    /**
+     * Notes:  返回失败，使用错误码内的message
+     * @param: [errorCode]
+     * @return: com.sbvadmin.model.ResultFormat<T>
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/3/9 10:32
+     **/
+    public static <T> ResultFormat<T> fail (ErrorCode errorCode){
+        ResultFormat<T> resultFormat = new ResultFormat<>();
+        resultFormat.setCode(errorCode.getCode());
+        resultFormat.setMessage(errorCode.getMessage());
         return resultFormat;
     }
 }

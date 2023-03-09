@@ -32,7 +32,7 @@ public class RestExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResultFormat<String> badCredentialsException(Exception e) {
         log.error("认证异常 ex={}", e.getMessage(), e);
-        return ResultFormat.fail(ErrorCode.LOGIN_FAILED.getCode(),e.getMessage());
+        return ResultFormat.fail(ErrorCode.LOGIN_FAILED,e.getMessage());
     }
 
     /**
@@ -46,7 +46,7 @@ public class RestExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResultFormat<String> accessDeniedException(Exception e) {
         log.error("权限异常 ex={}", e.getMessage(), e);
-        return ResultFormat.fail(ErrorCode.ACCESS_DENIED.getCode(),e.getMessage());
+        return ResultFormat.fail(ErrorCode.ACCESS_DENIED,e.getMessage());
     }
 
     /**
@@ -66,7 +66,7 @@ public class RestExceptionHandler {
         }
         String message = builder.toString();
         log.error("参数异常 ex={}", message, e);
-        return ResultFormat.fail(ErrorCode.ACCESS_DENIED.getCode(),message);
+        return ResultFormat.fail(ErrorCode.ACCESS_DENIED,message);
     }
 
 
@@ -74,7 +74,7 @@ public class RestExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResultFormat<String> exception(Exception e) {
         log.error("全局异常信息 ex={}", e.getMessage(), e);
-        return ResultFormat.fail(ErrorCode.CODE_500.getCode(),e.getMessage());
+        return ResultFormat.fail(ErrorCode.CODE_500,e.getMessage());
     }
 
 }

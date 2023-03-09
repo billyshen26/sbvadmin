@@ -55,12 +55,12 @@ public class UserController {
         String message = null;
         // 1.将用户添加到数据库
         if (!userService.save(user))
-            return ResultFormat.fail(ErrorCode.FAILED.getCode(), ErrorCode.FAILED.getMessage());
+            return ResultFormat.fail(ErrorCode.FAILED);
         // 2.将用户添加事件发送到mq，用于后续邮件通知
         try {
             rabbitTemplate.convertAndSend("add-user", user);
         } catch (AmqpConnectException e) {
-            return ResultFormat.fail(ErrorCode.RABBITMQ_NOT_ACTIVE.getCode(), ErrorCode.RABBITMQ_NOT_ACTIVE.getMessage());
+            return ResultFormat.fail(ErrorCode.RABBITMQ_NOT_ACTIVE);
         }
         return true;
     }
@@ -80,7 +80,7 @@ public class UserController {
     @SbvLog(desc = "删除用户")
     public Object delUser(@PathVariable Long id) {
         if (id == 1L) {
-            return ResultFormat.fail(ErrorCode.ROOT_CANT_DELETE.getCode(), ErrorCode.ROOT_CANT_DELETE.getMessage());
+            return ResultFormat.fail(ErrorCode.ROOT_CANT_DELETE);
         }
         return userService.removeById(id);
     }
@@ -90,7 +90,7 @@ public class UserController {
     public Object changePassword(@RequestBody String data) {
         JSONObject jsonObject = JSONUtil.parseObj(data);
         if (jsonObject.getShort("id") == 1) {
-            return ResultFormat.fail(ErrorCode.ROOT_CANT_UPDATE.getCode(), ErrorCode.ROOT_CANT_UPDATE.getMessage());
+            return ResultFormat.fail(ErrorCode.ROOT_CANT_UPDATE);
         }
         User user = userService.getById(jsonObject.getShort("id"));
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // 密码加密

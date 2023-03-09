@@ -35,7 +35,7 @@ public class RoleController {
     @PutMapping("/{id}")
     public Object editRole(@RequestBody Role role, @PathVariable Long id) {
         if (id == 1L){
-            return ResultFormat.fail(ErrorCode.ROOT_CANT_UPDATE.getCode(),ErrorCode.ROOT_CANT_UPDATE.getMessage());
+            return ResultFormat.fail(ErrorCode.ROOT_CANT_UPDATE);
         }
         role.setId(id);
         return roleService.updateById(role);
