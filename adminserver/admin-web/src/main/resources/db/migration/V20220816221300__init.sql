@@ -51,12 +51,11 @@ CREATE TABLE `sys_role`
     `name_zh`     varchar(64) NOT NULL DEFAULT '' COMMENT '中文名称',
     `description` text COLLATE utf8mb4_unicode_ci COMMENT '描述',
     `status`      tinyint NOT NULL DEFAULT 1 COMMENT '状态:0-禁用;1-启用',
-    `order_no`    tinyint NOT NULL DEFAULT 1 COMMENT '排序',
+    `order_no`    decimal(10,2) NOT NULL DEFAULT 0.0 COMMENT '排序',
     `created_at`  datetime NULL DEFAULT NULL COMMENT '创建时间',
     `updated_at`  datetime NULL DEFAULT NULL COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci comment='角色';
-
 --
 -- 转存表中的数据 `sys_role`
 --
@@ -108,7 +107,7 @@ CREATE TABLE `sys_permission`
     `show_flag`   tinyint NOT NULL DEFAULT 1 COMMENT '是否显示:0-隐藏;1-显示',
     `type`        tinyint NOT NULL DEFAULT 1 COMMENT '权限类型:0-目录;1-菜单;2-按钮',
     `status`      tinyint NOT NULL DEFAULT 1 COMMENT '状态:0-禁用;1-启用',
-    `order_no`    tinyint NOT NULL DEFAULT 1 COMMENT '排序',
+    `order_no`    decimal(10,2) NOT NULL DEFAULT 0.0 COMMENT '排序',
     `created_at`  datetime NULL DEFAULT NULL COMMENT '创建时间',
     `updated_at`  datetime NULL DEFAULT NULL COMMENT '修改时间',
     PRIMARY KEY (`id`)
@@ -188,11 +187,17 @@ CREATE TABLE `sys_config` (
     `value`       text COLLATE utf8mb4_unicode_ci COMMENT  '配置值',
     `name`        varchar(100) NOT NULL COMMENT '配置名',
     `description` text COLLATE utf8mb4_unicode_ci COMMENT '描述',
-    `order_no`    int(11) NULL DEFAULT 0 COMMENT '排序',
+    `order_no`    decimal(10,2) NOT NULL DEFAULT 0.0 COMMENT '排序',
     `created_at`  datetime NULL DEFAULT NULL COMMENT '创建时间',
     `updated_at`  datetime NULL DEFAULT NULL COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci comment='配置';
+
+-- ----------------------------
+-- Records of sys_config
+-- ----------------------------
+INSERT INTO `sys_config` (`symbol`, `value`, `name`,`description`, `order_no`, `created_at`,`updated_at`)
+VALUES ('common_title', 'SBVADMIN','平台名称','',0,now(),now());
 
 -- ----------------------------
 -- Table structure for sys_dict
@@ -205,7 +210,7 @@ CREATE TABLE `sys_dict` (
     `value`         varchar(100) NOT NULL COMMENT '字典值',
     `label`         varchar(100) NOT NULL COMMENT '字典名',
     `description`   text COLLATE utf8mb4_unicode_ci COMMENT '描述',
-    `order_no`      int(11) NULL DEFAULT 0 COMMENT '排序',
+    `order_no`      decimal(10,2) NOT NULL DEFAULT 0.0 COMMENT '排序',
     `created_at`    datetime NULL DEFAULT NULL COMMENT '创建时间',
     `updated_at`    datetime NULL DEFAULT NULL COMMENT '修改时间',
     PRIMARY KEY (`id`)
@@ -219,7 +224,7 @@ CREATE TABLE `sys_dept` (
     `id`            bigint UNSIGNED NOT NULL COMMENT 'ID' AUTO_INCREMENT,
     `pid`           bigint UNSIGNED NOT NULL COMMENT '上级机构ID，一级机构为0',
     `name`          varchar(50) DEFAULT NULL COMMENT '机构名称',
-    `order_no`      int(11) NULL DEFAULT 0 COMMENT '排序',
+    `order_no`      decimal(10,2) NOT NULL DEFAULT 0.0 COMMENT '排序',
     `created_at`    datetime NULL DEFAULT NULL COMMENT '创建时间',
     `updated_at`    datetime NULL DEFAULT NULL COMMENT '修改时间',
     PRIMARY KEY (`id`)
