@@ -209,9 +209,9 @@ public class SbvGenerator {
         Process process = null;
         String command = "";
         if(System.getProperty("os.name").toUpperCase().contains("WINDOWS")){
-            command = "src/main/java/com/shenfangtao/generator/move_files.cmd";
+            command = "src/main/java/com/sbvadmin/generator/move_files.cmd";
         }else{
-            command = "src/main/java/com/shenfangtao/generator/move_files.sh";
+            command = "src/main/java/com/sbvadmin/generator/move_files.sh";
         }
         try {
             process = Runtime.getRuntime().exec(command);
