@@ -101,7 +101,7 @@ public class SbvGenerator {
          * Author: 涛声依旧 likeboat@163.com
          * Time: 2022/12/13 17:15
          **/
-        moveFiels();
+        moveFiles();
     }
 
 
@@ -203,14 +203,18 @@ public class SbvGenerator {
      * Time: 2022/11/15 09:36
      **/
     @Test
-    public void moveFiels() {
+    public void moveFiles() {
         InputStreamReader stdISR = null;
         InputStreamReader errISR = null;
         Process process = null;
-        String command = "src/main/java/com/sbvadmin/generator/move_files.sh";
+        String command = "";
+        if(System.getProperty("os.name").toUpperCase().contains("WINDOWS")){
+            command = "src/main/java/com/shenfangtao/generator/move_files.cmd";
+        }else{
+            command = "src/main/java/com/shenfangtao/generator/move_files.sh";
+        }
         try {
             process = Runtime.getRuntime().exec(command);
-            int exitValue = process.waitFor();
 
             String line = null;
 
@@ -225,6 +229,9 @@ public class SbvGenerator {
             while ((line = errBR.readLine()) != null) {
                 System.out.println("ERR line:" + line);
             }
+
+            int exitValue = process.waitFor();
+
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -243,6 +250,7 @@ public class SbvGenerator {
             }
         }
     }
+
 
     /**
      * Notes:  生成flyway的sql文件，方便版本管理
