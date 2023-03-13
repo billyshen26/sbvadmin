@@ -31,4 +31,7 @@
     <select id="getPermissionsByUid" resultType="com.sbvadmin.model.Permission">
         SELECT DISTINCT p.* FROM sys_permission p LEFT JOIN sys_role_permission rp ON p.`id`=rp.`pid` LEFT JOIN sys_user_role ur  ON rp.`rid`=ur.`rid` WHERE ur.uid=#{id}
     </select>
+    <select id="getAutoIncrement" resultType="Long">
+        SELECT Auto_increment FROM information_schema.TABLES WHERE Table_Schema= #{database} AND table_name= 'sys_permission'
+    </select>
 </mapper>

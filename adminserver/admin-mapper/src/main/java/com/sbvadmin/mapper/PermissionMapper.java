@@ -30,4 +30,13 @@ public interface PermissionMapper  extends BaseMapper<Permission> {
      * Time: 2022/9/7 20:32
      **/
     List<Permission> getPermissionsByUid(Long id);
+    
+    /**
+     * Notes:  
+     * @param: 获取自增id https://www.cnblogs.com/guohu/p/10984278.html
+     * @return: java.lang.Integer
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/3/13 16:43
+     **/
+    Long getAutoIncrement(String database);
 }

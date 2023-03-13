@@ -2,7 +2,6 @@
 echo '*************************开始移动后端文件*************************'
 # 移动自动生成的文件到对应的文件夹，如果已经存在则不覆盖，防止辛苦写的代码被干掉了
 # 这里低代码生产的代码放到了admin-model中的src/main/java/com/sbvadmin/generator/tempFiles
-#mv -n src/main/java/com/sbvadmin/generator/tempFiles/com/sbvadmin/controller/*.java ../admin-web/src/main/java/com/sbvadmin/controller  废弃，用下面这条自定义的
 mv -n src/main/java/com/sbvadmin/generator/tempFiles/com/sbvadmin/vue/controller/* ../admin-web/src/main/java/com/sbvadmin/controller
 mv -n src/main/java/com/sbvadmin/generator/tempFiles/com/sbvadmin/model/*.java ../admin-model/src/main/java/com/sbvadmin/model
 mv -n src/main/java/com/sbvadmin/generator/tempFiles/com/sbvadmin/mapper/*.java ../admin-mapper/src/main/java/com/sbvadmin/mapper

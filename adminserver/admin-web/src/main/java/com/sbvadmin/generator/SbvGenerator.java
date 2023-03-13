@@ -36,6 +36,9 @@ public class SbvGenerator {
     @Value("${spring.datasource.url}")
     private String url;
 
+    @Value("${spring.datasource.database}")
+    private String database;
+
     @Value("${spring.datasource.username}")
     private String username;
 
@@ -48,11 +51,6 @@ public class SbvGenerator {
 
     @Test
     public void genCode() {
-//        FastAutoGenerator.create("jdbc:mysql:///sbvadmin", "sbvadminuser", "Sbvadmin")
-//                .globalConfig(builder -> builder.outputDir("/Users/billyshen/Documents/idea_workspace/gened"))
-////                .strategyConfig(builder -> builder.addInclude("permission"))
-//                .execute();
-
         /**
          * Notes:  1.生成低代码文件
          * Author: 涛声依旧 likeboat@163.com
@@ -127,14 +125,23 @@ public class SbvGenerator {
             String currentTime = sdf.format(new Date());
 
             // 自定义map，主要为了解决flyway sql中主键id的获取
-            // 创建wapper，查询当前permission表中主键最大值
-            QueryWrapper<Permission> wrapper = new QueryWrapper<>();
-            wrapper.select("max(id) as id");
-            Permission permission = permissionMapper.selectOne(wrapper);
-            System.out.println("maxId=" + permission.getId());
-            // 自定义permission自增主键
-            objectMap.put("permissionId", permission.getId() + inputTables.indexOf(tableName) + 1);
+//            // 创建wapper，查询当前permission表中主键最大值 废弃2023/3/13
+//            QueryWrapper<Permission> wrapper = new QueryWrapper<>();
+//            wrapper.select("max(id) as id");
+//            Permission permission = permissionMapper.selectOne(wrapper);
+//            Long maxid1 = permission.getId();
+//            System.out.println("maxId1=" + maxid1);
 
+            /**
+             * Notes: 1.在init.sql中预留1-999给sbvamin框架，方便框架升级
+             *        2.此处直接获取AutoIncrement的值，然后赋值
+             * Author: 涛声依旧 likeboat@163.com
+             * Time: 2023/3/13 18:00
+             **/
+            Long maxid = permissionMapper.getAutoIncrement(database);
+            System.out.println("maxId=" + maxid);
+            // 自定义permission自增主键
+            objectMap.put("permissionId", maxid +  inputTables.indexOf(tableName));
 
             customFile.forEach((key, value) -> {
                 VueFileEnum vueFile = VueFileEnum.valueOf(key);
@@ -147,47 +154,7 @@ public class SbvGenerator {
                     fileName = otherPath + File.separator + vueFile.getDir() + File.separator + entityName + vueFile.getFileName();
                 this.outputFile(new File(fileName), objectMap, value);
             });
-
-
-
-//            // 生成菜单 废弃  使用flyway生成
-//            Permission permission = new Permission();
-//            permission.setComponent("/sbvadmin/" + tableName + File.separator + entityName + "Index.vue");
-//            permission.setName(tableInfo.getComment());
-//            permission.setPath(tableName);
-//            permission.setPid(2L);  // 默认加入到系统管理下面
-//            permission.setRequestMethod("GET"); // 默认用列表页get请求
-//            permission.setRequestUrl("/api/" + tableName + "s"); // 这里和controller中的配置要一致
-//            permission.setType((byte) 1); // 默认为菜单类型
-//            permission.setStatus((byte) 1); // 默认启用
-//            permission.setTitle("routes." + entityName + "." + tableName); // 使用i18n配置标题名称
-//            permissionService.save(permission);
         }
-
-        /**
-         * Notes:  自定义map，主要为了解决flyway sql中主键id的获取
-         * @param: [config, tableInfo]
-         * @return: java.util.Map<java.lang.String,java.lang.Object>
-         * Author: 涛声依旧 likeboat@163.com
-         * Time: 2022/12/12 21:52
-         **/
-//        @Override
-//        public Map<String, Object> getObjectMap(@NotNull ConfigBuilder config, @NotNull TableInfo tableInfo) {
-//            // 获取实体类名字
-//            String entityName = tableInfo.getEntityName();
-//            // 获取object map
-//            Map<String, Object> objectMap = super.getObjectMap(config, tableInfo);
-//
-//            // 创建wapper，查询当前permission表中主键最大值
-//            QueryWrapper<Permission> wrapper = new QueryWrapper<>();
-//            wrapper.select("max(id) as id");
-//            Permission permission = permissionMapper.selectOne(wrapper);
-//            System.out.println("maxId=" + permission.getId());
-//
-//            // 自定义permission自增主键
-//            objectMap.put("permissionId", permission.getId() + 1);
-//            return objectMap;
-//        }
     }
 
     // 处理 all 情况

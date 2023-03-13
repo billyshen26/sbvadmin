@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 #if(${superControllerClassPackage})
 import ${superControllerClassPackage};
 #end
-    ${entity};
+import com.sbvadmin.model.${entity};
 import com.sbvadmin.service.impl.${entity}ServiceImpl;
 
 /**

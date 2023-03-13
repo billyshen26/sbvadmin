@@ -63,7 +63,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public boolean save(User entity) {
-        // 1.新增用户
+        // 1.新增用户 TODO 加入事务 和更多判断
         super.save(entity);
         // 2.给用户分配角色
         for (Integer roleId : entity.getRoleIds()) {

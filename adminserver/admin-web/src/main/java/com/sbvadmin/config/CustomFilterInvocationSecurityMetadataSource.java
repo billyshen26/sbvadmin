@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Notes:
+ * Notes: 设定访问接口需要的角色
  * Author: 涛声依旧 likeboat@163.com
  * Time: 2022/6/16 10:44
  */
@@ -29,25 +29,41 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
         FilterInvocation filterInvocation = (FilterInvocation) object;
-        String requestUrl =filterInvocation.getRequestUrl(); // 请求url
-        if (requestUrl.indexOf("?") != -1){
-            requestUrl =requestUrl.substring(0, requestUrl.indexOf("?")); // 去除问号及其后面的内容
-        }
-        System.out.println(requestUrl);
-        boolean test = requestUrl.equals("/api/configs/getConfigBySymbol");
-        System.out.println(test);
-        // 过滤掉一些所有人都需要的权限点
-        if (requestUrl.equals("/api/getUserInfo")
-                || requestUrl.equals("/api/getMenuList")
-                || requestUrl.equals("/api/getPermCode")
-                || requestUrl.equals("/api/configs/getConfigBySymbol")) {
+//        String requestUrl =filterInvocation.getRequestUrl(); // 请求url
+//        if (requestUrl.indexOf("?") != -1){
+//            requestUrl =requestUrl.substring(0, requestUrl.indexOf("?")); // 废弃 去除问号及其后面的内容
+//        }
+        String requestUri =filterInvocation.getRequest().getRequestURI(); // 请求uri 已经去掉了问号及其后面的内容
+        /**
+         * Notes:
+         * requestUrl 分为3类
+         * 1.无需认证的接口，比如登录或者注册接口
+         * 2.需要认证，但由于每个用户都应该有此类权限，需直接放行的接口，比如获取个人信息的接口（严格来说这是偷懒的做法）
+         * 3.需要认证，且需要权限的接口
+         * Author: 涛声依旧 likeboat@163.com
+         * Time: 2023/3/13 21:51
+         **/
+
+        // 第1类
+        if (requestUri.equals("/api/configs/getConfigBySymbol")) {
             return SecurityConfig.createList("ROLE_LOGIN");
         }
+
+        // 第2类
+        if (requestUri.equals("/api/getUserInfo")
+                || requestUri.equals("/api/getMenuList")
+                || requestUri.equals("/api/getPermCode")) {
+            return SecurityConfig.createList("ROLE_EVERYONE");
+        }
+
+        // 第3类 ,判定需要的角色
         String method = filterInvocation.getHttpRequest().getMethod(); // 请求的方法
         List<Permission> allPermission = permissionService.getAllPermissions();
         List<String> roleArr = new ArrayList<String>();
         for (Permission permission : allPermission) {
-            if(antPathMatcher.match(permission.getRequestUrl(),requestUrl)){ // 先判断URL路径是否符合
+            if(antPathMatcher.match(permission.getRequestUrl(),requestUri)){ // 先判断URL路径是否符合
+                // TODO 目前ANY的设定还没体现出来，没完全测试过，前端角色修改也存在问题
+                // 修改用户 api/users/2 这种接口还有问题 没法匹配到，待完善
                 if ("ANY".equals(permission.getRequestMethod())
                         || method.equals(permission.getRequestMethod())){  // 再判断方法是否符合
                     List<Role> roles = permission.getRoles();
@@ -62,7 +78,8 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
             roleArr.toArray(roleNames);
             return SecurityConfig.createList(roleNames);
         }
-        return SecurityConfig.createList("ROLE_LOGIN");
+        // 均不满足时，必须拥有root权限才能访问
+        return SecurityConfig.createList("ROLE_root"); // TODO 目前sys打头的几个表的增删改查权限还有问题，比如admin就没法修改用户
     }
 
     @Override

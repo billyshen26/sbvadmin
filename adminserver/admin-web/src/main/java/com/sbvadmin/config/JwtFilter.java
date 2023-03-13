@@ -47,11 +47,7 @@ public class JwtFilter extends OncePerRequestFilter {
         //获取请求路径
         String path = req.getRequestURI();
         //获取请求方式
-//        String method = req.getMethod();
-//        if ("/api/configs/getConfigBySymbol".equals(path) && "POST".equals(method)) {
-//            filterChain.doFilter(request, response);
-//            return;
-//        }
+        String method = req.getMethod();
 
         String jwtToken = req.getHeader("authorization");
         System.out.println("jwtToken:" + jwtToken);

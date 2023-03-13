@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Notes: 捕捉权限捕捉异常
+ * Notes: 捕捉权限异常
  * Author: 涛声依旧 likeboat@163.com
  * Time: 2022/8/28 15:53
  */

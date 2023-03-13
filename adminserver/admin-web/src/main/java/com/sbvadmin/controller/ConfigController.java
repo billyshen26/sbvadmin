@@ -32,15 +32,5 @@ public class ConfigController extends BaseController<ConfigServiceImpl, Config> 
     public String getConfigBySymbol(@RequestParam(value = "symbol") String symbol){
         return CommonUtil.getConfigBySymbol(symbol);
     }
-//    @PostMapping("/getConfigBySymbol")
-//    public String getConfigBySymbol(@RequestBody Map<String, Object> params){
-//        QueryWrapper<Config> queryWrapper=new QueryWrapper<>();
-//        queryWrapper.eq("symbol", (String) params.get("symbol"));
-//        Config config = configService.getOne(queryWrapper);
-//        if (config != null)
-//            return config.getValue();
-//        else
-//            return "暂未配置";
-//    }
 }
 

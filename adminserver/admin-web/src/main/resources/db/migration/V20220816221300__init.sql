@@ -111,7 +111,8 @@ CREATE TABLE `sys_permission`
     `created_at`  datetime NULL DEFAULT NULL COMMENT '创建时间',
     `updated_at`  datetime NULL DEFAULT NULL COMMENT '修改时间',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci comment='权限';
+) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci comment='权限';
+-- 预留1-999给sbvamin框架，方便框架升级
 
 --
 -- 转存表中的数据 `sys_permission`
@@ -119,13 +120,13 @@ CREATE TABLE `sys_permission`
 --
 
 INSERT INTO `sys_permission` (`id`, `pid`, `request_url`, `request_method`, `name`, `title`, `description`, `path`, `component`, `icon`, `show_flag`, `type`, `status`, `order_no`, `created_at`, `updated_at`)
-VALUES (1, 0, '/api/dashboard','GET', 'Dashboard', 'routes.dashboard.dashboard','Dashboard目录','/dashboard','LAYOUT', 'bx:bx-home','1','0','1','1',now(), now()),
-       (2, 0, '/api/system','GET', '系统管理', 'routes.demo.system.moduleName','系统管理目录','/system','LAYOUT', 'ion:settings-outline','1','0','1','1',now(), now()),
-       (3, 2, '/api/users','GET', '账号管理', 'routes.demo.system.account','账号管理菜单','account','/sbvadmin/user/UserIndex', '','1','1','1','1',now(), now()),
+VALUES (1, 0, '/api/dashboard','ANY', 'Dashboard', 'routes.dashboard.dashboard','Dashboard目录','/dashboard','LAYOUT', 'bx:bx-home','1','0','1','1',now(), now()),
+       (2, 0, '/api/system','ANY', '系统管理', 'routes.demo.system.moduleName','系统管理目录','/system','LAYOUT', 'ion:settings-outline','1','0','1','1',now(), now()),
+       (3, 2, '/api/users','ANY', '账号管理', 'routes.demo.system.account','账号管理菜单','account','/sbvadmin/user/UserIndex', '','1','1','1','1',now(), now()),
        (4, 3, '/api/users','POST', '新增账号', '','新增账号按钮','','', '','1','2','1','1',now(), now()),
-       (5, 2, '/api/users','GET', '菜单管理', 'routes.demo.system.menu','菜单管理菜单','menu','/sbvadmin/menu/MenuIndex', '','1','1','1','1',now(), now()),
-       (6, 5, '/api/users','POST', '新增菜单', '','新增菜单按钮','','', '','1','2','1','1',now(), now()),
-       (7, 2, '/api/users','GET', '角色管理', 'routes.demo.system.role','角色管理菜单','role','/sbvadmin/role/RoleIndex', '','1','1','1','1',now(), now());
+       (5, 2, '/api/permissions','ANY', '菜单管理', 'routes.demo.system.menu','菜单管理菜单','menu','/sbvadmin/menu/MenuIndex', '','1','1','1','1',now(), now()),
+       (6, 5, '/api/permissions','POST', '新增菜单', '','新增菜单按钮','','', '','1','2','1','1',now(), now()),
+       (7, 2, '/api/roles','ANY', '角色管理', 'routes.demo.system.role','角色管理菜单','role','/sbvadmin/role/RoleIndex', '','1','1','1','1',now(), now());
 
 
 --

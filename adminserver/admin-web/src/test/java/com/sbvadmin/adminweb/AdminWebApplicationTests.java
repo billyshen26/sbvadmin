@@ -1,7 +1,9 @@
 package com.sbvadmin.adminweb;
 
+import com.sbvadmin.mapper.PermissionMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
@@ -10,6 +12,8 @@ import java.io.IOException;
 @SpringBootTest
 @Slf4j
 class AdminWebApplicationTests {
+    @Autowired
+    PermissionMapper permissionMapper;
 
     @Test
     void contextLoads() throws IOException, InterruptedException {
@@ -28,5 +32,11 @@ class AdminWebApplicationTests {
             log.info("操作操作命令成功！！！" + exec);
         }
     }
+    @Test
+    void test(){
+        Long id = permissionMapper.getAutoIncrement("sbvadmin");
+        System.out.println(id);
+    }
+
 
 }

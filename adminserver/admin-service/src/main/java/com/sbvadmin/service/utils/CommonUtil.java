@@ -3,7 +3,9 @@ package com.sbvadmin.service.utils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sbvadmin.model.Config;
 import com.sbvadmin.model.Dept;
+import com.sbvadmin.model.Dict;
 import com.sbvadmin.service.impl.ConfigServiceImpl;
+import com.sbvadmin.service.impl.DictServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -27,12 +29,17 @@ public class CommonUtil {
     static
     ConfigServiceImpl configService;
 
+    @Autowired
+    static
+    DictServiceImpl dictService;
+
 
     // 解决静态方法使用Spirng注入空指针问题 https://www.jianshu.com/p/94da6fed473f
     @Autowired
-    public CommonUtil(Environment environment, ConfigServiceImpl configService){
+    public CommonUtil(Environment environment, ConfigServiceImpl configService, DictServiceImpl dictService){
         CommonUtil.environment = environment;
         CommonUtil.configService = configService;
+        CommonUtil.dictService = dictService;
     }
 
     /**
@@ -92,5 +99,24 @@ public class CommonUtil {
             return config.getValue();
         else
             return Config.defaultConfig;
+    }
+
+
+    /**
+     * Notes:  获取字典列表
+     * @param: [symbol]
+     * @return: java.util.List<com.sbvadmin.model.Dict>
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/3/13 15:08
+     **/
+    public static List<Dict> getDictByType(String type){
+        QueryWrapper<Dict> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("type", type);
+        List<Dict> dictList = dictService.list(queryWrapper);
+        return dictList;
+//        if (config != null)
+//            return config.getValue();
+//        else
+//            return Config.defaultConfig;
     }
 }
