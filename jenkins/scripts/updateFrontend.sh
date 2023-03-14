@@ -20,7 +20,7 @@ pwd
 cd ../sbvadmin-vben
 pwd
 #yarn  安装依赖，只需执行一次
-#yarn build
+yarn build
 echo 'update dist'
 rm -fr ../sbvadmin/adminserver/admin-web/src/main/resources/static/*
 cp -a dist/* ../sbvadmin/adminserver/admin-web/src/main/resources/static/
