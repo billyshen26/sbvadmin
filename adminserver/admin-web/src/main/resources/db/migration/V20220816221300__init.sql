@@ -208,7 +208,7 @@ CREATE TABLE `sys_dict` (
     `id`            bigint UNSIGNED NOT NULL COMMENT 'ID' AUTO_INCREMENT,
     `pid`           bigint UNSIGNED NOT NULL COMMENT '父级ID',
     `type`          varchar(100) NOT NULL COMMENT '字典类型',
-    `value`         varchar(100) NOT NULL COMMENT '字典值',
+    `value`         text COLLATE utf8mb4_unicode_ci COMMENT  '配置值',
     `label`         varchar(100) NOT NULL COMMENT '字典名',
     `description`   text COLLATE utf8mb4_unicode_ci COMMENT '描述',
     `order_no`      decimal(10,2) NOT NULL DEFAULT 0.0 COMMENT '排序',
