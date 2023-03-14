@@ -15,13 +15,6 @@ pipeline {
                 sh './jenkins/scripts/updateFrontend.sh'
             }
         }
-        stage('Build') {
-            steps {
-                /*
-                * sh 'mvn -B -DskipTests clean package -P prod'
-                */
-            }
-        }
         stage('Restart') {
             steps {
                 sh 'systemctl restart sbvadmin'
