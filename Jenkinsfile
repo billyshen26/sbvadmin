@@ -17,7 +17,9 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'mvn -B -DskipTests clean package -P prod'
+                /*
+                * sh 'mvn -B -DskipTests clean package -P prod'
+                */
             }
         }
         stage('Restart') {

@@ -12,7 +12,20 @@
 #cd ../../../../../../sbvadmin-vben
 #cp -a dist/* ../adminserver/admin-web/src/main/resources/static/
 
-# 暂时就在本地的提交脚本里写吧
+# 暂时就在本地的提交脚本里写吧 这个方案也有问题，sbvadmin里面的static文件要加入git
+
+#重新采用云端构建，这次把前端sbvadmin-vben加入到jenkins中
+echo 'build frontend'
+pwd
+cd ../sbvadmin-vben
+pwd
+#yarn  安装依赖，只需执行一次
+#yarn build
+echo 'update dist'
+rm -fr ../sbvadmin/adminserver/admin-web/src/main/resources/static/*
+cp -a dist/* ../sbvadmin/adminserver/admin-web/src/main/resources/static/
+
+
 
 
 
