@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import javax.validation.constraints.NotNull;
 import java.io.*;
@@ -26,6 +27,7 @@ import java.util.*;
  * Time: 2022/9/7 15:53
  */
 @SpringBootTest
+@ActiveProfiles("dev")
 public class SbvGenerator {
 
     @Autowired
