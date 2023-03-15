@@ -15,15 +15,16 @@
 # 暂时就在本地的提交脚本里写吧 这个方案也有问题，sbvadmin里面的static文件要加入git
 
 #重新采用云端构建，这次把前端sbvadmin-vben加入到jenkins中
-echo 'build frontend'
-pwd
-cd ../sbvadmin-vben
-pwd
-#yarn  安装依赖，只需执行一次
-yarn build
+#echo 'build frontend'
+#pwd
+#cd ../sbvadmin-vben
+# yarn build  服务器太拉，打包还是不行
+# 直接用本地ftp上传的dist包来更新了
 echo 'update dist'
-rm -fr ../sbvadmin/adminserver/admin-web/src/main/resources/static/*
-cp -a dist/* ../sbvadmin/adminserver/admin-web/src/main/resources/static/
+rm -fr adminserver/admin-web/src/main/resources/static/*
+cd /var/app/sbvadmin
+unzip  dist.zip
+mv dist/* /var/lib/jenkins/workspace/sbvadmin/adminserver/admin-web/src/main/resources/static/
 
 
 
