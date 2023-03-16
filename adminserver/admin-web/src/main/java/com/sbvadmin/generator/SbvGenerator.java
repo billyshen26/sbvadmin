@@ -51,6 +51,9 @@ public class SbvGenerator {
     @Value("${spring.application.name}")
     private String name;
 
+    @Value("${spring.application.vbenName}")
+    private String vbenName;
+
     @Test
     public void genCode() {
         /**
@@ -178,9 +181,9 @@ public class SbvGenerator {
         Process process = null;
         String command = "";
         if(System.getProperty("os.name").toUpperCase().contains("WINDOWS")){
-            command = "src/main/java/com/sbvadmin/generator/move_files.cmd";
+            command = "src/main/java/com/sbvadmin/generator/move_files.cmd"; // TODO
         }else{
-            command = "src/main/java/com/sbvadmin/generator/move_files.sh";
+            command = "src/main/java/com/sbvadmin/generator/move_files.sh " + vbenName; // 前端工程项目文件夹名，方便自己对项目取名
         }
         try {
             process = Runtime.getRuntime().exec(command);

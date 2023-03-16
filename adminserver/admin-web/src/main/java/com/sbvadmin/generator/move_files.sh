@@ -10,11 +10,11 @@ mv -n src/main/java/com/sbvadmin/generator/tempFiles/com/sbvadmin/service/*.java
 mv -n src/main/java/com/sbvadmin/generator/tempFiles/*.xml ../admin-mapper/src/main/resources/mapper
 mv -n src/main/java/com/sbvadmin/generator/tempFiles/com/sbvadmin/vue/sql/* ../admin-web/src/main/resources/db/migration
 echo '*************************开始移动前端文件*************************'
-mv -n src/main/java/com/sbvadmin/generator/tempFiles/com/sbvadmin/vue/api/*.ts ../../../sbvadmin-vben/src/api/sbvadmin
-mv -n src/main/java/com/sbvadmin/generator/tempFiles/com/sbvadmin/vue/model/*.ts ../../../sbvadmin-vben/src/api/sbvadmin/model
-mv -n src/main/java/com/sbvadmin/generator/tempFiles/com/sbvadmin/vue/view/* ../../../sbvadmin-vben/src/views/sbvadmin
-mv -n src/main/java/com/sbvadmin/generator/tempFiles/com/sbvadmin/vue/i18nEN/* ../../../sbvadmin-vben/src/locales/lang/en/routes
-mv -n src/main/java/com/sbvadmin/generator/tempFiles/com/sbvadmin/vue/i18nZH/* ../../../sbvadmin-vben/src/locales/lang/zh-CN/routes
+mv -n src/main/java/com/sbvadmin/generator/tempFiles/com/sbvadmin/vue/api/*.ts ../../../${1%.*}/src/api/sbvadmin
+mv -n src/main/java/com/sbvadmin/generator/tempFiles/com/sbvadmin/vue/model/*.ts ../../../${1%.*}/src/api/sbvadmin/model
+mv -n src/main/java/com/sbvadmin/generator/tempFiles/com/sbvadmin/vue/view/* ../../../${1%.*}/src/views/sbvadmin
+mv -n src/main/java/com/sbvadmin/generator/tempFiles/com/sbvadmin/vue/i18nEN/* ../../../${1%.*}/src/locales/lang/en/routes
+mv -n src/main/java/com/sbvadmin/generator/tempFiles/com/sbvadmin/vue/i18nZH/* ../../../${1%.*}/src/locales/lang/zh-CN/routes
 
 echo '*************************删除自动生成的文件************************'
 rm -fr src/main/java/com/sbvadmin/generator/tempFiles
