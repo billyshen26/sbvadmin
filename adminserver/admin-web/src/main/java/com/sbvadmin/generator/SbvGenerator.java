@@ -3,12 +3,17 @@ package com.sbvadmin.generator;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
+import com.baomidou.mybatisplus.generator.config.INameConvert;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
+import com.baomidou.mybatisplus.generator.config.StrategyConfig;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
+import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.VelocityTemplateEngine;
 import com.baomidou.mybatisplus.generator.fill.Column;
 import com.sbvadmin.mapper.PermissionMapper;
+import com.sbvadmin.mapper.RolePermissionMapper;
 import com.sbvadmin.model.Permission;
+import com.sbvadmin.model.RolePermission;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +37,8 @@ public class SbvGenerator {
 
     @Autowired
     public PermissionMapper permissionMapper;
+    @Autowired
+    public RolePermissionMapper rolePermissionMapper;
 
     private List<String> inputTables;
 
@@ -47,12 +54,15 @@ public class SbvGenerator {
     @Value("${spring.datasource.password}")
     private String password;
 
+    @Value("${spring.datasource.table-prefix}")
+    private String tablePrefix;
 
     @Value("${spring.application.name}")
     private String name;
 
     @Value("${spring.application.vbenName}")
     private String vbenName;
+
 
     @Test
     public void genCode() {
@@ -69,7 +79,7 @@ public class SbvGenerator {
                     .outputDir("src/main/java/com/sbvadmin/generator/tempFiles"); // 指定输出目录
             })
             .packageConfig(builder -> {
-                builder.parent("com.sbvadmin") // 设置父包名
+                builder.parent("com." + name) // 设置父包名
                         .entity("model") //设置entity包名
                         .other("vue") // 前端页面生成放入的临时包
                     .pathInfo(Collections.singletonMap(OutputFile.mapperXml, "src/main/java/com/sbvadmin/generator/tempFiles")); // 设置mapperXml生成路径
@@ -78,6 +88,7 @@ public class SbvGenerator {
             .strategyConfig((scanner, builder) ->  {
                 inputTables = getTables(scanner.apply("请输入表名，多个英文逗号分隔？所有输入 all"));
                 builder.addInclude(inputTables)
+                        .addTablePrefix(tablePrefix +"_")
                     .controllerBuilder().enableRestStyle().enableHyphenStyle().superClass("com.sbvadmin.controller.BaseController")
                     .entityBuilder().enableLombok().addTableFills(
                             new Column("create_time", FieldFill.INSERT)
@@ -120,6 +131,7 @@ public class SbvGenerator {
         protected void outputCustomFile(@NotNull Map<String, String> customFile, @NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
             String entityName = tableInfo.getEntityName();
             String tableName = tableInfo.getName();
+            String getEntityPath = tableInfo.getEntityPath();
             String otherPath = this.getPathInfo(OutputFile.other);
             try {
                 Thread.sleep(1000); // 休眠一秒，解决版本重复问题
@@ -152,7 +164,7 @@ public class SbvGenerator {
                 VueFileEnum vueFile = VueFileEnum.valueOf(key);
                 String fileName = null;
                 if (vueFile.getDir() == "view")
-                    fileName = otherPath + File.separator + vueFile.getDir() + File.separator + tableName + File.separator + entityName + vueFile.getFileName();
+                    fileName = otherPath + File.separator + vueFile.getDir() + File.separator + getEntityPath + File.separator + entityName + vueFile.getFileName();
                 else if (vueFile.getDir() == "sql")
                     fileName = otherPath + File.separator + vueFile.getDir() + File.separator + "V"+currentTime+"__"+ entityName + vueFile.getFileName();
                 else
@@ -183,7 +195,7 @@ public class SbvGenerator {
         if(System.getProperty("os.name").toUpperCase().contains("WINDOWS")){
             command = "src/main/java/com/sbvadmin/generator/move_files.cmd"; // TODO
         }else{
-            command = "src/main/java/com/sbvadmin/generator/move_files.sh " + vbenName; // 前端工程项目文件夹名，方便自己对项目取名
+            command = "src/main/java/com/sbvadmin/generator/move_files.sh " + name + " " + vbenName; // 前端工程项目文件夹名，方便自己对项目取名
         }
         try {
             process = Runtime.getRuntime().exec(command);
@@ -255,6 +267,92 @@ public class SbvGenerator {
             fos.flush();
             fos.close();
         }
+    }
+
+    /**
+     * Notes:  这个主要是用来测试的，删除刚刚生成低代码，慎用
+     * @param: []
+     * @return: void
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/3/16 21:55
+     **/
+    @Test
+    public void deleteJustGeneratedFiles() throws IOException, InterruptedException {
+
+        Scanner input = new Scanner(System.in);
+        System.out.println("输入表名，不要带前缀");
+        String tableNameInput = input.nextLine();
+        String tableName = NamingStrategy.capitalFirst(NamingStrategy.underlineToCamel(tableNameInput));
+        // 删除文件
+        String command = "";
+        if(System.getProperty("os.name").toUpperCase().contains("WINDOWS")){
+            command = "src/main/java/com/sbvadmin/generator/delete_files.cmd"; // TODO
+        }else{
+            command = "src/main/java/com/sbvadmin/generator/delete_files.sh "
+                    + name + " " + vbenName + " " + tableName + " " + tableNameInput ;
+        }
+        execCommand(command);
+
+        // 删除数据库记录
+        QueryWrapper<Permission> wrapper = new QueryWrapper<>();
+        wrapper.eq("request_url","/api/"+tableNameInput+"s");
+        Permission permission = permissionMapper.selectOne(wrapper);
+        QueryWrapper<RolePermission> wrapper2 = new QueryWrapper<>();
+        wrapper2.eq("pid",permission.getId());
+        rolePermissionMapper.delete(wrapper2);
+        permissionMapper.delete(wrapper);
+
+        // 手动去删下 flyway里的数据 TODO
 
     }
+
+    /**
+     * Notes:  执行cmd命令
+     * @param: [command]
+     * @return: void
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/3/16 21:58
+     **/
+    private void execCommand(String command){
+        InputStreamReader stdISR = null;
+        InputStreamReader errISR = null;
+        Process process = null;
+        try {
+            process = Runtime.getRuntime().exec(command);
+
+            String line = null;
+
+            stdISR = new InputStreamReader(process.getInputStream());
+            BufferedReader stdBR = new BufferedReader(stdISR);
+            while ((line = stdBR.readLine()) != null) {
+                System.out.println("STD line:" + line);
+            }
+
+            errISR = new InputStreamReader(process.getErrorStream());
+            BufferedReader errBR = new BufferedReader(errISR);
+            while ((line = errBR.readLine()) != null) {
+                System.out.println("ERR line:" + line);
+            }
+
+            int exitValue = process.waitFor();
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stdISR != null) {
+                    stdISR.close();
+                }
+                if (errISR != null) {
+                    errISR.close();
+                }
+                if (process != null) {
+                    process.destroy();
+                }
+            } catch (IOException e) {
+                System.out.println("正式执行命令：" + command + "有IO异常");
+            }
+        }
+    }
+
 }

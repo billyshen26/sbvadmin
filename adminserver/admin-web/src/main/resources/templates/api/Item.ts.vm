@@ -2,7 +2,7 @@ import { defHttp } from '/@/utils/http/axios';
 import { ${entity}, ${entity}Params, ${entity}List } from './model/${entity}Model';
 
 enum Api {
-  ${entity}s = '/${table.name}s',
+  ${entity}s = '/${table.entityPath}s',
 }
 
 export const get${entity}List = (params: ${entity}Params) => {
