@@ -3,7 +3,7 @@ echo '*************************开始删除后端文件*************************
 rm src/main/java/com/${1%.*}/controller/${3%.*}Controller.java
 rm ../admin-model/src/main/java/com/${1%.*}/model/${3%.*}.java
 rm ../admin-mapper/src/main/java/com/${1%.*}/mapper/${3%.*}Mapper.java
-rm ../admin-mapper/src/main/resources/mapper/${3%.*}Mapper.xml
+rm ../admin-mapper/src/main/resources/mapper/${1%.*}/${3%.*}Mapper.xml
 rm ../admin-service/src/main/java/com/${1%.*}/service/I${3%.*}Service.java
 rm ../admin-service/src/main/java/com/${1%.*}/service/impl/${3%.*}ServiceImpl.java
 rm src/main/resources/db/migration/*__${3%.*}Menu.sql

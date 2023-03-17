@@ -17,6 +17,7 @@ import com.sbvadmin.model.RolePermission;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.system.ApplicationHome;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -57,8 +58,11 @@ public class SbvGenerator {
     @Value("${spring.datasource.table-prefix}")
     private String tablePrefix;
 
-    @Value("${spring.application.name}")
-    private String name;
+    @Value("${spring.application.packageName}")
+    private String packageName;
+
+    @Value("${spring.application.author}")
+    private String author;
 
     @Value("${spring.application.vbenName}")
     private String vbenName;
@@ -74,12 +78,12 @@ public class SbvGenerator {
         String dir = System.getProperty("user.dir");
         FastAutoGenerator.create(url, username, password)
             .globalConfig(builder -> {
-                builder.author(name) // 设置作者
+                builder.author(author) // 设置作者
                     .disableOpenDir() //禁止打开输出目录
                     .outputDir("src/main/java/com/sbvadmin/generator/tempFiles"); // 指定输出目录
             })
             .packageConfig(builder -> {
-                builder.parent("com." + name) // 设置父包名
+                builder.parent("com." + packageName) // 设置父包名
                         .entity("model") //设置entity包名
                         .other("vue") // 前端页面生成放入的临时包
                     .pathInfo(Collections.singletonMap(OutputFile.mapperXml, "src/main/java/com/sbvadmin/generator/tempFiles")); // 设置mapperXml生成路径
@@ -160,6 +164,9 @@ public class SbvGenerator {
             // 自定义permission自增主键
             objectMap.put("permissionId", maxid +  inputTables.indexOf(tableName));
 
+            // 包名
+            objectMap.put("packageName", packageName);
+
             customFile.forEach((key, value) -> {
                 VueFileEnum vueFile = VueFileEnum.valueOf(key);
                 String fileName = null;
@@ -188,51 +195,52 @@ public class SbvGenerator {
      **/
     @Test
     public void moveFiles() {
-        InputStreamReader stdISR = null;
-        InputStreamReader errISR = null;
-        Process process = null;
+//        InputStreamReader stdISR = null;
+//        InputStreamReader errISR = null;
+//        Process process = null;
         String command = "";
         if(System.getProperty("os.name").toUpperCase().contains("WINDOWS")){
             command = "src/main/java/com/sbvadmin/generator/move_files.cmd"; // TODO
         }else{
-            command = "src/main/java/com/sbvadmin/generator/move_files.sh " + name + " " + vbenName; // 前端工程项目文件夹名，方便自己对项目取名
+            command = "src/main/java/com/sbvadmin/generator/move_files.sh " + packageName + " " + vbenName; // 前端工程项目文件夹名，方便自己对项目取名
         }
-        try {
-            process = Runtime.getRuntime().exec(command);
-
-            String line = null;
-
-            stdISR = new InputStreamReader(process.getInputStream());
-            BufferedReader stdBR = new BufferedReader(stdISR);
-            while ((line = stdBR.readLine()) != null) {
-                System.out.println("STD line:" + line);
-            }
-
-            errISR = new InputStreamReader(process.getErrorStream());
-            BufferedReader errBR = new BufferedReader(errISR);
-            while ((line = errBR.readLine()) != null) {
-                System.out.println("ERR line:" + line);
-            }
-
-            int exitValue = process.waitFor();
-
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (stdISR != null) {
-                    stdISR.close();
-                }
-                if (errISR != null) {
-                    errISR.close();
-                }
-                if (process != null) {
-                    process.destroy();
-                }
-            } catch (IOException e) {
-                System.out.println("正式执行命令：" + command + "有IO异常");
-            }
-        }
+        execCommand(command);
+//        try {
+//            process = Runtime.getRuntime().exec(command);
+//
+//            String line = null;
+//
+//            stdISR = new InputStreamReader(process.getInputStream());
+//            BufferedReader stdBR = new BufferedReader(stdISR);
+//            while ((line = stdBR.readLine()) != null) {
+//                System.out.println("STD line:" + line);
+//            }
+//
+//            errISR = new InputStreamReader(process.getErrorStream());
+//            BufferedReader errBR = new BufferedReader(errISR);
+//            while ((line = errBR.readLine()) != null) {
+//                System.out.println("ERR line:" + line);
+//            }
+//
+//            int exitValue = process.waitFor();
+//
+//        } catch (IOException | InterruptedException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                if (stdISR != null) {
+//                    stdISR.close();
+//                }
+//                if (errISR != null) {
+//                    errISR.close();
+//                }
+//                if (process != null) {
+//                    process.destroy();
+//                }
+//            } catch (IOException e) {
+//                System.out.println("正式执行命令：" + command + "有IO异常");
+//            }
+//        }
     }
 
 
@@ -289,7 +297,7 @@ public class SbvGenerator {
             command = "src/main/java/com/sbvadmin/generator/delete_files.cmd"; // TODO
         }else{
             command = "src/main/java/com/sbvadmin/generator/delete_files.sh "
-                    + name + " " + vbenName + " " + tableName + " " + tableNameInput ;
+                    + packageName + " " + vbenName + " " + tableName + " " + tableNameInput ;
         }
         execCommand(command);
 
@@ -355,4 +363,33 @@ public class SbvGenerator {
         }
     }
 
+    /**
+     * Notes:  初始化自定义项目文件夹,执行一次即可
+     * @param: []
+     * @return: void
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/3/17 14:01
+     **/
+    @Test
+    public void createDirs(){
+        String dir = System.getProperty("user.dir");
+        ApplicationHome home = new ApplicationHome(getClass());
+        String adminserver = home.getDir().getParent();
+        System.out.println(adminserver);
+        String directories = adminserver + "/admin-web/src/main/java/com/"+ packageName + "/controller";
+        File controller = new File(directories);
+        controller.mkdirs();
+        directories = adminserver + "/admin-service/src/main/java/com/"+ packageName + "/service/impl";
+        File serviceImpl = new File(directories);
+        serviceImpl.mkdirs();
+        directories = adminserver + "/admin-model/src/main/java/com/"+ packageName + "/model";
+        File model = new File(directories);
+        model.mkdirs();
+        directories = adminserver + "/admin-mapper/src/main/java/com/"+ packageName + "/mapper";
+        File mapper = new File(directories);
+        mapper.mkdirs();
+        directories = adminserver + "/admin-mapper/src/main/resources/mapper/"+ packageName;
+        File xml = new File(directories);
+        xml.mkdirs();
+    }
 }
