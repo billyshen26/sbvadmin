@@ -5,6 +5,7 @@
 - 破坏性更新，数据库改动了，不支持升级(需要删除数据库所有表)
 - 优化了低代码生成，加入了packageName的设计，方便使用自己的包名开发
 - 改变前端包部署方式，移除static的git版本控制
+- @MapperScan("com.xxx.mapper") 需要手动加入，待优化
 
 ### ✨ Features
 
