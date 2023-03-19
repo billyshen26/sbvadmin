@@ -1,4 +1,4 @@
-package com.sbvadmin;
+package com;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -19,7 +19,7 @@ public class AdminWebApplication {
     }
 
     /**
-     * Notes:  解决Invalid character found in the request target 异常
+     * Notes:  解决Invalid haracter found in the request target 异常
      * https://blog.csdn.net/tianzhonghaoqing/article/details/125806385
      * @param: []
      * @return: org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory

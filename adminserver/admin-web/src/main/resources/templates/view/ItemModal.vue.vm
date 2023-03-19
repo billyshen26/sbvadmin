@@ -8,7 +8,7 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { formSchema } from './${entity}.data';
-  import { edit${entity}, add${entity} } from '/@/api/sbvadmin/${entity}';
+  import { edit${entity}, add${entity} } from '/@/api/${packageName}/${entity}';
 
   export default defineComponent({
     name: '${entity}Modal',

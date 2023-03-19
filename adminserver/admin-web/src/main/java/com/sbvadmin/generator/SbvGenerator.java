@@ -195,9 +195,6 @@ public class SbvGenerator {
      **/
     @Test
     public void moveFiles() {
-//        InputStreamReader stdISR = null;
-//        InputStreamReader errISR = null;
-//        Process process = null;
         String command = "";
         if(System.getProperty("os.name").toUpperCase().contains("WINDOWS")){
             command = "src/main/java/com/sbvadmin/generator/move_files.cmd"; // TODO
@@ -205,42 +202,6 @@ public class SbvGenerator {
             command = "src/main/java/com/sbvadmin/generator/move_files.sh " + packageName + " " + vbenName; // 前端工程项目文件夹名，方便自己对项目取名
         }
         execCommand(command);
-//        try {
-//            process = Runtime.getRuntime().exec(command);
-//
-//            String line = null;
-//
-//            stdISR = new InputStreamReader(process.getInputStream());
-//            BufferedReader stdBR = new BufferedReader(stdISR);
-//            while ((line = stdBR.readLine()) != null) {
-//                System.out.println("STD line:" + line);
-//            }
-//
-//            errISR = new InputStreamReader(process.getErrorStream());
-//            BufferedReader errBR = new BufferedReader(errISR);
-//            while ((line = errBR.readLine()) != null) {
-//                System.out.println("ERR line:" + line);
-//            }
-//
-//            int exitValue = process.waitFor();
-//
-//        } catch (IOException | InterruptedException e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                if (stdISR != null) {
-//                    stdISR.close();
-//                }
-//                if (errISR != null) {
-//                    errISR.close();
-//                }
-//                if (process != null) {
-//                    process.destroy();
-//                }
-//            } catch (IOException e) {
-//                System.out.println("正式执行命令：" + command + "有IO异常");
-//            }
-//        }
     }
 
 
