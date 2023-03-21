@@ -41,6 +41,11 @@ public class Dict implements Serializable {
     private String type;
 
     /**
+     * 字典类型名
+     */
+    private String typeName;
+
+    /**
      * 字典值
      */
     private String value;
