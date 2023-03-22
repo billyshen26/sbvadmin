@@ -33,13 +33,14 @@ export const searchFormSchema: FormSchema[] = [
 ## ----------  新增修改字段  ----------
 export const formSchema: FormSchema[] = [
 #foreach($field in ${table.fields})
-    #if(${field.propertyType.equals("boolean")} ||
-        ${field.propertyType.equals("Long")} ||
+    #if(${field.propertyType.equals("Long")} ||
         ${field.propertyType.equals("Byte")} ||
         ${field.propertyType.equals("Integer")})
         #set($component="InputNumber")
     #elseif(${field.propertyType.equals("LocalDateTime")})
         #set($component="DatePicker")
+    #elseif(${field.propertyType.equals("Boolean")})
+        #set($component="RadioButtonGroup")
     #else
         #set($component="Input")
     #end
@@ -52,6 +53,15 @@ export const formSchema: FormSchema[] = [
     #end
     #if(!${field.metaInfo.nullable} && !${field.keyFlag})
     required: true,
+    #end
+    #if(${component} == "RadioButtonGroup")
+    defaultValue: 0,
+    componentProps: {
+      options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
+      ],
+    },
     #end
   },
 #end
