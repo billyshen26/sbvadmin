@@ -38,6 +38,7 @@ public class User implements UserDetails , Serializable {
     @NotNull(message = "密码不能为空")
     private String password;
     private String avatar;
+    private String homePath;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime lastLoginAt;
     private String lastLoginIp;

@@ -62,7 +62,7 @@ public class AuthController {
         userInfo.setId(user.getId());
         userInfo.setUsername(user.getUsername());
         userInfo.setAvatar(CommonUtil.getAvatarUrl(user.getAvatar()));
-        userInfo.setHomePath("/dashboard/workbench"); // 默认去到工作台
+        userInfo.setHomePath(user.getHomePath()); // 登录后去到的第一个页面路由
         userInfo.setRealName(user.getNickname());
         userInfo.setNickname(user.getNickname());
         userInfo.setEmail(user.getEmail());

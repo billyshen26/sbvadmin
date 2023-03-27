@@ -12,9 +12,10 @@ CREATE TABLE `sys_user`
     `email`         varchar(64) NOT NULL DEFAULT '' COMMENT '邮箱',
     `activated`     tinyint(1) DEFAULT '1' COMMENT '激活状态:1为启用，0位禁用',
     `locked`        tinyint(1) DEFAULT '0' COMMENT '是否被锁:1为已锁，0位未锁',
-    `username`      varchar(255)     NOT NULL COMMENT '用户名',
-    `password`      varchar(255)     NOT NULL COMMENT '密码',
+    `username`      varchar(100)     NOT NULL COMMENT '用户名',
+    `password`      varchar(100)     NOT NULL COMMENT '密码',
     `avatar`        varchar(255)     NOT NULL DEFAULT '' COMMENT '头像',
+    `home_path`     varchar(100)     NOT NULL DEFAULT '' COMMENT '入口页面',
     `last_login_at` datetime NULL DEFAULT NULL COMMENT '最后登录时间',
     `last_login_ip` varchar(20) NOT NULL DEFAULT '' COMMENT '最后登录ip',
     `mp_open_id`    varchar(64) NOT NULL DEFAULT '' COMMENT '微信open_id',
@@ -27,17 +28,17 @@ CREATE TABLE `sys_user`
 --
 -- 转存表中的数据 `sys_user`
 --
-insert into `sys_user` (`id`, `nickname`, `phone`, `email`, `activated`, `locked`, `username`, `password`, `avatar`, `last_login_at`,
+insert into `sys_user` (`id`, `nickname`, `phone`, `email`, `activated`, `locked`, `username`, `password`, `avatar`, `home_path`, `last_login_at`,
                     `last_login_ip`, `mp_open_id`, `union_id`, `created_at`, `updated_at`)
 values (1, '超级管理员', '13912341234', 'likeboat@163.com', 1, 0, 'root',
         '$2a$10$ySG2lkvjFHY5O0./CPIE1OI8VJsuKYEzOYzqIa7AJR6sEgSzUFOAm',
-        'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640', NULL, '', '', '', now(), now()),
+        'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640', '/dashboard/analysis',NULL, '', '', '', now(), now()),
        (2, '管理员', '13812341234', 'likeboat@126.com', 1, 0, 'admin',
         '$2a$10$ySG2lkvjFHY5O0./CPIE1OI8VJsuKYEzOYzqIa7AJR6sEgSzUFOAm',
-        'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640', NULL, '', '', '', now(), now()),
+        'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640', '/dashboard/analysis',NULL, '', '', '', now(), now()),
        (3, '普通用户', '13712341234', 'likeboat@sina.com', 1, 0, 'user',
         '$2a$10$ySG2lkvjFHY5O0./CPIE1OI8VJsuKYEzOYzqIa7AJR6sEgSzUFOAm',
-        'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640', NULL, '', '', '', now(), now());
+        'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640', '/dashboard/analysis',NULL, '', '', '', now(), now());
 
 --
 -- 表的结构 `sys_role`
