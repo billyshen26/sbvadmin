@@ -120,7 +120,7 @@ CREATE TABLE `sys_permission`
 --
 
 INSERT INTO `sys_permission` (`id`, `pid`, `request_url`, `request_method`, `name`, `title`, `description`, `path`, `component`, `icon`, `show_flag`, `type`, `status`, `order_no`, `created_at`, `updated_at`)
-VALUES (1, 0, '/api/dashboard','ANY', 'Dashboard', 'routes.dashboard.dashboard','Dashboard目录','/dashboard','LAYOUT', 'bx:bx-home','1','0','1','1',now(), now()),
+VALUES (1, 0, '/api/dashboard','ANY', '首页', 'routes.dashboard.dashboard','首页目录','/dashboard','LAYOUT', 'bx:bx-home','1','0','1','1',now(), now()),
        (2, 0, '/api/system','ANY', '系统管理', 'routes.demo.system.moduleName','系统管理目录','/system','LAYOUT', 'ion:settings-outline','1','0','1','1',now(), now()),
        (3, 2, '/api/users','ANY', '账号管理', 'routes.demo.system.account','账号管理菜单','account','/sbvadmin/user/UserIndex', '','1','1','1','1',now(), now()),
        (4, 3, '/api/users','POST', '新增账号', '','新增账号按钮','','', '','1','2','1','1',now(), now()),
