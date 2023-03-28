@@ -26,14 +26,14 @@
             <result column="rname" property="name"/>
             <result column="rname_zh" property="nameZh"/>
         </collection>
-        <collection property="roleIds" ofType="Integer">
+        <collection property="roleIds" ofType="Long">
             <id column="rid"/>
         </collection>
         <collection property="depts" ofType="com.sbvadmin.model.Dept">
             <id column="did" property="id"/>
             <result column="dname" property="name"/>
         </collection>
-        <collection property="deptIds" ofType="Integer">
+        <collection property="deptIds" ofType="Long">
             <id column="did"/>
         </collection>
     </resultMap>

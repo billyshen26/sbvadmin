@@ -1,9 +1,6 @@
 package com.sbvadmin.model;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -45,18 +42,20 @@ public class User implements UserDetails , Serializable {
     private String mpOpenId;
     private String unionId;
     private Boolean locked;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createdAt;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") // 解决返回带T的问题
+//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") // 解决返回带T的问题
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updatedAt;
 
     @TableField(exist = false)
-    private List<Integer> roleIds; // 方便前端显示，分配用户角色
+    private List<Long> roleIds; // 方便前端显示，分配用户角色
     @TableField(exist = false)
     private List<Role> roles;
 
     @TableField(exist = false)
-    private List<Integer> deptIds; // 方便前端显示，分配用户机构
+    private List<Long> deptIds; // 方便前端显示，分配用户机构
     @TableField(exist = false)
     private List<Dept> depts;
 

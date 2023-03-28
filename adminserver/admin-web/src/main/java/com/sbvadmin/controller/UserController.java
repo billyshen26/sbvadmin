@@ -2,9 +2,10 @@ package com.sbvadmin.controller;
 
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.sbvadmin.model.ErrorCode;
-import com.sbvadmin.model.ResultFormat;
-import com.sbvadmin.model.User;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.sbvadmin.model.*;
+import com.sbvadmin.service.impl.UserDeptServiceImpl;
+import com.sbvadmin.service.impl.UserRoleServiceImpl;
 import com.sbvadmin.service.impl.UserServiceImpl;
 import com.sbvadmin.service.utils.CommonUtil;
 import com.sbvadmin.utils.SbvLog;
@@ -16,6 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -35,15 +38,16 @@ public class UserController {
     @Autowired
     UserServiceImpl userService;
 
+    @Autowired
+    UserRoleServiceImpl userRoleService;
+
+    @Autowired
+    UserDeptServiceImpl userDeptService;
+
     @GetMapping("")
     public List<User> getUsers(@RequestParam(value="deptId" ,required=false) Long did) {
-        String host = environment.getProperty("server.host");
-        String port = environment.getProperty("server.port");
         List<User> users = userService.getUsersWithRoles(did);
         for (User user : users) {
-//            if (!user.getAvatar().contains("http")) {
-//                user.setAvatar(host + ":" + port + File.separator + user.getAvatar()); // 补充域名和端口
-//            }
             user.setAvatar(CommonUtil.getAvatarUrl(user.getAvatar()));
         }
         return users;
@@ -54,6 +58,8 @@ public class UserController {
     public Object addUser(@RequestBody @Valid User user) {
         String message = null;
         // 1.将用户添加到数据库
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // 密码加密
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (!userService.save(user))
             return ResultFormat.fail(ErrorCode.FAILED);
         // 2.将用户添加事件发送到mq，用于后续邮件通知
@@ -69,11 +75,38 @@ public class UserController {
     @SbvLog(desc = "修改用户")
     public boolean editUser(@RequestBody User user, @PathVariable Long id) {
         user.setId(id);
+        // 修改密码
         if (user.getPassword() != null) {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // 密码加密
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        return userService.updateById(user); // TODO 修改角色机构
+        // 修改角色
+        QueryWrapper userRoleWrapper = new QueryWrapper<>();
+        userRoleWrapper.eq("uid",id);
+        userRoleService.remove(userRoleWrapper); //先删除之前的分配关系
+        List<UserRole> userRoles = new ArrayList<>();
+        for (Long roleId : user.getRoleIds()) {
+            UserRole userRole = new UserRole();
+            userRole.setRid(roleId);
+            userRole.setUid(id);
+            userRoles.add(userRole);
+        }
+        userRoleService.saveBatch(userRoles);
+
+        // 修改部门
+        QueryWrapper userDeptWrapper = new QueryWrapper<>();
+        userDeptWrapper.eq("uid",id);
+        userDeptService.remove(userDeptWrapper); //先删除之前的分配关系
+        List<UserDept> userDepts = new ArrayList<>();
+        for (Long deptId : user.getDeptIds()) {
+            UserDept userDept = new UserDept();
+            userDept.setDid(deptId);
+            userDept.setUid(id);
+            userDepts.add(userDept);
+        }
+        userDeptService.saveBatch(userDepts);
+
+        return userService.updateById(user);
     }
 
     @DeleteMapping("/{id}")

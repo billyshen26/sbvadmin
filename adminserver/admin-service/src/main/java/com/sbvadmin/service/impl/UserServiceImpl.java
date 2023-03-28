@@ -66,14 +66,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 1.新增用户 TODO 加入事务 和更多判断
         super.save(entity);
         // 2.给用户分配角色
-        for (Integer roleId : entity.getRoleIds()) {
+        for (Long roleId : entity.getRoleIds()) {
             UserRole userRole = new UserRole();
             userRole.setRid(roleId.longValue());
             userRole.setUid(entity.getId());
             userRoleMapper.insert(userRole);
         }
         // 3.给用户分配机构
-        for (Integer deptId : entity.getDeptIds()) {
+        for (Long deptId : entity.getDeptIds()) {
             UserDept userDept = new UserDept();
             userDept.setDid(deptId.longValue());
             userDept.setUid(entity.getId());
