@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sbvadmin.mapper.RoleMapper;
 import com.sbvadmin.model.Role;
 import com.sbvadmin.model.RolePermission;
+import com.sbvadmin.model.User;
 import com.sbvadmin.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     /**
-     * Notes:  同时修改角色和权限的关系
+     * Notes:  修改角色，同时修改角色和权限的关系
      * @param: [entity]
      * @return: boolean
      * Author: 涛声依旧 likeboat@163.com
@@ -40,6 +41,36 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
      **/
     @Override
     public boolean updateById(Role entity) {
+        // 更新该角色的其他信息
+        super.updateById(entity);  // TODO 需要进行事务处理
+
+        //更新角色和权限之间的关系
+        return updateRolePermission(entity);
+    }
+
+    /*
+     * Notes:  新增角色，同时修改角色和权限的关系
+     * @param: [entity]
+     * @return: boolean
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/3/30 15:26
+     **/
+    @Override
+    public boolean save(Role entity) {
+        // 新增角色
+        super.save(entity);
+        //更新角色和权限之间的关系
+        return updateRolePermission(entity);
+    }
+
+    /*
+     * Notes:  更新角色和权限之间的关系
+     * @param: [entity]
+     * @return: boolean
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/3/30 15:23
+     **/
+    private boolean updateRolePermission(Role entity){
         // 1. 删除所有改角色的权限点
         QueryWrapper<RolePermission> queryWrapper=new QueryWrapper<>();
         queryWrapper.eq("rid", entity.getId());
@@ -52,8 +83,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
             rolePermission.setRid(entity.getId());
             rolePermissions.add(rolePermission);
         }
-        rolePermissionService.saveBatch(rolePermissions);
-        // 更新该角色的其他信息
-        return super.updateById(entity);  // TODO 需要进行事务处理
+        return rolePermissionService.saveBatch(rolePermissions);
     }
 }

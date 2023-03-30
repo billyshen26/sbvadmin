@@ -22,7 +22,8 @@ public enum ErrorCode {
     ROOT_CANT_DELETE(20002, "超级管理员不能被删除"),
     ROOT_CANT_UPDATE(20003, "超级管理员不能被修改"),
     PERMISSION_CANT_DELETE(20004, "预定权限点不能被删除"),
-    RABBITMQ_NOT_ACTIVE(20005, "用户数据库添加成功,但Rabbit MQ 服务未启用");
+    RABBITMQ_NOT_ACTIVE(20005, "用户数据库添加成功,但Rabbit MQ 服务未启用"),
+    WECHAT_AUTH_FAILED(20006, "微信授权失败");
 
     // 30001-39999 用户自定义错误
 

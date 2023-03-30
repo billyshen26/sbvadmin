@@ -80,31 +80,31 @@ public class UserController {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // 密码加密
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        // 修改角色
-        QueryWrapper userRoleWrapper = new QueryWrapper<>();
-        userRoleWrapper.eq("uid",id);
-        userRoleService.remove(userRoleWrapper); //先删除之前的分配关系
-        List<UserRole> userRoles = new ArrayList<>();
-        for (Long roleId : user.getRoleIds()) {
-            UserRole userRole = new UserRole();
-            userRole.setRid(roleId);
-            userRole.setUid(id);
-            userRoles.add(userRole);
-        }
-        userRoleService.saveBatch(userRoles);
-
-        // 修改部门
-        QueryWrapper userDeptWrapper = new QueryWrapper<>();
-        userDeptWrapper.eq("uid",id);
-        userDeptService.remove(userDeptWrapper); //先删除之前的分配关系
-        List<UserDept> userDepts = new ArrayList<>();
-        for (Long deptId : user.getDeptIds()) {
-            UserDept userDept = new UserDept();
-            userDept.setDid(deptId);
-            userDept.setUid(id);
-            userDepts.add(userDept);
-        }
-        userDeptService.saveBatch(userDepts);
+//        // 修改角色
+//        QueryWrapper userRoleWrapper = new QueryWrapper<>();
+//        userRoleWrapper.eq("uid",id);
+//        userRoleService.remove(userRoleWrapper); //先删除之前的分配关系
+//        List<UserRole> userRoles = new ArrayList<>();
+//        for (Long roleId : user.getRoleIds()) {
+//            UserRole userRole = new UserRole();
+//            userRole.setRid(roleId);
+//            userRole.setUid(id);
+//            userRoles.add(userRole);
+//        }
+//        userRoleService.saveBatch(userRoles);
+//
+//        // 修改部门
+//        QueryWrapper userDeptWrapper = new QueryWrapper<>();
+//        userDeptWrapper.eq("uid",id);
+//        userDeptService.remove(userDeptWrapper); //先删除之前的分配关系
+//        List<UserDept> userDepts = new ArrayList<>();
+//        for (Long deptId : user.getDeptIds()) {
+//            UserDept userDept = new UserDept();
+//            userDept.setDid(deptId);
+//            userDept.setUid(id);
+//            userDepts.add(userDept);
+//        }
+//        userDeptService.saveBatch(userDepts);
 
         return userService.updateById(user);
     }

@@ -34,6 +34,7 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
 //            requestUrl =requestUrl.substring(0, requestUrl.indexOf("?")); // 废弃 去除问号及其后面的内容
 //        }
         String requestUri =filterInvocation.getRequest().getRequestURI(); // 请求uri 已经去掉了问号及其后面的内容
+
         /**
          * Notes:
          * requestUrl 分为3类
@@ -45,7 +46,9 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
          **/
 
         // 第1类
-        if (requestUri.equals("/api/configs/getConfigBySymbol")) {
+        if (requestUri.equals("/api/configs/getConfigBySymbol")||
+                requestUri.equals("/api/wechat/jscode2openid")||
+                requestUri.equals("/api/wechat/wechatLogin")) {
             return SecurityConfig.createList("ROLE_LOGIN");
         }
 
@@ -63,7 +66,6 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
         for (Permission permission : allPermission) {
             if(antPathMatcher.match(permission.getRequestUrl(),requestUri)){ // 先判断URL路径是否符合
                 // TODO 目前ANY的设定还没体现出来，没完全测试过，前端角色修改也存在问题
-                // 修改用户 api/users/2 这种接口还有问题 没法匹配到，待完善
                 if ("ANY".equals(permission.getRequestMethod())
                         || method.equals(permission.getRequestMethod())){  // 再判断方法是否符合
                     List<Role> roles = permission.getRoles();
@@ -79,7 +81,7 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
             return SecurityConfig.createList(roleNames);
         }
         // 均不满足时，必须拥有root权限才能访问
-        return SecurityConfig.createList("ROLE_root"); // TODO 目前sys打头的几个表的增删改查权限还有问题，比如admin就没法修改用户
+        return SecurityConfig.createList("ROLE_root");
     }
 
     @Override

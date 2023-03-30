@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,6 +35,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     UserDeptMapper userDeptMapper;
 
+    @Autowired
+    UserRoleServiceImpl userRoleService;
+
+    @Autowired
+    UserDeptServiceImpl userDeptService;
 
 
     @Override
@@ -63,27 +69,55 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public boolean save(User entity) {
-        // 1.新增用户 TODO 加入事务 和更多判断
+        // 新增用户 TODO 加入事务 和更多判断
         super.save(entity);
-        // 2.给用户分配角色
-        for (Long roleId : entity.getRoleIds()) {
-            UserRole userRole = new UserRole();
-            userRole.setRid(roleId.longValue());
-            userRole.setUid(entity.getId());
-            userRoleMapper.insert(userRole);
-        }
-        // 3.给用户分配机构
-        for (Long deptId : entity.getDeptIds()) {
-            UserDept userDept = new UserDept();
-            userDept.setDid(deptId.longValue());
-            userDept.setUid(entity.getId());
-            userDeptMapper.insert(userDept);
-        }
-        return true;
+        // 给用户分配角色和给用户分配机构
+        return updateUserRoleAndDept(entity);
     }
 
+    @Override
+    public boolean updateById(User entity) {
+        // 修改用户 TODO 加入事务 和更多判断
+        super.updateById(entity);
+        // 给用户分配角色和给用户分配机构
+        return updateUserRoleAndDept(entity);
+    }
     public List<Role> getUserRolesByUid(Long id){
         return userMapper.getUserRolesByUid(id);
     }
 
+    /*
+     * Notes:  修改用户角色关系和用户机构关系
+     * @param: [user]
+     * @return: boolean
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/3/30 15:46
+     **/
+    private boolean updateUserRoleAndDept(User user){
+        // 修改角色
+        QueryWrapper userRoleWrapper = new QueryWrapper<>();
+        userRoleWrapper.eq("uid",user.getId());
+        userRoleService.remove(userRoleWrapper); //先删除之前的分配关系
+        List<UserRole> userRoles = new ArrayList<>();
+        for (Long roleId : user.getRoleIds()) {
+            UserRole userRole = new UserRole();
+            userRole.setRid(roleId);
+            userRole.setUid(user.getId());
+            userRoles.add(userRole);
+        }
+        userRoleService.saveBatch(userRoles);
+
+        // 修改部门
+        QueryWrapper userDeptWrapper = new QueryWrapper<>();
+        userDeptWrapper.eq("uid",user.getId());
+        userDeptService.remove(userDeptWrapper); //先删除之前的分配关系
+        List<UserDept> userDepts = new ArrayList<>();
+        for (Long deptId : user.getDeptIds()) {
+            UserDept userDept = new UserDept();
+            userDept.setDid(deptId);
+            userDept.setUid(user.getId());
+            userDepts.add(userDept);
+        }
+        return userDeptService.saveBatch(userDepts);
+    }
 }

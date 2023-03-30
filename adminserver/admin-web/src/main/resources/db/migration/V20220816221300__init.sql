@@ -122,13 +122,24 @@ CREATE TABLE `sys_permission`
 
 INSERT INTO `sys_permission` (`id`, `pid`, `request_url`, `request_method`, `name`, `title`, `description`, `path`, `component`, `icon`, `show_flag`, `type`, `status`, `order_no`, `created_at`, `updated_at`)
 VALUES (1, 0, '/api/dashboard','ANY', '首页', 'routes.dashboard.dashboard','首页目录','/dashboard','LAYOUT', 'bx:bx-home','1','0','1','1',now(), now()),
-       (2, 0, '/api/system','ANY', '系统管理', 'routes.demo.system.moduleName','系统管理目录','/system','LAYOUT', 'ion:settings-outline','1','0','1','1',now(), now()),
-       (3, 2, '/api/users','ANY', '账号管理', 'routes.demo.system.account','账号管理菜单','account','/sbvadmin/user/UserIndex', '','1','1','1','1',now(), now()),
-       (4, 3, '/api/users','POST', '新增账号', '','新增账号按钮','','', '','1','2','1','1',now(), now()),
-       (5, 2, '/api/permissions','ANY', '菜单管理', 'routes.demo.system.menu','菜单管理菜单','menu','/sbvadmin/menu/MenuIndex', '','1','1','1','1',now(), now()),
-       (6, 5, '/api/permissions','POST', '新增菜单', '','新增菜单按钮','','', '','1','2','1','1',now(), now()),
-       (7, 2, '/api/roles','ANY', '角色管理', 'routes.demo.system.role','角色管理菜单','role','/sbvadmin/role/RoleIndex', '','1','1','1','1',now(), now());
-
+       (2, 1, '/api/dashboard/workbench','GET', '工作台', 'routes.dashboard.workbench','工作台','workbench','/sbvadmin/dashboard/workbench/index', '','1','1','1','1',now(), now()),
+       (3, 1, '/api/dashboard/analysis','GET', '分析页', 'routes.dashboard.analysis','分析页','analysis','/sbvadmin/dashboard/analysis/index', '','1','1','1','1',now(), now()),
+       (4, 0, '/api/system','ANY', '系统管理', 'routes.demo.system.moduleName','系统管理目录','/system','LAYOUT', 'ion:settings-outline','1','0','1','1',now(), now()),
+       (5, 4, '/api/users','ANY', '账号管理', 'routes.demo.system.account','账号管理菜单','account','/sbvadmin/user/UserIndex', '','1','1','1','1',now(), now()),
+       (6, 5, '/api/users','GET', '账号列表', '','账号列表','','', '','1','2','1','1',now(), now()),
+       (7, 5, '/api/users','POST', '新增账号', '','新增账号','','', '','1','2','1','1',now(), now()),
+       (8, 5, '/api/users/**','PUT', '修改账号', '','修改账号','','', '','1','2','1','1',now(), now()),
+       (9, 5, '/api/users/**','DELETE', '删除账号', '','删除账号','','', '','1','2','1','1',now(), now()),
+       (10, 4, '/api/permissions','ANY', '菜单管理', 'routes.demo.system.menu','菜单管理菜单','menu','/sbvadmin/menu/MenuIndex', '','1','1','1','1',now(), now()),
+       (11, 10, '/api/permissions','GET', '菜单列表', '','菜单列表','','', '','1','2','1','1',now(), now()),
+       (12, 10, '/api/permissions','POST', '新增菜单', '','新增菜单','','', '','1','2','1','1',now(), now()),
+       (13, 10, '/api/permissions/**','PUT', '修改菜单', '','修改菜单','','', '','1','2','1','1',now(), now()),
+       (14, 10, '/api/permissions/**','DELETE', '删除菜单', '','删除菜单','','', '','1','2','1','1',now(), now()),
+       (15, 4, '/api/roles','ANY', '角色管理', 'routes.demo.system.role','角色管理菜单','role','/sbvadmin/role/RoleIndex', '','1','1','1','1',now(), now()),
+       (16, 15, '/api/roles','GET', '角色列表', '','角色列表','','', '','1','2','1','1',now(), now()),
+       (17, 15, '/api/roles','POST', '新增角色', '','新增角色','','', '','1','2','1','1',now(), now()),
+       (18, 15, '/api/roles/**','PUT', '修改角色', '','修改角色','','', '','1','2','1','1',now(), now()),
+       (19, 15, '/api/roles/**','DELETE', '删除角色', '','删除角色','','', '','1','2','1','1',now(), now());
 
 --
 -- 表的结构 `sys_role_permission`
@@ -145,14 +156,44 @@ CREATE TABLE `sys_role_permission`
 -- ----------------------------
 -- Records of sys_role_permission
 -- ----------------------------
-INSERT INTO `sys_role_permission` (`id`, `rid`, `pid`)
-VALUES (1, 1, 1),
-       (2, 1, 2),
-       (3, 1, 3),
-       (4, 1, 4),
-       (5, 1, 5),
-       (6, 1, 6),
-       (7, 1, 7);
+INSERT INTO `sys_role_permission` (`rid`, `pid`)
+VALUES (2, 1),
+       (2, 2),
+       (2, 3),
+       (2, 4),
+       (2, 5),
+       (2, 6),
+       (2, 7),
+       (2, 8),
+       (2, 9),
+       (2, 11),
+       (2, 12),
+       (2, 13),
+       (2, 14),
+       (2, 15),
+       (2, 16),
+       (2, 17),
+       (2, 18),
+       (2, 19),
+       (1, 1),
+       (1, 2),
+       (1, 3),
+       (1, 4),
+       (1, 5),
+       (1, 6),
+       (1, 7),
+       (1, 8),
+       (1, 9),
+       (1, 11),
+       (1, 12),
+       (1, 13),
+       (1, 14),
+       (1, 15),
+       (1, 16),
+       (1, 17),
+       (1, 18),
+       (1, 19);
+
 --
 -- 表的结构 `sys_log`
 -- 记录操作日志和错误日志
