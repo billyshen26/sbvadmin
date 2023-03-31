@@ -66,7 +66,7 @@ public class RestExceptionHandler {
         }
         String message = builder.toString();
         log.error("参数异常 ex={}", message, e);
-        return ResultFormat.fail(ErrorCode.ACCESS_DENIED,message);
+        return ResultFormat.fail(ErrorCode.BAD_REQUEST,message);
     }
 
 
