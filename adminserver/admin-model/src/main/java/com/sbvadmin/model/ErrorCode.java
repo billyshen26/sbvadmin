@@ -18,6 +18,7 @@ public enum ErrorCode {
     BAD_REQUEST(400, "参数异常"),
 
     // 20001-29999 框架自定错误
+    PASSWORD_CANT_BLANK(2007, "密码不能为空"),
     FAILED(20001, "操作失败"),
     ROOT_CANT_DELETE(20002, "超级管理员不能被删除"),
     ROOT_CANT_UPDATE(20003, "超级管理员不能被修改"),

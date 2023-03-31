@@ -58,6 +58,7 @@ public class UserController {
     public Object addUser(@RequestBody @Valid User user) {
         String message = null;
         // 1.将用户添加到数据库
+        if (user.getPassword() == null||user.getPassword().equals("")) return ResultFormat.fail(ErrorCode.PASSWORD_CANT_BLANK);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // 密码加密
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (!userService.save(user))
