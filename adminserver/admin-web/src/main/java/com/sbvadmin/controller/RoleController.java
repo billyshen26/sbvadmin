@@ -1,7 +1,9 @@
 package com.sbvadmin.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sbvadmin.model.*;
 import com.sbvadmin.service.impl.RoleServiceImpl;
+import com.sbvadmin.service.impl.UserRoleServiceImpl;
 import com.sbvadmin.utils.SbvLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,9 @@ import java.util.List;
 public class RoleController {
     @Autowired
     RoleServiceImpl roleService;
+
+    @Autowired
+    UserRoleServiceImpl userRoleService;
 
     @GetMapping("")
     public List<Role> getRoles(){
@@ -43,7 +48,20 @@ public class RoleController {
 
     @SbvLog(desc = "删除角色")
     @DeleteMapping("/{id}")
-    public boolean delRole(@PathVariable Long id) {
+    public Object delRole(@PathVariable Long id) {
+        // 预置的几个角色无法删除
+        if (id == 1L || id == 2L || id == 3L){
+            return ResultFormat.fail(ErrorCode.PRESET_ROLE_CANT_DELETE);
+        }
+
+        // 如果角色已经分配给了某些用户，无法删除
+        QueryWrapper<UserRole> userRoleQueryWrapper = new QueryWrapper<>();
+        userRoleQueryWrapper.eq("rid",id);
+        if (userRoleService.list(userRoleQueryWrapper).size() != 0){
+            return ResultFormat.fail(ErrorCode.ROLE_CANT_DELETE);
+        }
+
+        // 删除角色和权限之间的关系，以及角色
         return roleService.removeById(id);
     }
 

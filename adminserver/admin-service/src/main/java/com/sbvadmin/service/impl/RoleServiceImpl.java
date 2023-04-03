@@ -63,6 +63,16 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         return updateRolePermission(entity);
     }
 
+    @Override
+    public boolean removeById(Role entity) {
+        // 删除角色和权限之间的关系
+        QueryWrapper<RolePermission> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("rid", entity.getId());
+        rolePermissionService.remove(queryWrapper);
+        // 删除角色
+        return super.removeById(entity);
+    }
+
     /*
      * Notes:  更新角色和权限之间的关系
      * @param: [entity]

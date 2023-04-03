@@ -51,7 +51,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String jwtToken = req.getHeader("authorization");
         System.out.println("jwtToken:" + jwtToken);
-        if (jwtToken != null){
+        if (jwtToken != null && jwtToken != ""){
             jwtToken = jwtToken.replace("Bearer","");
             if (!jwtTokenUtil.isTokenExpired(jwtToken)) {
                 Claims claims = jwtTokenUtil.parserToken(jwtToken);

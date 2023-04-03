@@ -25,4 +25,10 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
         List<Dept> treeDepts = CommonUtil.findChildren(0L,deptList);
         return treeDepts;
     }
+
+    @Override
+    public boolean removeById(Dept entity) {
+
+        return super.removeById(entity);
+    }
 }

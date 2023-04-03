@@ -19,10 +19,14 @@ public enum ErrorCode {
 
     // 20001-29999 框架自定错误
     PASSWORD_CANT_BLANK(20007, "密码不能为空"),
+    PRESET_ROLE_CANT_DELETE(20008, "预置角色无法删除"),
+    ROLE_CANT_DELETE(20009, "角色已经分配给某些用户,无法删除"),
+    PERMISSION_CANT_DELETE(20010, "权限已经分配给了某些角色，无法删除"),
+    DEPT_CANT_DELETE(20011, "机构已经分配给了某些用户，无法删除"),
     FAILED(20001, "操作失败"),
     ROOT_CANT_DELETE(20002, "超级管理员不能被删除"),
     ROOT_CANT_UPDATE(20003, "超级管理员不能被修改"),
-    PERMISSION_CANT_DELETE(20004, "预定权限点不能被删除"),
+    PRESET_PERMISSION_CANT_DELETE(20004, "预置权限点不能被删除"),
     RABBITMQ_NOT_ACTIVE(20005, "用户数据库添加成功,但Rabbit MQ 服务未启用"),
     WECHAT_AUTH_FAILED(20006, "微信授权失败");
 
