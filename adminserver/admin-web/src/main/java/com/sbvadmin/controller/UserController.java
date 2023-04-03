@@ -57,8 +57,13 @@ public class UserController {
     @SbvLog(desc = "新增用户")
     public Object addUser(@RequestBody @Valid User user) {
         String message = null;
-        // 1.将用户添加到数据库
+        // 密码不能为空
         if (user.getPassword() == null||user.getPassword().equals("")) return ResultFormat.fail(ErrorCode.PASSWORD_CANT_BLANK);
+        // username 不能重复 TODO 应该有更优雅的写法
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("username",user.getUsername());
+        if(userService.getOne(userQueryWrapper) != null) return ResultFormat.fail(ErrorCode.USERNAME_DUPLICATED);
+        // 1.将用户添加到数据库
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // 密码加密
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (!userService.save(user))

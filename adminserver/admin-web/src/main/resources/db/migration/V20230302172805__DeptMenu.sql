@@ -2,7 +2,7 @@
 -- 新增菜单
 --
 INSERT INTO `sys_permission` (`id`, `pid`, `request_url`, `request_method`, `name`, `title`, `description`, `path`, `component`, `icon`, `show_flag`, `type`, `status`, `order_no`, `created_at`, `updated_at`)
-VALUES (36, 4, '/api/depts','ANY', '机构管理', 'routes.sbvadmin.Dept.dept','机构管理','/dept','/sbvadmin/dept/DeptIndex.vue', '','1','1','1','1',now(), now()),
+VALUES (36, 4, '/api/depts','ANY', '机构管理', 'routes.sbvadmin.Dept.dept','机构管理','/dept','/sbvadmin/dept/DeptIndex.vue', '','1','1','1','4',now(), now()),
        (37, 36, '/api/depts/getDeptsAsTree','GET', '机构列表', '','机构列表','','', '','1','2','1','1',now(), now()),
        (38, 36, '/api/depts','POST', '新增机构', '','新增机构','','', '','1','2','1','1',now(), now()),
        (39, 36, '/api/depts/**','PUT', '修改机构', '','修改机构','','', '','1','2','1','1',now(), now()),

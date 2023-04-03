@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,11 +27,13 @@ public class Role implements Serializable {
     /**
      * 英文名称
      */
+    @NotNull(message = "角色值不能为空")
     private String name;
 
     /**
      * 中文名称
      */
+    @NotNull(message = "角色名不能为空")
     private String nameZh;
 
     /**

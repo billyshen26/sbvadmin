@@ -32,7 +32,11 @@ public class RoleController {
 
     @PostMapping("")
     @SbvLog(desc = "新增角色")
-    public boolean addRole(@RequestBody @Valid Role role){
+    public Object addRole(@RequestBody @Valid Role role){
+        // name 不能重复 TODO 应该有更优雅的写法
+        QueryWrapper<Role> roleQueryWrapper = new QueryWrapper<>();
+        roleQueryWrapper.eq("name",role.getName());
+        if(roleService.getOne(roleQueryWrapper) != null) return ResultFormat.fail(ErrorCode.ROLE_NAME_DUPLICATED);
         return roleService.save(role);
     }
 

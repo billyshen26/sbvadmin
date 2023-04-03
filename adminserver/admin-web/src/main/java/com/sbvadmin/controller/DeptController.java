@@ -3,10 +3,9 @@ package com.sbvadmin.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sbvadmin.model.*;
 import com.sbvadmin.service.impl.UserDeptServiceImpl;
+import com.sbvadmin.utils.SbvLog;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.sbvadmin.service.impl.DeptServiceImpl;
 
 import java.util.List;
@@ -31,8 +30,10 @@ public class DeptController extends BaseController<DeptServiceImpl, Dept> {
         return deptService.getAllDepts();
     }
 
+    @DeleteMapping("/{id}")
+    @SbvLog(desc = "删除")
     @Override
-    public Object delItem(Long id) {
+    public Object delItem(@PathVariable Long id) {
         // 如果机构已经分配给了某些用户，无法删除
         QueryWrapper<UserDept> userDeptQueryWrapper = new QueryWrapper<>();
         userDeptQueryWrapper.eq("did",id);
