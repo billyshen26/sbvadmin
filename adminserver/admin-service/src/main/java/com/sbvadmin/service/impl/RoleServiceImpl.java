@@ -28,8 +28,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     RolePermissionServiceImpl rolePermissionService;
 
     @Override
-    public List<Role> getRolesWithPermissions() {
-        return roleMapper.getRolesWithPermissions();
+    public List<Role> getRolesWithPermissions(String name, String status) {
+        return roleMapper.getRolesWithPermissions(name, status);
     }
 
     /**
@@ -43,7 +43,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public boolean updateById(Role entity) {
         // 更新该角色的其他信息
         super.updateById(entity);  // TODO 需要进行事务处理
-
+        if(entity.getMenu() == null) return true; // 不修改权限点的情况，比如启用禁用角色
         //更新角色和权限之间的关系
         return updateRolePermission(entity);
     }

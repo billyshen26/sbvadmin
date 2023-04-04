@@ -44,7 +44,7 @@ public class Role implements Serializable {
     /**
      * 状态:0-禁用;1-启用
      */
-    private Byte status;
+    private Boolean status;
 
     /**
      * 排序

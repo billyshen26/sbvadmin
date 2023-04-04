@@ -62,8 +62,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * Author: 涛声依旧 likeboat@163.com
      * Time: 2022/7/18 22:38
      **/
-    public List<User> getUsersWithRoles(Long did) {
-        return userMapper.getUsersWithRoles(did);
+    public List<User> getUsersWithRoles(Long did,Long id,String name) {
+        return userMapper.getUsersWithRoles(did,id,name);
     }
 
 

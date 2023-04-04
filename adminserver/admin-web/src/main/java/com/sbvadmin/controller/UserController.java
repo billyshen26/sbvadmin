@@ -45,8 +45,10 @@ public class UserController {
     UserDeptServiceImpl userDeptService;
 
     @GetMapping("")
-    public List<User> getUsers(@RequestParam(value="deptId" ,required=false) Long did) {
-        List<User> users = userService.getUsersWithRoles(did);
+    public List<User> getUsers(@RequestParam(value="deptId" ,required=false) Long did,
+                               @RequestParam(value="id" ,required=false) Long id,
+                               @RequestParam(value="name" ,required=false) String name) {
+        List<User> users = userService.getUsersWithRoles(did,id,name);
         for (User user : users) {
             user.setAvatar(CommonUtil.getAvatarUrl(user.getAvatar()));
         }

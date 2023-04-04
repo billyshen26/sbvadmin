@@ -48,5 +48,11 @@
         <if test="did!=null and did!=''">
             where d.id = #{did}
         </if>
+        <if test="id!=null and id!=''">
+            where u.id = #{id}
+        </if>
+        <if test="name!=null and name!=''">
+            where u.nickname like CONCAT('%',#{name},'%') or u.username like CONCAT('%',#{name},'%')
+        </if>
     </select>
 </mapper>

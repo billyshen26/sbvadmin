@@ -15,5 +15,11 @@
     </resultMap>
     <select id="getRolesWithPermissions" resultMap="RoleWithPermissions">
         SELECT r.*,rp.pid FROM sys_role r LEFT JOIN sys_role_permission rp ON r.`id`=rp.`rid`
+        <if test="status!=null and status!=''">
+            where r.status = #{status}
+        </if>
+        <if test="name!=null and name!=''">
+            where r.name like CONCAT('%',#{name},'%') or r.name_zh like CONCAT('%',#{name},'%')
+        </if>
     </select>
 </mapper>
