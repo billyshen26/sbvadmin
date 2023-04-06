@@ -11,7 +11,7 @@
     <!-- 将监听类加入到xml -->
     <contextListener class="com.sbvadmin.config.CustomLogContextListener" />
 
-    <springProperty scope="context" name="APP_NAME"  source="spring.application.name"/>
+    <springProperty scope="context" name="APP_NAME"  source="spring.application.packageName"/>
     <!-- 格式化输出：
         %d          表示日期，
         %thread     表示线程名，
