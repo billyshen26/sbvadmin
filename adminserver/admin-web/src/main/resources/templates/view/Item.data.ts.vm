@@ -25,6 +25,11 @@ export const searchFormSchema: FormSchema[] = [
   {
     field: 'createdAt',
     component: 'RangePicker',
+    componentProps: {
+      format: 'YYYY-MM-DD HH:mm:ss',
+      placeholder: ['开始时间', '结束时间'],
+      showTime: { format: 'HH:mm:ss' },
+    },
     label: '创建日期',
     colProps: { span: 8 },
   },

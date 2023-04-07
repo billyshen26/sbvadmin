@@ -163,6 +163,10 @@ public class SbvGenerator {
             System.out.println("maxId=" + maxid);
             // 自定义permission自增主键
             objectMap.put("permissionId", maxid +  inputTables.indexOf(tableName));
+            objectMap.put("permissionId1", maxid +  inputTables.indexOf(tableName) + 1);
+            objectMap.put("permissionId2", maxid +  inputTables.indexOf(tableName) + 2);
+            objectMap.put("permissionId3", maxid +  inputTables.indexOf(tableName) + 3);
+            objectMap.put("permissionId4", maxid +  inputTables.indexOf(tableName) + 4);
 
             // 包名
             objectMap.put("packageName", packageName);
@@ -264,12 +268,15 @@ public class SbvGenerator {
 
         // 删除数据库记录
         QueryWrapper<Permission> wrapper = new QueryWrapper<>();
-        wrapper.eq("request_url","/api/"+tableNameInput+"s");
-        Permission permission = permissionMapper.selectOne(wrapper);
-        QueryWrapper<RolePermission> wrapper2 = new QueryWrapper<>();
-        wrapper2.eq("pid",permission.getId());
-        rolePermissionMapper.delete(wrapper2);
+        wrapper.like("request_url","/api/"+tableNameInput+"s");
+        List<Permission> permissionList = permissionMapper.selectList(wrapper);
+        for (Permission permission: permissionList ) {
+            QueryWrapper<RolePermission> wrapper2 = new QueryWrapper<>();
+            wrapper2.eq("pid",permission.getId());
+            rolePermissionMapper.delete(wrapper2);
+        }
         permissionMapper.delete(wrapper);
+
 
         // 手动去删下 flyway里的数据 TODO
 
