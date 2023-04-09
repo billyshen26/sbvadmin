@@ -14,7 +14,7 @@ CREATE TABLE `sys_user`
     `locked`        tinyint(1) DEFAULT '0' COMMENT '是否被锁:1为已锁，0位未锁',
     `username`      varchar(100) NOT NULL UNIQUE COMMENT '用户名',
     `password`      varchar(100) NOT NULL COMMENT '密码',
-    `avatar`        varchar(255) NOT NULL DEFAULT '' COMMENT '头像',
+    `avatar`        text COLLATE utf8mb4_unicode_ci COMMENT '头像',
     `home_path`     varchar(100) NOT NULL DEFAULT '' COMMENT '入口页面',
     `last_login_at` datetime NULL DEFAULT NULL COMMENT '最后登录时间',
     `last_login_ip` varchar(20) NOT NULL DEFAULT '' COMMENT '最后登录ip',
