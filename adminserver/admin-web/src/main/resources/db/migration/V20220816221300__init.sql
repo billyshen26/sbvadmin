@@ -253,6 +253,7 @@ CREATE TABLE `sys_dict` (
     `type_name`      varchar(100) NOT NULL COMMENT '字典类型名',
     `value`         text COLLATE utf8mb4_unicode_ci COMMENT  '字典值',
     `label`         varchar(100) NOT NULL COMMENT '字典名',
+    `icon`          text COLLATE utf8mb4_unicode_ci COMMENT '图标',
     `description`   text COLLATE utf8mb4_unicode_ci COMMENT '描述',
     `order_no`      decimal(10,2) NOT NULL DEFAULT 0.0 COMMENT '排序',
     `created_at`    datetime NULL DEFAULT NULL COMMENT '创建时间',
@@ -263,13 +264,13 @@ CREATE TABLE `sys_dict` (
 -- ----------------------------
 -- Records of sys_dict
 -- ----------------------------
-INSERT INTO `sys_dict` (`pid`, `type`, `type_name`, `value`, `label`,`description`, `order_no`, `created_at`,`updated_at`)
-VALUES (0, 'sex','性别','1', '男','性别描述',0,now(),now()),
-       (0, 'sex','性别','2', '女','性别描述',0,now(),now()),
-       (0, 'education','学历','1', '大专','学历描述',0,now(),now()),
-       (0, 'education','学历','2', '本科','学历描述',0,now(),now()),
-       (0, 'education','学历','3', '硕士','学历描述',0,now(),now()),
-       (0, 'education','学历','4', '博士','学历描述',0,now(),now());
+INSERT INTO `sys_dict` (`pid`, `type`, `type_name`, `value`, `label`,`icon`,`description`, `order_no`, `created_at`,`updated_at`)
+VALUES (0, 'sex','性别','1', '男','性别描述','',0,now(),now()),
+       (0, 'sex','性别','2', '女','性别描述','',0,now(),now()),
+       (0, 'education','学历','1', '大专','学历描述','',0,now(),now()),
+       (0, 'education','学历','2', '本科','学历描述','',0,now(),now()),
+       (0, 'education','学历','3', '硕士','学历描述','',0,now(),now()),
+       (0, 'education','学历','4', '博士','学历描述','',0,now(),now());
 
 -- ----------------------------
 -- Table structure for sys_dept

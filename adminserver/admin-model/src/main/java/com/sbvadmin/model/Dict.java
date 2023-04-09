@@ -55,6 +55,11 @@ public class Dict implements Serializable {
     private String label;
 
     /**
+     * 图标
+     */
+    private String icon;
+
+    /**
      * 描述
      */
     private String description;
