@@ -54,6 +54,12 @@ public class BaseController<S extends IService<T>, T> {
 //        return this.getItemService().list();
     }
 
+    @GetMapping("/{id}")
+    @SbvLog(desc = "获取详情")
+    public T getItem(@PathVariable Long id) {
+        return this.getItemService().getById(id);
+    }
+
     @DeleteMapping("/{id}")
     @SbvLog(desc = "删除")
     public Object delItem(@PathVariable Long id) {
