@@ -1,9 +1,6 @@
 package com.sbvadmin.utils;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -70,8 +67,17 @@ public class JwtTokenUtil {
      * Time: 2022/12/30 16:50
      **/
     public Claims parserToken(String token){
-        return Jwts.parser().setSigningKey(signingKey).parseClaimsJws(token)
-                .getBody();
+//        return Jwts.parser().setSigningKey(signingKey).parseClaimsJws(token)
+//                .getBody();
+        try {
+            return Jwts.parser().setSigningKey(signingKey).parseClaimsJws(token).getBody();
+        } catch (ExpiredJwtException var) {
+            return  var.getClaims();
+        } catch (PrematureJwtException var1) {
+            return var1.getClaims();
+        } catch (Exception var2) {
+            return null;
+        }
     }
 
     /**

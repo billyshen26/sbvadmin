@@ -46,6 +46,9 @@ public class JwtFilter extends OncePerRequestFilter {
         HttpServletRequest req = (HttpServletRequest) request;
         //获取请求路径
         String path = req.getRequestURI();
+        if (path.equals("/api/refreshToken")){
+            filterChain.doFilter(req,response);
+        }
         //获取请求方式
         String method = req.getMethod();
 

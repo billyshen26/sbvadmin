@@ -6,14 +6,22 @@ import com.sbvadmin.model.UserInfo;
 import com.sbvadmin.service.impl.PermissionServiceImpl;
 import com.sbvadmin.service.impl.UserServiceImpl;
 import com.sbvadmin.service.utils.CommonUtil;
+import com.sbvadmin.utils.JwtTokenUtil;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +34,8 @@ import java.util.Map;
 @RequestMapping("/api")
 public class AuthController {
 
-
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
     UserServiceImpl userService;
@@ -101,5 +110,40 @@ public class AuthController {
                 SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         return permissionService.getCodesByUid(user.getId());
+    }
+
+    /**
+     * Notes:  刷新token，目前给小程序用
+     * @param: []
+     * @return: java.lang.String
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/4/11 10:26
+     **/
+    @PostMapping("/refreshToken")
+    public String refreshToken(HttpServletRequest request){
+        String jwtToken = request.getHeader("authorization");
+        System.out.println("jwtToken:" + jwtToken);
+        if (jwtToken != null && jwtToken != "") {
+            jwtToken = jwtToken.replace("Bearer", "");
+//            if (!jwtTokenUtil.isTokenExpired(jwtToken)) { // 可以随时刷新token，待考虑 TODO
+                Claims claims = jwtTokenUtil.parserToken(jwtToken);
+                String username = claims.getSubject();//获取当前登录用户名
+                List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get("authorities"));
+                Long uid = Long.valueOf(String.valueOf(claims.get("uid")));
+                User user = userService.getById(uid);
+                StringBuffer as = new StringBuffer();
+                for (GrantedAuthority authority : authorities) {
+                    as.append(authority.getAuthority())
+                            .append(",");
+                }
+                Date expired = jwtTokenUtil.getExpiredDate();
+                Map<String, Object> map = new HashMap<>();
+                map.put("authorities", as); // 配置用户角色
+                map.put("uid", user.getId()); // 配置用户id
+                String jwt = jwtTokenUtil.genToken(map, user.getUsername(), expired);
+                return jwt;
+//            }
+        }
+        return "先登录，才能刷新token";
     }
 }
