@@ -79,9 +79,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public boolean updateById(User entity) {
         // 修改用户 TODO 加入事务 和更多判断
-        super.updateById(entity);
+        boolean result = super.updateById(entity);
         // 给用户分配角色和给用户分配机构
-        return updateUserRoleAndDept(entity);
+        if (entity.getRoleIds() != null)
+            result = updateUserRoleAndDept(entity);
+        return result;
     }
     public List<Role> getUserRolesByUid(Long id){
         return userMapper.getUserRolesByUid(id);
