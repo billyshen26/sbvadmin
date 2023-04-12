@@ -167,6 +167,7 @@ public class SbvGenerator {
             objectMap.put("permissionId2", maxid +  inputTables.indexOf(tableName) + 2);
             objectMap.put("permissionId3", maxid +  inputTables.indexOf(tableName) + 3);
             objectMap.put("permissionId4", maxid +  inputTables.indexOf(tableName) + 4);
+            objectMap.put("permissionId5", maxid +  inputTables.indexOf(tableName) + 5);
 
             // 包名
             objectMap.put("packageName", packageName);

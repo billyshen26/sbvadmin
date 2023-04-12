@@ -6,7 +6,8 @@ VALUES (${permissionId}, 4, '/api/${table.entityPath}s','ANY', '${table.comment}
        (${permissionId1}, ${permissionId}, '/api/${table.entityPath}s','GET', '${table.comment}列表', '','${table.comment}列表','','', '','1','2','1','1',now(), now()),
        (${permissionId2}, ${permissionId}, '/api/${table.entityPath}s','POST', '新增${table.comment}', '','新增${table.comment}','','', '','1','2','1','1',now(), now()),
        (${permissionId3}, ${permissionId}, '/api/${table.entityPath}s/**','PUT', '修改${table.comment}', '','修改${table.comment}','','', '','1','2','1','1',now(), now()),
-       (${permissionId4}, ${permissionId}, '/api/${table.entityPath}s/**','DELETE', '删除${table.comment}', '','删除${table.comment}','','', '','1','2','1','1',now(), now());
+       (${permissionId4}, ${permissionId}, '/api/${table.entityPath}s/**','DELETE', '删除${table.comment}', '','删除${table.comment}','','', '','1','2','1','1',now(), now()),
+       (${permissionId5}, ${permissionId}, '/api/${table.entityPath}s/**','GET', '${table.comment}详情', '','${table.comment}详情','','', '','1','2','1','1',now(), now());
 
 --
 -- 默认将菜单分配给root
@@ -17,8 +18,10 @@ VALUES (1, ${permissionId}),
        (1, ${permissionId2}),
        (1, ${permissionId3}),
        (1, ${permissionId4}),
+       (1, ${permissionId5}),
        (2, ${permissionId}),
        (2, ${permissionId1}),
        (2, ${permissionId2}),
        (2, ${permissionId3}),
-       (2, ${permissionId4});
+       (2, ${permissionId4}),
+       (2, ${permissionId5});
