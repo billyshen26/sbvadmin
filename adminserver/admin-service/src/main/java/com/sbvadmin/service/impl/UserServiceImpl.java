@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -119,5 +120,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             userDepts.add(userDept);
         }
         return userDeptService.saveBatch(userDepts);
+    }
+
+    /**
+     * Notes:  同时删除和用户相关的关系
+     * @param: [id]
+     * @return: boolean
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/4/12 10:07
+     **/
+    @Override
+    public boolean removeById(Serializable id) {
+        // 删除用户和角色关系
+        QueryWrapper userRoleWrapper = new QueryWrapper<>();
+        userRoleWrapper.eq("uid",id);
+        userRoleService.remove(userRoleWrapper);
+
+        // 删除用户和部门关系
+        QueryWrapper userDeptWrapper = new QueryWrapper<>();
+        userDeptWrapper.eq("uid",id);
+        userDeptService.remove(userDeptWrapper);
+
+        // 删除用户
+        return super.removeById(id);
     }
 }
