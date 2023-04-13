@@ -13,9 +13,10 @@ import com.sbvadmin.service.impl.LogServiceImpl;
  */
 @RestController
 @RequestMapping("/api/logs")
-
 public class LogController extends BaseController<LogServiceImpl, Log> {
-
+    public LogController(){
+        this.tableName = "sys_log";
+    }
 
 }
 

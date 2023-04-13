@@ -26,7 +26,8 @@ public class RoleController {
     UserRoleServiceImpl userRoleService;
 
     @GetMapping("")
-    public List<Role> getRoles(@RequestParam(value="status" ,required=false) String status, // TIPS:不能传int型的0，https://blog.csdn.net/qq_40450926/article/details/99696463
+    // TIPS: 不能传int型的0，https://blog.csdn.net/qq_40450926/article/details/99696463
+    public List<Role> getRoles(@RequestParam(value="status" ,required=false) String status,
                                @RequestParam(value="name" ,required=false) String name){
         return roleService.getRolesWithPermissions(name,status);
     }

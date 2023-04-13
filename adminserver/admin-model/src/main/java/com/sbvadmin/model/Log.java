@@ -1,6 +1,7 @@
 package com.sbvadmin.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -87,4 +88,7 @@ public class Log implements Serializable {
     private LocalDateTime createdAt;
 //    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
+
+    @TableField(exist = false)
+    private String nickname; // 生产日志的所属用户昵称,链表查询案例
 }

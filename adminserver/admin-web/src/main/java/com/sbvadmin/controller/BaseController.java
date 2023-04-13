@@ -21,8 +21,24 @@ public class BaseController<S extends IService<T>, T> {
     @Autowired
     protected S itemService;
 
+    protected String tableName;
     public S getItemService() {
         return this.itemService;
+    }
+
+    /*
+     * Notes:  格式化表名，用于辅助生成链表查询的时候进行字段的前缀添加
+     * @param: []
+     * @return: java.lang.String
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/4/13 16:58
+     **/
+    protected String getTableName(){
+        if (this.tableName != null){
+            return this.tableName + ".";
+        }else{
+            return "";
+        }
     }
 
     @GetMapping("")
@@ -34,7 +50,7 @@ public class BaseController<S extends IService<T>, T> {
                              @RequestParam(value="pageSize" ,required=false) Integer pageSize){
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         if (id != null) // id精准搜索
-            queryWrapper.eq("id",id);
+            queryWrapper.eq(this.getTableName()+"id",id);
         if (createdAt != null) // 创建日期范围搜索
             queryWrapper.between("created_at",createdAt[0],createdAt[1]);
 
@@ -57,7 +73,9 @@ public class BaseController<S extends IService<T>, T> {
     @GetMapping("/{id}")
     @SbvLog(desc = "获取详情")
     public T getItem(@PathVariable Long id) {
-        return this.getItemService().getById(id);
+        QueryWrapper<T> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(this.getTableName()+"id",id);
+        return this.getItemService().getOne(queryWrapper);
     }
 
     @DeleteMapping("/{id}")

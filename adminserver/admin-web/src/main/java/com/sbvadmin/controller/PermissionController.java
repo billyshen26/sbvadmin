@@ -49,7 +49,8 @@ public class PermissionController {
     public Object delPermission(@PathVariable Long id) {
         // 预置权限点不能被删除
         Long[] preDefinedPermissons = {1L,2L,3L,4L,5L,6L,7L};
-        if (Arrays.asList(preDefinedPermissons).contains(id)){ // TIPS:数组包含
+        // TIPS: 数组包含
+        if (Arrays.asList(preDefinedPermissons).contains(id)){
             return ResultFormat.fail(ErrorCode.PRESET_PERMISSION_CANT_DELETE);
         }
 
