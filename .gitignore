@@ -18,3 +18,6 @@
 /backup
 /adminserver/logs/
 /adminserver/admin-web/logs/
+
+### local configure file ###
+*.local

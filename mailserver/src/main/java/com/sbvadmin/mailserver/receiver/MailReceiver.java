@@ -1,6 +1,7 @@
 package com.sbvadmin.mailserver.receiver;
 
 import com.rabbitmq.client.Channel;
+import com.sbvadmin.model.User;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -9,6 +10,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -28,22 +30,22 @@ public class MailReceiver {
     @Autowired
     TemplateEngine templateEngine;
 
-//    @RabbitListener(queues = "add-user")
-//    public void handler(Message message, Channel channel) throws IOException {
-//        User user = (User) message.getPayload();
-//        System.out.println("有新用户添加进来了:" + user.getNickname());
-//
-//        Context ctx = new Context();
-//        ctx.setVariable("username",user.getUsername());
-//        ctx.setVariable("name",user.getNickname());
-//        String mail = templateEngine.process("register.html", ctx);
-//
-//        sendHtmlMail("493058179@qq.com",
-//                user.getEmail(),
-//                "likeboat@163.com",
-//                "svbadmin新用户注册邮件",
-//                mail);
-//    }
+    @RabbitListener(queues = "add-user")
+    public void handler(Message message, Channel channel) throws IOException {
+        User user = (User) message.getPayload();
+        System.out.println("有新用户添加进来了:" + user.getNickname());
+
+        Context ctx = new Context();
+        ctx.setVariable("username",user.getUsername());
+        ctx.setVariable("name",user.getNickname());
+        String mail = templateEngine.process("register.html", ctx);
+
+        sendHtmlMail("493058179@qq.com",
+                user.getEmail(),
+                "likeboat@163.com",
+                "svbadmin新用户注册邮件",
+                mail);
+    }
 
     /**
      * Notes:  发送html格式的邮件
@@ -75,10 +77,5 @@ public class MailReceiver {
         simpMsg.setSubject(subject);
         simpMsg.setText(content);
         javaMailSender.send(simpMsg);
-    }
-
-    @RabbitListener(queues = "QUD_OPEN_S")
-    public void handlerDnake(Message message, Channel channel) throws IOException {
-        System.out.println("有新报警来了");
     }
 }
