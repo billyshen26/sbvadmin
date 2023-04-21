@@ -50,7 +50,7 @@ public class UserController {
                                @RequestParam(value="name" ,required=false) String name) {
         List<User> users = userService.getUsersWithRoles(did,id,name);
         for (User user : users) {
-            user.setAvatar(CommonUtil.getAvatarUrl(user.getAvatar()));
+            if(user.getAvatar() != null) user.setAvatar(CommonUtil.getAvatarUrl(user.getAvatar()));
         }
         return users;
     }
