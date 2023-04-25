@@ -29,6 +29,19 @@ public class ResultFormat<T> {
     }
 
     /**
+     * Notes:  返回成功仅消息
+     * @param: [message]
+     * @return: com.sbvadmin.model.ResultFormat<T>
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/4/25 17:08
+     **/
+    public static <T> ResultFormat<T> success(String message){
+        ResultFormat<T> resultFormat = new ResultFormat<>();
+        resultFormat.setCode(ErrorCode.SUCCESS.getCode());
+        resultFormat.setMessage(message);
+        return resultFormat;
+    }
+    /**
      * Notes:  返回失败，包含自定义的message
      * @param: [errorCode, message]
      * @return: com.sbvadmin.model.ResultFormat<T>

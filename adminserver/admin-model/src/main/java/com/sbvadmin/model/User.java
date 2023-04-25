@@ -36,7 +36,7 @@ public class User implements UserDetails , Serializable {
     private String password;
     private String avatar;
     private String homePath;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime lastLoginAt;
     private String lastLoginIp;
     private String mpOpenId;
@@ -45,7 +45,7 @@ public class User implements UserDetails , Serializable {
 //    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createdAt;
-//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") // 解决返回带T的问题
+//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") // 解决返回带T的问题 改成LocalDateTimeSerializerConfig
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updatedAt;
 
