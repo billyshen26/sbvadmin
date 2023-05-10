@@ -33,7 +33,7 @@ public class UploadController {
         File jarFile = null;
         String path = null;
         try{
-            jarFile = home.getSource() != null ?  home.getSource() : home.getDir();
+            jarFile = home.getSource() != null ?  home.getSource() : home.getDir(); // TODO 写个公用函数
             String parent = jarFile.getParent();
             path = jarFile.getParentFile().toString();
         }catch(Exception e){

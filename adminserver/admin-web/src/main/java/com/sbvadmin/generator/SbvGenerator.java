@@ -235,7 +235,7 @@ public class SbvGenerator {
             String fileName = "src" + File.separator +"main" + File.separator + "resources" +
                     File.separator + "db" +  File.separator +
                     "migration" +  File.separator +
-                    "V" + currentTime + "__create_table_" + inputTable + ".sql";
+                    "V" + currentTime + "__" + inputTable + ".sql";
             FileOutputStream fos = new FileOutputStream(fileName);
             fos.write(fileData.getBytes());
             fos.flush();

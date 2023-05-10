@@ -70,7 +70,7 @@ public class AuthController {
         userInfo.setUserId(user.getId());
         userInfo.setId(user.getId());
         userInfo.setUsername(user.getUsername());
-        userInfo.setAvatar(CommonUtil.getAvatarUrl(user.getAvatar()));
+        userInfo.setAvatar(CommonUtil.getAvatarUrl(user.getAvatar())); // TIPS: 拼接服务器公网路径
         userInfo.setHomePath(user.getHomePath()); // 登录后去到的第一个页面路由
         userInfo.setRealName(user.getNickname());
         userInfo.setNickname(user.getNickname());
