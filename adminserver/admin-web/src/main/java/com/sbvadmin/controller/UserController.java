@@ -132,9 +132,9 @@ public class UserController {
     @SbvLog(desc = "修改个人密码")
     public Object changePassword(@RequestBody String data) {
         JSONObject jsonObject = JSONUtil.parseObj(data);
-        if (jsonObject.getShort("id") == 1) {
-            return ResultFormat.fail(ErrorCode.ROOT_CANT_UPDATE);
-        }
+//        if (jsonObject.getShort("id") == 1) {
+//            return ResultFormat.fail(ErrorCode.ROOT_CANT_UPDATE);
+//        }
         User user = userService.getById(jsonObject.getShort("id"));
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // 密码加密
         if(!passwordEncoder.matches(jsonObject.getStr("passwordOld"),user.getPassword())){
