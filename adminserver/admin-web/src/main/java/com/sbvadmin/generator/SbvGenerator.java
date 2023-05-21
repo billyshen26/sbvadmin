@@ -162,12 +162,12 @@ public class SbvGenerator {
             Long maxid = permissionMapper.getAutoIncrement(database);
             System.out.println("maxId=" + maxid);
             // 自定义permission自增主键
-            objectMap.put("permissionId", maxid +  inputTables.indexOf(tableName));
-            objectMap.put("permissionId1", maxid +  inputTables.indexOf(tableName) + 1);
-            objectMap.put("permissionId2", maxid +  inputTables.indexOf(tableName) + 2);
-            objectMap.put("permissionId3", maxid +  inputTables.indexOf(tableName) + 3);
-            objectMap.put("permissionId4", maxid +  inputTables.indexOf(tableName) + 4);
-            objectMap.put("permissionId5", maxid +  inputTables.indexOf(tableName) + 5);
+            objectMap.put("permissionId", maxid +  inputTables.indexOf(tableName)*6);
+            objectMap.put("permissionId1", maxid +  inputTables.indexOf(tableName)*6 + 1);
+            objectMap.put("permissionId2", maxid +  inputTables.indexOf(tableName)*6 + 2);
+            objectMap.put("permissionId3", maxid +  inputTables.indexOf(tableName)*6 + 3);
+            objectMap.put("permissionId4", maxid +  inputTables.indexOf(tableName)*6 + 4);
+            objectMap.put("permissionId5", maxid +  inputTables.indexOf(tableName)*6 + 5);
 
             // 包名
             objectMap.put("packageName", packageName);
