@@ -25,7 +25,7 @@ public class UploadController {
     private String uploadsPath;
 
     @PostMapping("/upload")
-    public String create(@RequestPart MultipartFile file) throws IOException {
+    public String create(@RequestPart MultipartFile file, @RequestPart String dir) throws IOException {
         String fileName = file.getOriginalFilename();
 
         //获取当前jar 的执行路径
@@ -40,7 +40,7 @@ public class UploadController {
             e.printStackTrace();
         }
         // 创建uploads 文件夹
-        String uploadsDirPath = path+ File.separator + uploadsPath;
+        String uploadsDirPath = path+ File.separator + uploadsPath+ File.separator +dir;
         File uploadsDir = new File(uploadsDirPath);
         if (!uploadsDir.exists()){ //如果不存在
             boolean dr = uploadsDir.mkdirs(); //创建目录
