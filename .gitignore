@@ -1,13 +1,5 @@
 # Project exclude paths
-/adminserver/admin-mapper/target/
-/adminserver/admin-model/target/
-/adminserver/admin-service/target/
-/adminserver/admin-web/target/
-/mailserver/target/
-/mailserver/target/
-/mailserver/target/
-/mailserver/target/
-
+target/
 ### IntelliJ IDEA ###
 .idea
 *.iws
