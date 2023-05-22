@@ -50,6 +50,6 @@ public class UploadController {
         if (!dest.exists()){ //如果不存在
             Files.copy(file.getInputStream(), dest.toPath()); //创建文件
         }
-        return uploadsPath + File.separator + fileName; // 只存相对地址
+        return uploadsPath + File.separator + dir + File.separator +fileName; // 只存相对地址
     }
 }
