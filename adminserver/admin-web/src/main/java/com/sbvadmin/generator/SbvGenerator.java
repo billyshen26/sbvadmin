@@ -1,5 +1,6 @@
 package com.sbvadmin.generator;
 
+import cn.hutool.core.io.FileUtil;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
@@ -67,6 +68,8 @@ public class SbvGenerator {
     @Value("${spring.application.vbenName}")
     private String vbenName;
 
+    @Value("${spring.application.apiName}")
+    private String apiName;
 
     @Test
     public void genCode() {
@@ -77,42 +80,42 @@ public class SbvGenerator {
          **/
         String dir = System.getProperty("user.dir");
         FastAutoGenerator.create(url, username, password)
-            .globalConfig(builder -> {
-                builder.author(author) // 设置作者
-                    .disableOpenDir() //禁止打开输出目录
-                    .outputDir("src/main/java/com/sbvadmin/generator/tempFiles"); // 指定输出目录
-            })
-            .packageConfig(builder -> {
-                builder.parent("com." + packageName) // 设置父包名
-                        .entity("model") //设置entity包名
-                        .other("vue") // 前端页面生成放入的临时包
-                    .pathInfo(Collections.singletonMap(OutputFile.mapperXml, "src/main/java/com/sbvadmin/generator/tempFiles")); // 设置mapperXml生成路径
-            })
-            // 策略配置
-            .strategyConfig((scanner, builder) ->  {
-                inputTables = getTables(scanner.apply("请输入表名，多个英文逗号分隔？所有输入 all"));
-                builder.addInclude(inputTables)
-                        .addTablePrefix(tablePrefix +"_")
-                    .controllerBuilder().enableRestStyle().enableHyphenStyle().superClass("com.sbvadmin.controller.BaseController")
-                    .entityBuilder().enableLombok().addTableFills(
-                            new Column("create_time", FieldFill.INSERT)
-                    ).build();
-            })
-            .injectionConfig((scanner, builder) -> {
-                Map<String,String> customFile = new HashMap<>();
-                customFile.put("LIST_VIEW",VueFileEnum.LIST_VIEW.getTemplate());
-                customFile.put("ADD_EDIT_VIEW",VueFileEnum.ADD_EDIT_VIEW.getTemplate());
-                customFile.put("VIET_DATA",VueFileEnum.VIET_DATA.getTemplate());
-                customFile.put("API",VueFileEnum.API.getTemplate());
-                customFile.put("MODEL",VueFileEnum.MODEL.getTemplate());
-                customFile.put("I18N_EN",VueFileEnum.I18N_EN.getTemplate());
-                customFile.put("I18N_ZH",VueFileEnum.I18N_ZH.getTemplate());
-                customFile.put("MENU_SQL",VueFileEnum.MENU_SQL.getTemplate()); // 生成菜单的sql
-                customFile.put("CONTROLLER",VueFileEnum.CONTROLLER.getTemplate()); // 自定义controller
-                builder.customFile(customFile);
-            })
-            .templateEngine(new EnhanceFreemarkerTemplateEngine())
-            .execute();
+                .globalConfig(builder -> {
+                    builder.author(author) // 设置作者
+                            .disableOpenDir() //禁止打开输出目录
+                            .outputDir("src/main/java/com/sbvadmin/generator/tempFiles"); // 指定输出目录
+                })
+                .packageConfig(builder -> {
+                    builder.parent("com." + packageName) // 设置父包名
+                            .entity("model") //设置entity包名
+                            .other("vue") // 前端页面生成放入的临时包
+                            .pathInfo(Collections.singletonMap(OutputFile.mapperXml, "src/main/java/com/sbvadmin/generator/tempFiles")); // 设置mapperXml生成路径
+                })
+                // 策略配置
+                .strategyConfig((scanner, builder) ->  {
+                    inputTables = getTables(scanner.apply("请输入表名，多个英文逗号分隔？所有输入 all"));
+                    builder.addInclude(inputTables)
+                            .addTablePrefix(tablePrefix +"_")
+                            .controllerBuilder().enableRestStyle().enableHyphenStyle().superClass("com.sbvadmin.controller.BaseController")
+                            .entityBuilder().enableLombok().addTableFills(
+                                    new Column("create_time", FieldFill.INSERT)
+                            ).build();
+                })
+                .injectionConfig((scanner, builder) -> {
+                    Map<String,String> customFile = new HashMap<>();
+                    customFile.put("LIST_VIEW",VueFileEnum.LIST_VIEW.getTemplate());
+                    customFile.put("ADD_EDIT_VIEW",VueFileEnum.ADD_EDIT_VIEW.getTemplate());
+                    customFile.put("VIET_DATA",VueFileEnum.VIET_DATA.getTemplate());
+                    customFile.put("API",VueFileEnum.API.getTemplate());
+                    customFile.put("MODEL",VueFileEnum.MODEL.getTemplate());
+                    customFile.put("I18N_EN",VueFileEnum.I18N_EN.getTemplate());
+                    customFile.put("I18N_ZH",VueFileEnum.I18N_ZH.getTemplate());
+                    customFile.put("MENU_SQL",VueFileEnum.MENU_SQL.getTemplate()); // 生成菜单的sql
+                    customFile.put("CONTROLLER",VueFileEnum.CONTROLLER.getTemplate()); // 自定义controller
+                    builder.customFile(customFile);
+                })
+                .templateEngine(new EnhanceFreemarkerTemplateEngine())
+                .execute();
 
         /**
          * Notes:  2.把自动生成的文件放到对应的位置
@@ -171,6 +174,8 @@ public class SbvGenerator {
 
             // 包名
             objectMap.put("packageName", packageName);
+            String packageNameWithSlash = packageName.replaceAll("\\.", File.separator);
+            objectMap.put("packageNameWithSlash", packageNameWithSlash);
 
             customFile.forEach((key, value) -> {
                 VueFileEnum vueFile = VueFileEnum.valueOf(key);
@@ -204,7 +209,8 @@ public class SbvGenerator {
         if(System.getProperty("os.name").toUpperCase().contains("WINDOWS")){
             command = "src/main/java/com/sbvadmin/generator/move_files.cmd"; // TODO
         }else{
-            command = "src/main/java/com/sbvadmin/generator/move_files.sh " + packageName + " " + vbenName; // 前端工程项目文件夹名，方便自己对项目取名
+            String packageNameWithSlash = packageName.replaceAll("\\.", File.separator);
+            command = "src/main/java/com/sbvadmin/generator/move_files.sh " + packageNameWithSlash + " " + vbenName; // 前端工程项目文件夹名，方便自己对项目取名
         }
         execCommand(command);
     }
@@ -262,8 +268,9 @@ public class SbvGenerator {
         if(System.getProperty("os.name").toUpperCase().contains("WINDOWS")){
             command = "src/main/java/com/sbvadmin/generator/delete_files.cmd"; // TODO
         }else{
+            String packageNameWithSlash = packageName.replaceAll("\\.", File.separator);
             command = "src/main/java/com/sbvadmin/generator/delete_files.sh "
-                    + packageName + " " + vbenName + " " + tableName + " " + tableNameInput ;
+                    + packageNameWithSlash + " " + vbenName + " " + tableName + " " + tableNameInput ;
         }
         execCommand(command);
 
@@ -341,24 +348,35 @@ public class SbvGenerator {
      **/
     @Test
     public void createDirs(){
-        String dir = System.getProperty("user.dir");
+        // 创建后端api目录
+        String packageNameWithSlash = packageName.replaceAll("\\.", File.separator);
         ApplicationHome home = new ApplicationHome(getClass());
         String adminserver = home.getDir().getParent();
         System.out.println(adminserver);
-        String directories = adminserver + "/admin-web/src/main/java/com/"+ packageName + "/controller";
+        String directories = adminserver + "/admin-web/src/main/java/com/"+ packageNameWithSlash + "/controller";
         File controller = new File(directories);
         controller.mkdirs();
-        directories = adminserver + "/admin-service/src/main/java/com/"+ packageName + "/service/impl";
+        directories = adminserver + "/admin-service/src/main/java/com/"+ packageNameWithSlash + "/service/impl";
         File serviceImpl = new File(directories);
         serviceImpl.mkdirs();
-        directories = adminserver + "/admin-model/src/main/java/com/"+ packageName + "/model";
+        directories = adminserver + "/admin-model/src/main/java/com/"+ packageNameWithSlash + "/model";
         File model = new File(directories);
         model.mkdirs();
-        directories = adminserver + "/admin-mapper/src/main/java/com/"+ packageName + "/mapper";
+        directories = adminserver + "/admin-mapper/src/main/java/com/"+ packageNameWithSlash + "/mapper";
         File mapper = new File(directories);
         mapper.mkdirs();
-        directories = adminserver + "/admin-mapper/src/main/resources/mapper/"+ packageName;
+        directories = adminserver + "/admin-mapper/src/main/resources/mapper/"+ packageNameWithSlash;
         File xml = new File(directories);
         xml.mkdirs();
+        // 创建前端admin目录
+        String adminDir =  adminserver.replace(apiName,vbenName).substring(0,adminserver.length()-10);
+        directories = adminDir + File.separator+ "src/api/maodu/iot/data/model";
+        FileUtil.mkdir( directories);
+        directories = adminDir + File.separator+ "src/locales/lang/en/routes/maodu/iot/data";
+        FileUtil.mkdir( directories);
+        directories = adminDir + File.separator+ "src/locales/lang/zh-CN/routes/maodu/iot/data";
+        FileUtil.mkdir( directories);
+        directories = adminDir + File.separator+ "src/views/maodu/iot/data";
+        FileUtil.mkdir( directories);
     }
 }
