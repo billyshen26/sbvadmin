@@ -1,13 +1,13 @@
 <template>
-    <div>
-        <BasicTable @register="registerTable" :searchInfo="searchInfo">
-            <template #toolbar>
-                <a-button type="primary" @click="handleCreate"> 新增 </a-button>
-            </template>
-            <template #bodyCell="{ column, record }">
-                <template v-if="column.key === 'action'">
-                    <TableAction
-                            :actions="[
+  <div>
+    <BasicTable @register="registerTable" :searchInfo="searchInfo">
+      <template #toolbar>
+        <a-button type="primary" @click="handleCreate"> 新增 </a-button>
+      </template>
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'action'">
+          <TableAction
+            :actions="[
               {
                 icon: 'clarity:note-edit-line',
                 onClick: handleEdit.bind(null, record),
@@ -22,101 +22,101 @@
                 },
               },
             ]"
-                    />
-                </template>
-            </template>
-        </BasicTable>
-        <${entity}Modal @register="registerModal" @success="handleSuccess" />
-    </div>
+          />
+        </template>
+      </template>
+    </BasicTable>
+    <${entity}Modal @register="registerModal" @success="handleSuccess" />
+  </div>
 </template>
 <script lang="ts">
-    import { defineComponent, reactive } from 'vue';
-    import { BasicTable, useTable, TableAction } from '/@/components/Table';
-    import { useModal } from '/@/components/Modal';
-    import { get${entity}List, del${entity} } from '/@/api/${packageNameWithSlash}/${entity}';
-    import ${entity}Modal from './${entity}Modal.vue';
-    import { columns, searchFormSchema } from './${entity}.data';
+  import { defineComponent, reactive } from 'vue';
+  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { useModal } from '/@/components/Modal';
+  import { get${entity}List, del${entity} } from '/@/api/${packageNameWithSlash}/${entity}';
+  import ${entity}Modal from './${entity}Modal.vue';
+  import { columns, searchFormSchema } from './${entity}.data';
 
-    export default defineComponent({
-        name: '${entity}Management',
-        components: { BasicTable, ${entity}Modal, TableAction },
-        setup() {
-            const [registerModal, { openModal }] = useModal();
-            const searchInfo = reactive<Recordable>({});
-            const [registerTable, { reload, updateTableDataRecord }] = useTable({
-                title: '列表',
-                api: get${entity}List,
-                rowKey: 'id',
-                columns,
-                formConfig: {
-                    labelWidth: 120,
-                    schemas: searchFormSchema,
-                    autoSubmitOnEnter: true,
-                },
-                showIndexColumn: false,
-                useSearchForm: true,
-                showTableSetting: true,
-                bordered: true,
-                handleSearchInfoFn(info) {
-                    console.log('handleSearchInfoFn', info);
-                    return info;
-                },
-                actionColumn: {
-                    width: 120,
-                    title: '操作',
-                    dataIndex: 'action',
-                    // slots: { customRender: 'action' },
-                },
-            });
-
-            function handleCreate() {
-                openModal(true, {
-                    isUpdate: false,
-                });
-            }
-
-            function handleEdit(record: Recordable) {
-                openModal(true, {
-                    record,
-                    isUpdate: true,
-                });
-            }
-
-            function handleDelete(record: Recordable) {
-                console.log(record.id);
-                del${entity}(record.id)
-                        .then((res) => {
-                            console.log(res);
-                        })
-                        .catch((res) => {
-                            console.log(res);
-                        })
-                        .finally(() => {
-                            reload();
-                            console.log(record);
-                        });
-            }
-
-            function handleSuccess({ isUpdate, values }) {
-                if (isUpdate) {
-                    // 不刷新表格直接更新内部数据。
-                    // 注意：updateTableDataRecord要求表格的rowKey属性为string并且存在于每一行的record的keys中
-                    const result = updateTableDataRecord(values.id, values);
-                    console.log(result);
-                } else {
-                    reload();
-                }
-            }
-
-            return {
-                registerTable,
-                registerModal,
-                handleCreate,
-                handleEdit,
-                handleDelete,
-                handleSuccess,
-                searchInfo,
-            };
+  export default defineComponent({
+    name: '${entity}Management',
+    components: { BasicTable, ${entity}Modal, TableAction },
+    setup() {
+      const [registerModal, { openModal }] = useModal();
+      const searchInfo = reactive<Recordable>({});
+      const [registerTable, { reload, updateTableDataRecord }] = useTable({
+        title: '列表',
+        api: get${entity}List,
+        rowKey: 'id',
+        columns,
+        formConfig: {
+          labelWidth: 120,
+          schemas: searchFormSchema,
+          autoSubmitOnEnter: true,
         },
-    });
+        showIndexColumn: false,
+        useSearchForm: true,
+        showTableSetting: true,
+        bordered: true,
+        handleSearchInfoFn(info) {
+          console.log('handleSearchInfoFn', info);
+          return info;
+        },
+        actionColumn: {
+          width: 120,
+          title: '操作',
+          dataIndex: 'action',
+          // slots: { customRender: 'action' },
+        },
+      });
+
+      function handleCreate() {
+        openModal(true, {
+          isUpdate: false,
+        });
+      }
+
+      function handleEdit(record: Recordable) {
+        openModal(true, {
+          record,
+          isUpdate: true,
+        });
+      }
+
+      function handleDelete(record: Recordable) {
+        console.log(record.id);
+        del${entity}(record.id)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((res) => {
+            console.log(res);
+          })
+          .finally(() => {
+            reload();
+            console.log(record);
+          });
+      }
+
+      function handleSuccess({ isUpdate, values }) {
+        if (isUpdate) {
+          // 不刷新表格直接更新内部数据。
+          // 注意：updateTableDataRecord要求表格的rowKey属性为string并且存在于每一行的record的keys中
+          const result = updateTableDataRecord(values.id, values);
+          console.log(result);
+        } else {
+          reload();
+        }
+      }
+
+      return {
+        registerTable,
+        registerModal,
+        handleCreate,
+        handleEdit,
+        handleDelete,
+        handleSuccess,
+        searchInfo,
+      };
+    },
+  });
 </script>
