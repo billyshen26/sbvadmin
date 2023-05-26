@@ -258,7 +258,7 @@ public class SbvGenerator {
      **/
     @Test
     public void deleteJustGeneratedFiles() throws IOException, InterruptedException {
-
+        // TODO 目前只能每次删一个表
         Scanner input = new Scanner(System.in);
         System.out.println("输入表名，不要带前缀");
         String tableNameInput = input.nextLine();

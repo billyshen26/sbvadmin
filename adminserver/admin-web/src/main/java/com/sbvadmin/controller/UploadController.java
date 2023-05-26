@@ -2,10 +2,7 @@ package com.sbvadmin.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.system.ApplicationHome;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -25,7 +22,8 @@ public class UploadController {
     private String uploadsPath;
 
     @PostMapping("/upload")
-    public String create(@RequestPart MultipartFile file, @RequestPart String dir) throws IOException {
+    public String create(@RequestPart MultipartFile file, @RequestPart(value="dir" ,required=false) String dir) throws IOException {
+//    public String create(@RequestPart MultipartFile file, @RequestPart String dir) throws IOException {
         String fileName = file.getOriginalFilename();
 
         //获取当前jar 的执行路径
@@ -40,6 +38,7 @@ public class UploadController {
             e.printStackTrace();
         }
         // 创建uploads 文件夹
+        if (dir == null) dir = "other";
         String uploadsDirPath = path+ File.separator + uploadsPath+ File.separator +dir;
         File uploadsDir = new File(uploadsDirPath);
         if (!uploadsDir.exists()){ //如果不存在

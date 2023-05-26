@@ -87,7 +87,7 @@ public class Permission implements Serializable {
     /**
      * 排序
      */
-    private Byte orderNo;
+    private Integer orderNo;
 
     private LocalDateTime createdAt;
 

@@ -87,7 +87,7 @@ public class LocalDateTimeSerializerConfig {
     }
 
     /**
-     * 统一配置
+     * 统一配置 让controller调用的时候 移除T
      */
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {

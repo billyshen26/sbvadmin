@@ -49,7 +49,7 @@ public class Role implements Serializable {
     /**
      * 排序
      */
-    private Byte orderNo;
+    private Integer orderNo;
 
     private LocalDateTime createdAt;
 

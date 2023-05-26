@@ -35,7 +35,7 @@ public class CommonUtil {
     DictServiceImpl dictService;
 
 
-    // 解决静态方法使用Spirng注入空指针问题 https://www.jianshu.com/p/94da6fed473f
+    // TIPS: 解决静态方法使用Spirng注入空指针问题 https://www.jianshu.com/p/94da6fed473f
     @Autowired
     public CommonUtil(Environment environment, ConfigServiceImpl configService, DictServiceImpl dictService){
         CommonUtil.environment = environment;
@@ -75,10 +75,11 @@ public class CommonUtil {
      * Time: 2023/3/5 16:29
      **/
     public static String getAvatarUrl(String avatar){
-        String host = environment.getProperty("server.host");
+//        String host = environment.getProperty("server.host");
+        String host = getConfigBySymbol("host_ip");
         String port = environment.getProperty("server.port");
         if (!avatar.contains("http")) {
-            return  host + ":" + port + File.separator + avatar; // 补充域名和端口
+            return  "http://" + host + ":" + port + File.separator + avatar; // 补充协议，域名和端口
         }
         return avatar;
     }
