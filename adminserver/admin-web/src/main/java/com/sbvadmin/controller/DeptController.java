@@ -3,11 +3,13 @@ package com.sbvadmin.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sbvadmin.model.*;
 import com.sbvadmin.service.impl.UserDeptServiceImpl;
+import com.sbvadmin.service.utils.CommonUtil;
 import com.sbvadmin.utils.SbvLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.sbvadmin.service.impl.DeptServiceImpl;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -30,6 +32,23 @@ public class DeptController extends BaseController<DeptServiceImpl, Dept> {
         return deptService.getAllDepts();
     }
     // TODO 新增部门的是要新增一点默认角色,和默认配置
+
+
+    /*
+     * Notes:  新增部门
+     * @param: [item]
+     * @return: java.lang.Object
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/5/27 22:12
+     **/
+    @PostMapping("")
+    @SbvLog(desc = "新增")
+    public Object addItem(@RequestBody @Valid Dept item){
+        if (this.getItemService().save(item))
+            return "新增成功!";
+        return "新增失败!";
+    }
+
     @DeleteMapping("/{id}")
     @SbvLog(desc = "删除")
     @Override
