@@ -18,6 +18,9 @@
         <if test="status!=null and status!=''">
             where r.status = #{status}
         </if>
+        <if test="did!=null and did!=''">
+            where r.did = #{did}
+        </if>
         <if test="name!=null and name!=''">
             where r.name like CONCAT('%',#{name},'%') or r.name_zh like CONCAT('%',#{name},'%')
         </if>

@@ -27,9 +27,16 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Autowired
     RolePermissionServiceImpl rolePermissionService;
 
+    /*
+     * Notes:  补充机构id，获取权限列表，用于菜单管理和新建角色时选择权限
+     * @param: [did, name, status]
+     * @return: java.util.List<com.sbvadmin.model.Role>
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/5/27 20:02
+     **/
     @Override
-    public List<Role> getRolesWithPermissions(String name, String status) {
-        return roleMapper.getRolesWithPermissions(name, status);
+    public List<Role> getRolesWithPermissions(Long did, String name, String status) {
+        return roleMapper.getRolesWithPermissions(did, name, status);
     }
 
     /**

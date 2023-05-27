@@ -19,7 +19,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName("sys_dict")
-public class Dict implements Serializable {
+public class Dict extends BaseModel implements Serializable  {
 
     private static final long serialVersionUID = 1L;
 

@@ -20,7 +20,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName("sys_config")
-public class Config implements Serializable {
+public class Config extends BaseModel implements Serializable {
 
 
     public static final String defaultConfig = "暂未配置";

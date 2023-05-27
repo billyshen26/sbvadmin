@@ -59,6 +59,8 @@ public class User implements UserDetails , Serializable {
     @TableField(exist = false)
     private List<Dept> depts;
 
+    @TableField(exist = false)
+    private Long loginDeptId; // 当前登录部门id
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

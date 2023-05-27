@@ -3,6 +3,7 @@ package com.sbvadmin.utils;
 import com.alibaba.druid.support.json.JSONUtils;
 import com.sbvadmin.model.Log;
 import com.sbvadmin.service.impl.LogServiceImpl;
+import com.sbvadmin.service.utils.CommonUtil;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -92,7 +93,7 @@ public class SbvLogAspect {
         log.setUpdatedAt(LocalDateTime.now());
         log.setVersion(version);
         log.setTakeUpTime((int)(System.currentTimeMillis() - takeUpTime.get()));
-
+        log.setDid(CommonUtil.getOwnUser().getLoginDeptId());
         log.setLevel(Log.ACTION_LEVEL);
 
         logService.save(log);

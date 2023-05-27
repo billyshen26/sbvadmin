@@ -62,6 +62,7 @@ public class DictController extends BaseController<DictServiceImpl, Dict> {
         queryWrapper.last("limit 1");
         Dict dict = itemService.getOne(queryWrapper);
         item.setTypeName(dict.getTypeName());
+        item.setDid(CommonUtil.getOwnUser().getLoginDeptId());
         if (itemService.save(item))
             return "新增成功!";
         return "新增失败!";

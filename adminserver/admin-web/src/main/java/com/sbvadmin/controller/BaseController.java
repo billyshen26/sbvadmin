@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.sbvadmin.model.BaseModel;
+import com.sbvadmin.model.User;
+import com.sbvadmin.service.utils.CommonUtil;
 import com.sbvadmin.utils.SbvLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +19,7 @@ import javax.validation.Valid;
  * Author: 涛声依旧 likeboat@163.com
  * Time: 2022/11/16 21:13
  */
-public class BaseController<S extends IService<T>, T> {
+public class BaseController<S extends IService<T>, T extends BaseModel> {
 
     @Autowired
     protected S itemService;
@@ -53,6 +56,10 @@ public class BaseController<S extends IService<T>, T> {
             queryWrapper.eq(this.getTableName()+"id",id);
         if (createdAt != null) // 创建日期范围搜索
             queryWrapper.between("created_at",createdAt[0],createdAt[1]);
+
+        // 2023-05-27 根据机构id查询，设置数据权限
+        User user = CommonUtil.getOwnUser();
+        queryWrapper.eq("did",user.getLoginDeptId());
 
         if (page == null){ // 如果未提供分页信息，则默认读取10000行数据
             page = 1;
@@ -97,6 +104,7 @@ public class BaseController<S extends IService<T>, T> {
     @PostMapping("")
     @SbvLog(desc = "新增")
     public Object addItem(@RequestBody @Valid T item){
+        item.setDid(CommonUtil.getOwnUser().getLoginDeptId()); // 2023-05-27 新增添加机构id，设置数据权限
         if (this.getItemService().save(item))
             return "新增成功!";
         return "新增失败!";

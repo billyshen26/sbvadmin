@@ -6,6 +6,7 @@ import com.sbvadmin.model.Log;
 import com.sbvadmin.model.ResultFormat;
 import com.sbvadmin.model.User;
 import com.sbvadmin.service.impl.LogServiceImpl;
+import com.sbvadmin.service.utils.CommonUtil;
 import com.sbvadmin.utils.IpUtil;
 import com.sbvadmin.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,6 +119,7 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
         log.setVersion(version);
         log.setTakeUpTime(0);
         log.setLevel(Log.ACTION_LEVEL);
+        log.setDid(user.getLoginDeptId());
         logService.save(log);
     }
     protected void unsuccessfulAuthentication(HttpServletRequest req, HttpServletResponse resp, AuthenticationException failed) throws IOException, ServletException {

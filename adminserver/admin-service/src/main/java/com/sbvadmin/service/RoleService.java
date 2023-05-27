@@ -11,5 +11,5 @@ import java.util.List;
  * Time: 2022/8/31 13:45
  */
 public interface RoleService  extends IService<Role> {
-    public List<Role> getRolesWithPermissions(String name, String status);
+    public List<Role> getRolesWithPermissions(Long did, String name, String status);
 }

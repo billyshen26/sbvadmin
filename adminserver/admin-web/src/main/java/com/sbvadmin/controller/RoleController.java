@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sbvadmin.model.*;
 import com.sbvadmin.service.impl.RoleServiceImpl;
 import com.sbvadmin.service.impl.UserRoleServiceImpl;
+import com.sbvadmin.service.utils.CommonUtil;
 import com.sbvadmin.utils.SbvLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,8 @@ public class RoleController {
     // TIPS: 不能传int型的0，https://blog.csdn.net/qq_40450926/article/details/99696463
     public List<Role> getRoles(@RequestParam(value="status" ,required=false) String status,
                                @RequestParam(value="name" ,required=false) String name){
-        return roleService.getRolesWithPermissions(name,status);
+        Long did = CommonUtil.getOwnUser().getLoginDeptId();
+        return roleService.getRolesWithPermissions(did,name,status);
     }
 
     @PostMapping("")
@@ -39,6 +41,7 @@ public class RoleController {
         QueryWrapper<Role> roleQueryWrapper = new QueryWrapper<>();
         roleQueryWrapper.eq("name",role.getName());
         if(roleService.getOne(roleQueryWrapper) != null) return ResultFormat.fail(ErrorCode.ROLE_NAME_DUPLICATED);
+        role.setDid(CommonUtil.getOwnUser().getLoginDeptId());
         return roleService.save(role);
     }
 

@@ -1,9 +1,14 @@
 package com.sbvadmin.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.sbvadmin.model.Log;
 import com.sbvadmin.model.Role;
 import com.sbvadmin.model.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -31,4 +36,13 @@ public interface UserMapper extends BaseMapper<User> {
      * Time: 2022/7/15 16:33
      **/
     List<User> getUsersWithRoles(Long did,Long id,String name);
+
+    /**
+     * Notes:  用于登录
+     * @param: [username]
+     * @return: com.sbvadmin.model.User
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/5/27 19:39
+     **/
+    User getOwnUserWithRoles(String username);
 }

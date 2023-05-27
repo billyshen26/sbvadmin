@@ -3,6 +3,7 @@ package com.sbvadmin.config;
 import com.sbvadmin.mapper.UserMapper;
 import com.sbvadmin.model.ErrorCode;
 import com.sbvadmin.model.User;
+import com.sbvadmin.service.utils.CommonUtil;
 import com.sbvadmin.utils.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,9 @@ public class JwtFilter extends OncePerRequestFilter {
                 String username = claims.getSubject();//获取当前登录用户名
                 List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get("authorities"));
                 Long uid = Long.valueOf(String.valueOf(claims.get("uid")));
-                User user  = userMapper.selectById(uid);
+//                User user  = userMapper.selectById(uid);
+                User user = userMapper.getOwnUserWithRoles(username);
+                user.setLoginDeptId(user.getDeptIds().get(0)); // TODO 目前默认为第一个机构ID
                 UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user, jwtToken, authorities);
                 token.setDetails(uid);
                 SecurityContextHolder.getContext().setAuthentication(token);

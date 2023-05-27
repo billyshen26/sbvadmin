@@ -22,7 +22,7 @@ import lombok.Setter;
 @Setter
 //@Builder
 @TableName("sys_log")
-public class Log implements Serializable {
+public class Log extends BaseModel implements Serializable {
     public static final Byte ACTION_LEVEL = 1;
     public static final Byte ERROR_LEVEL = 2;
     private static final long serialVersionUID = 1L;

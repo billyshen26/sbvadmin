@@ -4,10 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sbvadmin.model.Config;
 import com.sbvadmin.model.Dept;
 import com.sbvadmin.model.Dict;
+import com.sbvadmin.model.User;
 import com.sbvadmin.service.impl.ConfigServiceImpl;
 import com.sbvadmin.service.impl.DictServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -131,5 +134,19 @@ public class CommonUtil {
         List<Dict> dictList = dictService.list(queryWrapper);
         Map<Long,String> dicMaps =  dictList.stream().collect(Collectors.toMap(Dict::getId, Dict::getLabel));
         return dicMaps;
+    }
+
+    /*
+     * Notes:  获取登录用户的user信息
+     * @param: []
+     * @return: com.sbvadmin.model.User
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/5/27 10:33
+     **/
+    public static User getOwnUser(){
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        return user;
     }
 }

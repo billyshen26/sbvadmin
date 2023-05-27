@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Data
 @TableName("sys_role")
-public class Role implements Serializable {
+public class Role extends BaseModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)

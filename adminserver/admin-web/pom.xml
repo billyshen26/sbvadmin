@@ -9,7 +9,7 @@
     </parent>
     <groupId>com.sbvadmin</groupId>
     <artifactId>admin-web</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.1-SNAPSHOT</version>
     <name>admin-web</name>
     <description>admin-web</description>
     <properties>

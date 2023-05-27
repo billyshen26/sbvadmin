@@ -48,6 +48,7 @@ public class UserController {
     public List<User> getUsers(@RequestParam(value="deptId" ,required=false) Long did,
                                @RequestParam(value="id" ,required=false) Long id,
                                @RequestParam(value="name" ,required=false) String name) {
+        if (did == null) did = CommonUtil.getOwnUser().getLoginDeptId(); // 默认获取登录机构的账号
         List<User> users = userService.getUsersWithRoles(did,id,name);
         for (User user : users) {
             user.setAvatar(CommonUtil.getAvatarUrl(user.getAvatar()));
