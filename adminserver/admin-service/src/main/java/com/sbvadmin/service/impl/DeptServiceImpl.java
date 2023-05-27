@@ -1,11 +1,8 @@
 package com.sbvadmin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.sbvadmin.mapper.RoleMapper;
-import com.sbvadmin.mapper.UserDeptMapper;
-import com.sbvadmin.mapper.UserRoleMapper;
+import com.sbvadmin.mapper.*;
 import com.sbvadmin.model.*;
-import com.sbvadmin.mapper.DeptMapper;
 import com.sbvadmin.service.IDeptService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sbvadmin.service.utils.CommonUtil;
@@ -29,6 +26,9 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
 
     @Autowired
     RoleMapper roleMapper;
+
+    @Autowired
+    UserMapper userMapper;
 
     @Autowired
     UserRoleMapper userRoleMapper;
@@ -91,6 +91,8 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.setPassword(passwordEncoder.encode("admin_" + entity.getId())); // 密码同用户名
         user.setHomePath("/dashboard/analysis");
+        userMapper.insert(user);
+
         // 3.2 新增默认管理员用户-用户和角色关系
         UserRole userRole = new UserRole();
         userRole.setRid(role.getId());
