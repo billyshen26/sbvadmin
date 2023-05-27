@@ -28,6 +28,9 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
     RoleMapper roleMapper;
 
     @Autowired
+    RolePermissionMapper rolePermissionMapper;
+
+    @Autowired
     UserMapper userMapper;
 
     @Autowired
@@ -75,14 +78,20 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
         // 1. 新增机构
         super.save(entity);
 
-        // 2. 新增默认管理者角色
+        // 2.1 新增默认管理者角色
         Role role =new Role();
         role.setDid(entity.getId());
-        role.setMenu(Arrays.asList(1L,4L));
         role.setNameZh(entity.getName() + "管理员");
         role.setName("ROLE_" + "admin_" + entity.getId());
         role.setDescription(entity.getName() + "默认管理员角色");
         roleMapper.insert(role);
+        // 2.2 新增默认管理者角色-角色和权限的关系
+        for (Long menu : Arrays.asList(1L,4L)) {
+            RolePermission rolePermission = new RolePermission();
+            rolePermission.setPid(menu);
+            rolePermission.setRid(role.getId());
+            rolePermissionMapper.insert(rolePermission);
+        }
 
         // 3.1 新增默认管理员用户
         User user = new User();
@@ -91,6 +100,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.setPassword(passwordEncoder.encode("admin_" + entity.getId())); // 密码同用户名
         user.setHomePath("/dashboard/analysis");
+        user.setAvatar("avatar.png");
         userMapper.insert(user);
 
         // 3.2 新增默认管理员用户-用户和角色关系
