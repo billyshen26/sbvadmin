@@ -67,7 +67,7 @@ public class UserController {
         userQueryWrapper.eq("username",user.getUsername());
         if(userService.getOne(userQueryWrapper) != null) return ResultFormat.fail(ErrorCode.USERNAME_DUPLICATED);
         // 默认头像
-        if(user.getAvatar() == null) user.setAvatar("");
+        if(user.getAvatar() == null) user.setAvatar("avatar.png");
         // 1.将用户添加到数据库
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // 密码加密
         user.setPassword(passwordEncoder.encode(user.getPassword()));

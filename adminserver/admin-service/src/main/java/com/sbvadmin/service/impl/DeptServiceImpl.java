@@ -86,9 +86,12 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
         role.setDescription(entity.getName() + "默认管理员角色");
         roleMapper.insert(role);
         // 2.2 新增默认管理者角色-角色和权限的关系
-        for (Long menu : Arrays.asList(1L,4L)) {
+        QueryWrapper<RolePermission> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("rid", 2L); // 取admin的权限点
+        List<RolePermission> adminList = rolePermissionMapper.selectList(queryWrapper);
+        for (RolePermission rp : adminList) {
             RolePermission rolePermission = new RolePermission();
-            rolePermission.setPid(menu);
+            rolePermission.setPid(rp.getPid());
             rolePermission.setRid(role.getId());
             rolePermissionMapper.insert(rolePermission);
         }
