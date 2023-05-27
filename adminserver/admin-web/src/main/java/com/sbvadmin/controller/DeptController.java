@@ -31,8 +31,6 @@ public class DeptController extends BaseController<DeptServiceImpl, Dept> {
     public List<Dept> getDeptsAsTree(){
         return deptService.getAllDepts();
     }
-    // TODO 新增部门的是要新增一点默认角色,和默认配置
-
 
     /*
      * Notes:  新增部门
