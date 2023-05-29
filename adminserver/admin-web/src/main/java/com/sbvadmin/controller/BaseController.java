@@ -59,7 +59,7 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
 
         // 2023-05-27 根据机构id查询，设置数据权限
         User user = CommonUtil.getOwnUser();
-        queryWrapper.eq("did",user.getLoginDeptId());
+        queryWrapper.eq(this.getTableName()+"did",user.getLoginDeptId());
 
         if (page == null){ // 如果未提供分页信息，则默认读取10000行数据
             page = 1;
