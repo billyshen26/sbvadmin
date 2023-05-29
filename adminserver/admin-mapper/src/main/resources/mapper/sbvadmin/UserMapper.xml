@@ -47,15 +47,18 @@
             left join sys_role r on ur.`rid`=r.`id`
             left join sys_user_dept ud on u.`id`=ud.`uid`
             left join sys_dept d on d.`id`=ud.`did`
-        <if test="did!=null and did!=''">
-            where d.id = #{did}
-        </if>
-        <if test="id!=null and id!=''">
-            where u.id = #{id}
-        </if>
-        <if test="name!=null and name!=''">
-            where u.nickname like CONCAT('%',#{name},'%') or u.username like CONCAT('%',#{name},'%')
-        </if>
+        <where>
+            u.id != 1
+            <if test="did!=null and did!=''">
+                and d.id = #{did}
+            </if>
+            <if test="id!=null and id!=''">
+                and u.id = #{id}
+            </if>
+            <if test="name!=null and name!=''">
+                and (u.nickname like CONCAT('%',#{name},'%') or u.username like CONCAT('%',#{name},'%'))
+            </if>
+        </where>
     </select>
 
     <select id="getOwnUserWithRoles" resultMap="UserWithRoles">

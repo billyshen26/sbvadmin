@@ -24,7 +24,7 @@
                 and r.did = #{did}
             </if>
             <if test="name!=null and name!=''">
-                and r.name like CONCAT('%',#{name},'%') or r.name_zh like CONCAT('%',#{name},'%')
+                and (r.name like CONCAT('%',#{name},'%') or r.name_zh like CONCAT('%',#{name},'%'))
             </if>
         </where>
     </select>
