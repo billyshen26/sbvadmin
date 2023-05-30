@@ -28,7 +28,7 @@ import java.time.format.DateTimeFormatter;
  * Time: 2023/5/24 18:33
  */
 @Configuration
-@EnableCaching
+//@EnableCaching
 public class CustomRedisCacheManager extends CachingConfigurerSupport {
 
     @Bean

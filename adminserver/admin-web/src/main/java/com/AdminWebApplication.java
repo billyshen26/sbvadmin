@@ -10,7 +10,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-@EnableCaching
+//@EnableCaching 这个配置放到了 com.sbvadmin.service.config.CustomRedisCacheManager
 @MapperScan("com.sbvadmin.mapper")
 public class AdminWebApplication {
 

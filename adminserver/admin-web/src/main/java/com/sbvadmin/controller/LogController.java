@@ -16,7 +16,7 @@ import com.sbvadmin.service.impl.LogServiceImpl;
 public class LogController extends BaseController<LogServiceImpl, Log> {
     public LogController(){
         this.tableName = "sys_log";
-    }
+    } // TIPS: 解决查询是字段重复问题
 
 }
 

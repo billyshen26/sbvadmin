@@ -10,6 +10,10 @@ import com.sbvadmin.model.User;
 import com.sbvadmin.service.utils.CommonUtil;
 import com.sbvadmin.utils.SbvLog;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,6 +23,7 @@ import javax.validation.Valid;
  * Author: 涛声依旧 likeboat@163.com
  * Time: 2022/11/16 21:13
  */
+@CacheConfig(cacheNames = "cache")
 public class BaseController<S extends IService<T>, T extends BaseModel> {
 
     @Autowired
@@ -45,6 +50,7 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
     }
 
     @GetMapping("")
+    @Cacheable(key = "#root.targetClass + #root.methodName + #root.args")
     public IPage<T> getItems(@RequestParam(value="id" ,required=false) Long id,
                              @RequestParam(value="createdAt[]" ,required=false) String[] createdAt,
                              @RequestParam(value="field" ,required=false) String field,
@@ -87,6 +93,7 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
 
     @DeleteMapping("/{id}")
     @SbvLog(desc = "删除")
+    @CacheEvict(key = "#root.targetClass + #root.methodName + #root.args", allEntries = true)
     public Object delItem(@PathVariable Long id) {
         if (this.getItemService().removeById(id))
             return "删除成功!";
@@ -95,6 +102,7 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
 
     @PutMapping("/{id}")
     @SbvLog(desc = "修改")
+    @CacheEvict(key = "#root.targetClass + #root.methodName + #root.args", allEntries = true)
     public Object editItem(@RequestBody T item, @PathVariable Long id) {
         if (this.getItemService().updateById(item))
             return "修改成功!";
@@ -103,6 +111,7 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
 
     @PostMapping("")
     @SbvLog(desc = "新增")
+    @CacheEvict(key = "#root.targetClass + #root.methodName + #root.args", allEntries = true)
     public Object addItem(@RequestBody @Valid T item){
         item.setDid(CommonUtil.getOwnUser().getLoginDeptId()); // 2023-05-27 新增添加机构id，设置数据权限
         if (this.getItemService().save(item))
