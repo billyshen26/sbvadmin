@@ -110,7 +110,7 @@ public class SecurityConfiguration {
     @Bean
     WebSecurityCustomizer webSecurityCustomizer() {
         // 忽略 /error 页面
-        return web -> web.ignoring().antMatchers("/","/error","/index.html","/avatar.png","/uploads/**","/assets/**","/_app.config.js","/resource/**")
+        return web -> web.ignoring().antMatchers("/","/error","/index.html","/avatar.png","/logo.png","/uploads/**","/assets/**","/_app.config.js","/resource/**")
                 // 忽略常见的静态资源路径
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
