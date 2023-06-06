@@ -31,6 +31,7 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
 
     protected String tableName;
     protected String likeSearch;
+    protected String equalSearch;
     public S getItemService() {
         return this.itemService;
     }
@@ -60,12 +61,23 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
     public String getLikeSearch() {
         return likeSearch;
     }
+    /**
+     * Notes:  全等搜索字段
+     * @param: []
+     * @return: java.lang.String
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/6/6 15:23
+     **/
+    public String getEqualSearch() {
+        return equalSearch;
+    }
 
     @GetMapping("")
     @Cacheable(key = "#root.targetClass + #root.methodName + #root.args")
     public IPage<T> getItems(@RequestParam(value="id" ,required=false) Long id,
                              @RequestParam(value="createdAt[]" ,required=false) String[] createdAt,
                              @RequestParam(value="likeSearch" ,required=false) String likeSearch,
+                             @RequestParam(value="equalSearch" ,required=false) String equalSearch,
                              @RequestParam(value="field" ,required=false) String field,
                              @RequestParam(value="order" ,required=false) String order,
                              @RequestParam(value="page" ,required=false) Integer page,
@@ -75,8 +87,10 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
             queryWrapper.eq(this.getTableName()+"id",id);
         if (createdAt != null) // 创建日期范围搜索
             queryWrapper.between("created_at",createdAt[0],createdAt[1]);
-        if (likeSearch != null) // 自定义内容搜索：比如name等
+        if (likeSearch != null) // 自定义模糊内容搜索：比如name等
             queryWrapper.like(this.getLikeSearch(),likeSearch);
+        if (equalSearch != null) // 自定义全等内容搜索：比如type等
+            queryWrapper.eq(this.getEqualSearch(),equalSearch);
 
         // 2023-05-27 根据机构id查询，设置数据权限
         User user = CommonUtil.getOwnUser();
