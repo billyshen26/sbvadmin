@@ -1,11 +1,14 @@
 package com.sbvadmin.controller;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sbvadmin.model.BaseModel;
+import com.sbvadmin.model.ResultFormat;
 import com.sbvadmin.model.User;
 import com.sbvadmin.service.utils.CommonUtil;
 import com.sbvadmin.utils.SbvLog;
@@ -17,6 +20,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Notes:
@@ -124,9 +129,29 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
     @SbvLog(desc = "删除")
     @CacheEvict(key = "#root.targetClass + #root.methodName + #root.args", allEntries = true)
     public Object delItem(@PathVariable Long id) {
-        if (this.getItemService().removeById(id))
-            return "删除成功!";
-        return "删除失败!";
+        /**
+         * Notes: 在删除item 之前，加入一个切面，可以方便定制化处理删除前的工作；比如判断是否有数据关联性
+         * Time: 2023/6/12 11:28
+         **/
+        ResultFormat resultFormat = ResultFormat.success("OK");
+        try {
+            Class<?> clazz = this.getClass();// 获取类的Class对象
+            Method method = clazz.getMethod("beforeDel", Long.class);// 获取方法名为methodName，参数类型为paramType的方法
+            if(method != null) { // 判断该方法是否存在
+                System.out.println("该方法存在");
+                String className = StrUtil.lowerFirst(clazz.getSimpleName());
+                resultFormat = (ResultFormat) method.invoke(SpringUtil.getBean(className), id);
+            }
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            System.out.println("该方法不存在");
+        }
+        if (resultFormat.getCode() == 0 ){
+            if (this.getItemService().removeById(id))
+                return "删除成功!";
+            return "删除失败!";
+        }else {
+            return resultFormat;
+        }
     }
 
     @PutMapping("/{id}")
