@@ -8,8 +8,10 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sbvadmin.model.BaseModel;
+import com.sbvadmin.model.Dept;
 import com.sbvadmin.model.ResultFormat;
 import com.sbvadmin.model.User;
+import com.sbvadmin.service.impl.DeptServiceImpl;
 import com.sbvadmin.service.utils.CommonUtil;
 import com.sbvadmin.utils.SbvLog;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Notes:
@@ -39,6 +43,9 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
     public S getItemService() {
         return this.itemService;
     }
+
+    @Autowired
+    DeptServiceImpl deptService;
 
     /*
      * Notes:  格式化表名，用于辅助生成链表查询的时候进行字段的前缀添加
@@ -97,8 +104,13 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
             queryWrapper.eq(this.getEqualSearch(),equalSearch);
 
         // 2023-05-27 根据机构id查询，设置数据权限
-        User user = CommonUtil.getOwnUser();
-        queryWrapper.eq(this.getTableName()+"did",user.getLoginDeptId());
+        // 2023-06-12 修改成本人所拥有的所有did
+        List<Dept> deptList =  deptService.getAllDepts();
+        List<Long> deptIdList = new ArrayList<>();
+        deptList.forEach(item ->{
+            deptIdList.add(item.getId());
+        });
+        queryWrapper.in(this.getTableName()+"did",deptIdList);
 
         if (page == null){ // 如果未提供分页信息，则默认读取10000行数据
             page = 1;
