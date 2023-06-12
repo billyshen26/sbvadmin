@@ -104,7 +104,7 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
             queryWrapper.eq(this.getEqualSearch(),equalSearch);
 
         // 2023-05-27 根据机构id查询，设置数据权限
-        // 2023-06-12 修改成本人所拥有的所有did
+        // 2023-06-12 修改成本人所拥有的所有did TODO 可能有bug
         List<Dept> deptList =  deptService.getAllDepts();
         List<Long> deptIdList = new ArrayList<>();
         deptList.forEach(item ->{
