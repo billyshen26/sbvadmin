@@ -1,5 +1,4 @@
-import { BasicColumn } from '/@/components/Table';
-import { FormSchema } from '/@/components/Table';
+import { BasicColumn, FormSchema } from '/@/components/Table';
 
 ## ----------  列表页字段  ----------
 export const columns: BasicColumn[] = [
