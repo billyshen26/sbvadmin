@@ -11,6 +11,7 @@ import com.sbvadmin.model.UserDept;
 import com.sbvadmin.model.UserRole;
 import com.sbvadmin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -53,6 +54,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setLoginDeptId(user.getDeptIds().get(0)); // TODO 目前默认为第一个机构ID
         if (user == null){
             throw new UsernameNotFoundException("账户不存在");
+        }
+        if (!user.isEnabled()){
+            throw new DisabledException("账号被禁用了");
         }
 //        user.setRoles(userMapper.getUserRolesByUid(user.getId()));
         return user;

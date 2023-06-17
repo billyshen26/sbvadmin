@@ -2,6 +2,7 @@ package com.sbvadmin.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sbvadmin.mapper.UserMapper;
+import com.sbvadmin.model.ErrorCode;
 import com.sbvadmin.model.Log;
 import com.sbvadmin.model.ResultFormat;
 import com.sbvadmin.model.User;
@@ -11,8 +12,7 @@ import com.sbvadmin.utils.IpUtil;
 import com.sbvadmin.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -123,11 +123,26 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
         logService.save(log);
     }
     protected void unsuccessfulAuthentication(HttpServletRequest req, HttpServletResponse resp, AuthenticationException failed) throws IOException, ServletException {
+//        resp.setContentType("application/json;charset=utf-8");
+//        PrintWriter out = resp.getWriter();
+//        out.write("登录失败!");
+//        out.flush();
+//        out.close();
         resp.setContentType("application/json;charset=utf-8");
-        PrintWriter out = resp.getWriter();
-        out.write("登录失败!");
-        out.flush();
-        out.close();
+        PrintWriter writer = resp.getWriter();
+        ResultFormat resultFormat = ResultFormat.success(ErrorCode.SUCCESS);
+        if (failed instanceof InsufficientAuthenticationException) {
+            resultFormat.setMessage("请先登录");
+        } else if (failed instanceof BadCredentialsException) {
+            resultFormat.setMessage("用户名或密码错误");
+        } else if (failed.getCause() instanceof DisabledException) {
+            resultFormat.setMessage("账号已经被禁用,请联系管理员");
+        } else {
+            resultFormat.setMessage("请先用户认证失败,请检查后重试登录");
+        }
+        writer.write(new ObjectMapper().writeValueAsString(resultFormat));
+        writer.flush();
+        writer.close();
     }
 }
 
