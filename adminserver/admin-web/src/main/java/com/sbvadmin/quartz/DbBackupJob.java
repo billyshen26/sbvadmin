@@ -31,6 +31,9 @@ public class DbBackupJob extends QuartzJobBean {
     @Value("${spring.datasource.password}")
     private String dbpassword;
 
+    @Value("${spring.datasource.database}")
+    private String database;
+
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
@@ -45,8 +48,8 @@ public class DbBackupJob extends QuartzJobBean {
         }
 
         String cmd = "mysqldump -u" + dbUserName + " -p" + dbpassword +
-                " --ignore-table sbvadmin.log" + // 移除部分表格，比如那些数据量很大又不重要的表格
-                " sbvadmin -r " + backup + "/" + now + ".sql";
+                " --ignore-table "+ database +".sys_log" + // 移除部分表格，比如那些数据量很大又不重要的表格
+                " "+ database +" -r " + backup + "/" + now + ".sql";
         try {
             log.info("执行语句："+cmd);
             Process exec = Runtime.getRuntime().exec(cmd);
