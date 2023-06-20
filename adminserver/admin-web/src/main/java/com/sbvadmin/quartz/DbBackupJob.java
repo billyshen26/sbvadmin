@@ -1,5 +1,6 @@
 package com.sbvadmin.quartz;
 
+import com.sbvadmin.utils.CommonWebUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -39,9 +40,9 @@ public class DbBackupJob extends QuartzJobBean {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
         String now = df.format(System.currentTimeMillis());
         System.out.println(name + "定时任务开始执行：" + now);
-        String userDir = System.getProperty("user.dir");
+//        String userDir = System.getProperty("user.dir");
         // 判断要backup文件是否存在
-        String backup = userDir + "/backup";
+        String backup = CommonWebUtil.getJarPath() + File.separator + "backup";
         File file = new File(backup);
         if (!file.exists()) {
             file.mkdirs();
@@ -49,12 +50,12 @@ public class DbBackupJob extends QuartzJobBean {
 
         String cmd = "mysqldump -u" + dbUserName + " -p" + dbpassword +
                 " --ignore-table "+ database +".sys_log" + // 移除部分表格，比如那些数据量很大又不重要的表格
-                " "+ database +" -r " + backup + "/" + now + ".sql";
+                " "+ database +" -r " + backup + File.separator + now + ".sql";
         try {
             log.info("执行语句："+cmd);
             Process exec = Runtime.getRuntime().exec(cmd);
             if (exec.waitFor() == 0) {
-                log.info("数据库备份成功，保存路径：" + backup + "/" + now + ".sql");
+                log.info("数据库备份成功，保存路径：" + backup + File.separator + now + ".sql");
             } else {
                 System.out.println("process.waitFor()=" + exec.waitFor());
             }

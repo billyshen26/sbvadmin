@@ -1,5 +1,7 @@
 package com.sbvadmin.controller;
 
+import com.sbvadmin.service.utils.CommonUtil;
+import com.sbvadmin.utils.CommonWebUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.web.bind.annotation.*;
@@ -26,20 +28,9 @@ public class UploadController {
 //    public String create(@RequestPart MultipartFile file, @RequestPart String dir) throws IOException {
         String fileName = file.getOriginalFilename();
 
-        //获取当前jar 的执行路径
-        ApplicationHome home = new ApplicationHome(getClass());
-        File jarFile = null;
-        String path = null;
-        try{
-            jarFile = home.getSource() != null ?  home.getSource() : home.getDir(); // TODO 写个公用函数
-            String parent = jarFile.getParent();
-            path = jarFile.getParentFile().toString();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
         // 创建uploads 文件夹
         if (dir == null) dir = "other";
-        String uploadsDirPath = path+ File.separator + uploadsPath+ File.separator +dir;
+        String uploadsDirPath = CommonWebUtil.getJarPath() + File.separator + uploadsPath+ File.separator +dir;
         File uploadsDir = new File(uploadsDirPath);
         if (!uploadsDir.exists()){ //如果不存在
             boolean dr = uploadsDir.mkdirs(); //创建目录

@@ -8,6 +8,7 @@ import com.sbvadmin.model.User;
 import com.sbvadmin.service.impl.ConfigServiceImpl;
 import com.sbvadmin.service.impl.DictServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.system.ApplicationHome;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
