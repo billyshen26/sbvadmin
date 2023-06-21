@@ -35,6 +35,12 @@ public class DbBackupJob extends QuartzJobBean {
     @Value("${spring.datasource.database}")
     private String database;
 
+    @Value("${spring.datasource.host}")
+    private String host;
+
+    @Value("${spring.datasource.port}")
+    private String port;
+
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
@@ -48,7 +54,9 @@ public class DbBackupJob extends QuartzJobBean {
             file.mkdirs();
         }
 
-        String cmd = "mysqldump -u" + dbUserName + " -p" + dbpassword +
+        String hostInfo = ""; // 判断是否远程备份数据库
+        if (!host.equals("localhost")) hostInfo = " -h " + host + " -P " + port;
+        String cmd = "mysqldump"+ hostInfo +" -u" + dbUserName + " -p" + dbpassword +
                 " --ignore-table "+ database +".sys_log" + // 移除部分表格，比如那些数据量很大又不重要的表格
                 " "+ database +" -r " + backup + File.separator + now + ".sql";
         try {
