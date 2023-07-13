@@ -16,6 +16,7 @@
     <modules>
         <module>adminserver</module>
         <module>mailserver</module>
+        <module>monitorserver</module>
     </modules>
 
     <properties>

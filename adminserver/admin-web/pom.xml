@@ -57,6 +57,12 @@
             <version>13.0</version>
             <scope>compile</scope>
         </dependency>
+        <!--spring boot client-->
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
+            <version>2.7.10</version>
+        </dependency>
     </dependencies>
 
     <build>

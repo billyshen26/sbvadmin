@@ -5,9 +5,9 @@ INSERT INTO `sys_permission` (`id`, `pid`, `request_url`, `request_method`, `nam
 VALUES (${permissionId}, 4, '/api/${table.entityPath}s','ANY', '${table.comment}管理', 'routes.${packageName}.${entity}.${table.entityPath}','${table.comment}管理','/${table.entityPath}','/${packageNameWithSlash}/${table.entityPath}/${entity}Index.vue', '','1','1','1','1',now(), now()),
        (${permissionId1}, ${permissionId}, '/api/${table.entityPath}s','GET', '${table.comment}列表', '','${table.comment}列表','','', '','1','2','1','1',now(), now()),
        (${permissionId2}, ${permissionId}, '/api/${table.entityPath}s','POST', '新增${table.comment}', '','新增${table.comment}','','', '','1','2','1','1',now(), now()),
-       (${permissionId3}, ${permissionId}, '/api/${table.entityPath}s/**','PUT', '修改${table.comment}', '','修改${table.comment}','','', '','1','2','1','1',now(), now()),
-       (${permissionId4}, ${permissionId}, '/api/${table.entityPath}s/**','DELETE', '删除${table.comment}', '','删除${table.comment}','','', '','1','2','1','1',now(), now()),
-       (${permissionId5}, ${permissionId}, '/api/${table.entityPath}s/**','GET', '${table.comment}详情', '','${table.comment}详情','','', '','1','2','1','1',now(), now());
+       (${permissionId3}, ${permissionId}, '/api/${table.entityPath}s/{id:\\d*}','PUT', '修改${table.comment}', '','修改${table.comment}','','', '','1','2','1','1',now(), now()),
+       (${permissionId4}, ${permissionId}, '/api/${table.entityPath}s/{id:\\d*}','DELETE', '删除${table.comment}', '','删除${table.comment}','','', '','1','2','1','1',now(), now()),
+       (${permissionId5}, ${permissionId}, '/api/${table.entityPath}s/{id:\\d*}','GET', '${table.comment}详情', '','${table.comment}详情','','', '','1','2','1','1',now(), now());
 
 --
 -- 默认将菜单分配给root

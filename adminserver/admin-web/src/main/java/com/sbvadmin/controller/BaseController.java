@@ -170,7 +170,7 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
     @CacheEvict(key = "#root.targetClass + #root.methodName + #root.args", allEntries = true)
     public Object editItem(@RequestBody T item, @PathVariable Long id) {
         if (this.getItemService().updateById(item))
-            return "修改成功!";
+            return item;
         return "修改失败!";
     }
 
@@ -180,7 +180,7 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
     public Object addItem(@RequestBody @Valid T item){
         item.setDid(CommonUtil.getOwnUser().getLoginDeptId()); // 2023-05-27 新增添加机构id，设置数据权限
         if (this.getItemService().save(item))
-            return "新增成功!";
+            return item;
         return "新增失败!";
     }
 }

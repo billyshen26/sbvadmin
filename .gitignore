@@ -10,6 +10,7 @@ target/
 /backup
 /adminserver/logs/
 /adminserver/admin-web/logs/
+logs
 
 ### local configure file ###
 *.local

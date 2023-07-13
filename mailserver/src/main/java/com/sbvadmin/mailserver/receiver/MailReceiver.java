@@ -32,7 +32,7 @@ public class MailReceiver {
     @Autowired
     TemplateEngine templateEngine;
 
-    @RabbitListener(queues = "add-user")
+//    @RabbitListener(queues = "add-user")
     public void handler(Message message, Channel channel) throws IOException {
         User user = (User) message.getPayload();
         System.out.println("有新用户添加进来了:" + user.getNickname());

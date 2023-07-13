@@ -51,7 +51,11 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
                 requestUri.equals("/api/wechat/jscode2openid")||
                 requestUri.equals("/api/dicts/getDictByType")||
                 requestUri.equals("/api/dicts/getDictTypes")||
-                requestUri.equals("/api/wechat/wechatLogin")) {
+                requestUri.equals("/api/wechat/wechatLogin")||
+                requestUri.equals("/api/upload")|| // 微信上传头像需要
+                antPathMatcher.match("/actuator/**",requestUri)|| // sba功能
+                antPathMatcher.match("/assets/**",requestUri) // sba功能
+        ) {
             return SecurityConfig.createList("ROLE_LOGIN");
         }
 
