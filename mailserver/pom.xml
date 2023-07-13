@@ -57,7 +57,7 @@
     </dependencies>
 
     <build>
-        <finalName>saphub-mail</finalName>
+        <finalName>sbvadmin-mail</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
