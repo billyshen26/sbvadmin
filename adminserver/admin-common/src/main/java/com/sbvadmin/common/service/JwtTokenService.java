@@ -1,7 +1,6 @@
-package com.sbvadmin.utils;
+package com.sbvadmin.common.service;
 
 import io.jsonwebtoken.*;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +12,8 @@ import java.util.Map;
  * Author: 涛声依旧 likeboat@163.com
  * Time: 2022/7/25 20:23
  */
-public class JwtTokenUtil {
+@Component
+public class JwtTokenService {
 
     @Value("${spring.jwt.signingKey}")
     private String signingKey;

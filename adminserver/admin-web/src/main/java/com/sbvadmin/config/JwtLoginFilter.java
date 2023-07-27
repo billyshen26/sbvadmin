@@ -1,15 +1,14 @@
 package com.sbvadmin.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sbvadmin.common.service.JwtTokenService;
 import com.sbvadmin.mapper.UserMapper;
 import com.sbvadmin.model.ErrorCode;
 import com.sbvadmin.model.Log;
 import com.sbvadmin.model.ResultFormat;
 import com.sbvadmin.model.User;
 import com.sbvadmin.service.impl.LogServiceImpl;
-import com.sbvadmin.service.utils.CommonUtil;
 import com.sbvadmin.utils.IpUtil;
-import com.sbvadmin.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.*;
@@ -28,7 +27,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Notes:
@@ -47,7 +49,7 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
     private String version;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    JwtTokenService jwtTokenService;
 
     protected JwtLoginFilter(String defaultFilterProcessesUrl, AuthenticationManager authenticationManager) {
         super(new AntPathRequestMatcher(defaultFilterProcessesUrl));
@@ -73,11 +75,11 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
         }
 
         User user = (User) authResult.getPrincipal();
-        Date expired = jwtTokenUtil.getExpiredDate();
+        Date expired = jwtTokenService.getExpiredDate();
         Map<String, Object> map = new HashMap<>();
         map.put("authorities", as); // 配置用户角色
         map.put("uid",user.getId()); // 配置用户id
-        String jwt = jwtTokenUtil.genToken(map,authResult.getName(),expired);
+        String jwt = jwtTokenService.genToken(map,authResult.getName(),expired);
         resp.setContentType("application/json;charset=utf-8");
         PrintWriter out = resp.getWriter();
         Map<String, Object> tokenMap = new HashMap<>();  // map自定义输出结构

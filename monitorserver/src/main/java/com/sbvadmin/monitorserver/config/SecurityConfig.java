@@ -1,4 +1,4 @@
-package com.sbvadmin.monitorserver;
+package com.sbvadmin.monitorserver.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

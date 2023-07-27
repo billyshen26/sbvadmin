@@ -1,12 +1,12 @@
 package com.sbvadmin.controller;
 
+import com.sbvadmin.common.service.JwtTokenService;
 import com.sbvadmin.model.Role;
 import com.sbvadmin.model.User;
 import com.sbvadmin.model.UserInfo;
 import com.sbvadmin.service.impl.PermissionServiceImpl;
 import com.sbvadmin.service.impl.UserServiceImpl;
 import com.sbvadmin.service.utils.CommonUtil;
-import com.sbvadmin.utils.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -35,13 +35,13 @@ import java.util.Map;
 public class AuthController {
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
     UserServiceImpl userService;
 
     @Autowired
     PermissionServiceImpl permissionService;
+
+    @Autowired
+    JwtTokenService jwtTokenService;
 
     /**
      * Notes:  解决访问必须带index.html的问题
@@ -126,7 +126,7 @@ public class AuthController {
         if (jwtToken != null && jwtToken != "") {
             jwtToken = jwtToken.replace("Bearer", "");
 //            if (!jwtTokenUtil.isTokenExpired(jwtToken)) { // 可以随时刷新token，待考虑 TODO
-                Claims claims = jwtTokenUtil.parserToken(jwtToken);
+                Claims claims = jwtTokenService.parserToken(jwtToken);
                 String username = claims.getSubject();//获取当前登录用户名
                 List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get("authorities"));
                 Long uid = Long.valueOf(String.valueOf(claims.get("uid")));
@@ -136,11 +136,11 @@ public class AuthController {
                     as.append(authority.getAuthority())
                             .append(",");
                 }
-                Date expired = jwtTokenUtil.getExpiredDate();
+                Date expired = jwtTokenService.getExpiredDate();
                 Map<String, Object> map = new HashMap<>();
                 map.put("authorities", as); // 配置用户角色
                 map.put("uid", user.getId()); // 配置用户id
-                String jwt = jwtTokenUtil.genToken(map, user.getUsername(), expired);
+                String jwt = jwtTokenService.genToken(map, user.getUsername(), expired);
                 return jwt;
 //            }
         }

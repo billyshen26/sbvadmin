@@ -1,9 +1,7 @@
 package com.sbvadmin.controller;
 
-import com.sbvadmin.service.utils.CommonUtil;
-import com.sbvadmin.utils.CommonWebUtil;
+import com.sbvadmin.common.utils.CommonWebUtil;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.system.ApplicationHome;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,7 +28,7 @@ public class UploadController {
 
         // 创建uploads 文件夹
         if (dir == null) dir = "other";
-        String uploadsDirPath = CommonWebUtil.getJarPath() + File.separator + uploadsPath+ File.separator +dir;
+        String uploadsDirPath = CommonWebUtil.getJarPath(UploadController.class) + File.separator + uploadsPath+ File.separator +dir;
         File uploadsDir = new File(uploadsDirPath);
         if (!uploadsDir.exists()){ //如果不存在
             boolean dr = uploadsDir.mkdirs(); //创建目录

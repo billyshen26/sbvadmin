@@ -84,10 +84,16 @@ public class SbvLogAspect {
 
         // 用户信息
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long uid = (Long) authentication.getDetails();
-        log.setUid(uid);
-        log.setUsername(authentication.getName());
-
+        if(authentication.getPrincipal().equals("anonymousUser")){
+            log.setUid(1L);
+            log.setUsername("匿名");
+            log.setDid(1L);
+        }else{
+            Long uid = (Long) authentication.getDetails();
+            log.setUid(uid);
+            log.setUsername(authentication.getName());
+            log.setDid(CommonUtil.getOwnUser().getLoginDeptId());
+        }
         // 时间信息
         log.setCreatedAt(LocalDateTime.now());
         log.setUpdatedAt(LocalDateTime.now());

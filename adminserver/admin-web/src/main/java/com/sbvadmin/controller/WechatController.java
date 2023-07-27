@@ -3,12 +3,14 @@ package com.sbvadmin.controller;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.alibaba.druid.support.json.JSONUtils;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.sbvadmin.common.service.JwtTokenService;
 import com.sbvadmin.model.ErrorCode;
 import com.sbvadmin.model.ResultFormat;
 import com.sbvadmin.model.User;
 import com.sbvadmin.service.impl.UserServiceImpl;
 import com.sbvadmin.utils.JwtTokenUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,6 +25,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/api/wechat")
+@Slf4j
 public class WechatController {
     @Value("${wechat.app-id}")
     private String appId;
@@ -31,7 +34,7 @@ public class WechatController {
     private String appSecret;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private JwtTokenService jwtTokenService;
 
     @Autowired
     private UserServiceImpl userService;
@@ -50,7 +53,9 @@ public class WechatController {
         if (object.getInt("errcode") != null && object.getInt("errcode") != 0){
             return ResultFormat.fail(ErrorCode.WECHAT_AUTH_FAILED);
         }
-        return object.getStr("openid");
+        log.error("jscode2openid:" + object.getStr("openid"));
+        log.error(JSONUtil.toJsonStr(object));
+        return object;
     }
 
     /**
@@ -65,24 +70,41 @@ public class WechatController {
      **/
     @PostMapping("/wechatLogin")
     public Object wechatLogin(@RequestBody User user){
-        user.setUsername(user.getMpOpenId()); // 默认用户名为openid
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // 密码加密
-        user.setPassword(passwordEncoder.encode("123456")); // 默认密码123456 TODO
-        user.setNickname(user.getNickname());
-        user.setMpOpenId(user.getMpOpenId());
-        List<Long> roleIds = Arrays.asList(1L);
-        user.setRoleIds(roleIds);
-        List<Long> deptIds = Arrays.asList(1L);
-        user.setDeptIds(deptIds);
-        userService.save(user);
+        if(user.getMpOpenId().length() != 28) {
+            log.error("微信授权openid长度不对: " + user.getMpOpenId());
+            return "微信授权openid长度不对";
+        }
 
-
-        Date expired = jwtTokenUtil.getExpiredDate();
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("mp_open_id",user.getMpOpenId());
+        User existUser =  userService.getOne(queryWrapper);
+        if (existUser != null){
+            existUser.setNickname(user.getNickname()); // 更新昵称
+            existUser.setAvatar(user.getAvatar()); // 更新头像
+            existUser.setUnionId(user.getUnionId()); // 更新unionid
+            userService.updateById(existUser);
+            user = existUser;
+        }else{ // 若不存在则直接新增一个用户
+            user.setUsername(user.getMpOpenId()); // 默认用户名为openid
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // 密码加密
+            user.setPassword(passwordEncoder.encode("123456")); // 默认密码123456 TODO
+            List<Long> roleIds = Arrays.asList(3L);
+            user.setRoleIds(roleIds);
+            List<Long> deptIds = Arrays.asList(1L);
+            user.setDeptIds(deptIds);
+            userService.save(user);
+        }
+        // 生成token
+        Date expired = jwtTokenService.getExpiredDate();
         Map<String, Object> map = new HashMap<>();
         map.put("authorities", "ROLE_user"); // 配置用户角色
         map.put("uid",user.getId()); // 配置用户id
-        String jwt = jwtTokenUtil.genToken(map,user.getUsername(),expired);
+        String token = jwtTokenService.genToken(map,user.getUsername(),expired);
 
-        return jwt;
+        // 登录后用户id也返回下
+        Map<String, Object> result = new HashMap<>();
+        result.put("token", token); // 令牌
+        result.put("uid",user.getId()); // 用户id
+        return result;
     }
 }

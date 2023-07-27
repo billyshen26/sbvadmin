@@ -1,4 +1,4 @@
-package com.sbvadmin.utils;
+package com.sbvadmin.common.utils;
 
 import org.springframework.boot.system.ApplicationHome;
 
@@ -18,8 +18,8 @@ public class CommonWebUtil {
      * Author: 涛声依旧 likeboat@163.com
      * Time: 2023/6/20 17:32
      **/
-    public static String getJarPath(){
-        ApplicationHome home = new ApplicationHome(CommonWebUtil.class);
+    public static String getJarPath(Class<?> sourceClass){
+        ApplicationHome home = new ApplicationHome(sourceClass);
         File jarFile = null;
         String path = null;
         try{

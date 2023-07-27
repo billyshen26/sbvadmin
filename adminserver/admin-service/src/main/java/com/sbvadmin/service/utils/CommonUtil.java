@@ -83,7 +83,11 @@ public class CommonUtil {
         String host = getConfigBySymbol("host_ip");
         String port = environment.getProperty("server.port");
         if (!avatar.contains("http")) {
-            return  "http://" + host + ":" + port + File.separator + avatar; // 补充协议，域名和端口
+            if (!host.contains("http")){ // ip的情况，这里最好用正则 TODO
+                return  "http://" + host + ":" + port + File.separator + avatar; // 补充协议，域名和端口
+            }else{ // 直接提供域名
+                return  host + File.separator + avatar; // 补充协议，域名和端口
+            }
         }
         return avatar;
     }
@@ -118,6 +122,7 @@ public class CommonUtil {
     public static List<Dict> getDictByType(String type){
         QueryWrapper<Dict> queryWrapper=new QueryWrapper<>();
         queryWrapper.eq("type", type);
+        queryWrapper.orderByDesc("order_no");
         List<Dict> dictList = dictService.list(queryWrapper);
         return dictList;
     }

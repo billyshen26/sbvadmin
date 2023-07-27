@@ -1,10 +1,9 @@
 package com.sbvadmin.config;
 
+import com.sbvadmin.common.service.JwtTokenService;
 import com.sbvadmin.mapper.UserMapper;
 import com.sbvadmin.model.ErrorCode;
 import com.sbvadmin.model.User;
-import com.sbvadmin.service.utils.CommonUtil;
-import com.sbvadmin.utils.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,8 +28,6 @@ import java.util.List;
  * Time: 2022/7/20 20:38
  */
 public class JwtFilter extends OncePerRequestFilter {
-    @Autowired
-    private  JwtTokenUtil jwtTokenUtil;
 
     @Autowired
     UserMapper userMapper;
@@ -39,6 +36,9 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     @Qualifier("handlerExceptionResolver")
     private HandlerExceptionResolver resolver;
+
+    @Autowired
+    JwtTokenService jwtTokenService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -57,8 +57,8 @@ public class JwtFilter extends OncePerRequestFilter {
         System.out.println("jwtToken:" + jwtToken);
         if (jwtToken != null && jwtToken != ""){
             jwtToken = jwtToken.replace("Bearer","");
-            if (!jwtTokenUtil.isTokenExpired(jwtToken)) {
-                Claims claims = jwtTokenUtil.parserToken(jwtToken);
+            if (!jwtTokenService.isTokenExpired(jwtToken)) {
+                Claims claims = jwtTokenService.parserToken(jwtToken);
                 String username = claims.getSubject();//获取当前登录用户名
                 List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get("authorities"));
                 Long uid = Long.valueOf(String.valueOf(claims.get("uid")));

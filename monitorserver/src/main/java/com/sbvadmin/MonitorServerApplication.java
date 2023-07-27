@@ -1,4 +1,4 @@
-package com.sbvadmin.monitorserver;
+package com.sbvadmin;
 
 import de.codecentric.boot.admin.server.config.EnableAdminServer;
 import org.springframework.boot.SpringApplication;
