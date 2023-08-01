@@ -234,7 +234,7 @@ public class SbvGenerator {
         for (String inputTable : inputTables) {
             Thread.sleep(1000); // 休眠一秒，解决版本重复问题
             String fileData = "--\n" +
-                    "-- Structure for " + inputTable + "\n" +
+                    "-- " + inputTable + "\n" +
                     "--";
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime = sdf.format(new Date());
