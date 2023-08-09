@@ -5,6 +5,7 @@ import com.sbvadmin.mapper.UserMapper;
 import com.sbvadmin.model.ErrorCode;
 import com.sbvadmin.model.User;
 import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -27,6 +28,7 @@ import java.util.List;
  * Author: 涛声依旧 likeboat@163.com
  * Time: 2022/7/20 20:38
  */
+@Slf4j
 public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -54,7 +56,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String method = req.getMethod();
 
         String jwtToken = req.getHeader("authorization");
-        System.out.println("jwtToken:" + jwtToken);
+        log.debug("jwtToken:" + jwtToken);
         if (jwtToken != null && jwtToken != ""){
             jwtToken = jwtToken.replace("Bearer","");
             if (!jwtTokenService.isTokenExpired(jwtToken)) {
@@ -69,7 +71,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 token.setDetails(uid);
                 SecurityContextHolder.getContext().setAuthentication(token);
             }else{
-                System.out.println("令牌已失效");
+                log.info("令牌已失效");
                 resolver.resolveException(request, response, null, new BadCredentialsException(ErrorCode.TOKEN_INVALID.getMessage()));
                 return;
 //                throw new BadCredentialsException(ErrorCode.TOKEN_INVALID.getMessage());

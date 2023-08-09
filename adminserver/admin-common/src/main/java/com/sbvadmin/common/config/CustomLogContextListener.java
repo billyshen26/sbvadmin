@@ -1,4 +1,4 @@
-package com.sbvadmin.mailserver.config;
+package com.sbvadmin.common.config;
 
 /**
  * Notes:
@@ -13,7 +13,6 @@ import ch.qos.logback.core.Context;
 import ch.qos.logback.core.spi.ContextAwareBase;
 import ch.qos.logback.core.spi.LifeCycle;
 import com.sbvadmin.common.utils.CommonWebUtil;
-import org.springframework.boot.system.ApplicationHome;
 
 import java.io.File;
 
@@ -26,20 +25,6 @@ public class CustomLogContextListener extends ContextAwareBase implements Logger
     @Override
     public void start() {
         //获取当前jar 的执行路径
-//        ApplicationHome home = new ApplicationHome(getClass());
-//        File jarFile = null;
-//        try{
-//            jarFile = home.getSource() != null ?  home.getSource() : home.getDir();
-//            String parent = jarFile.getParent();
-//
-//            String path = jarFile.getParentFile().toString();
-//            System.out.println("CustomLogContextListener_start_filePath:"+path);
-//            System.setProperty(LOG_PAHT_KEY, path + File.separator + "logs");
-//            Context context = getContext();
-//            context.putProperty(LOG_PAHT_KEY,  path + File.separator + "logs");
-//        }catch(Exception e){
-//            e.printStackTrace();
-//        }
         String path = CommonWebUtil.getJarPath(CustomLogContextListener.class);
         System.setProperty(LOG_PAHT_KEY, path + File.separator + "logs");
         Context context = getContext();

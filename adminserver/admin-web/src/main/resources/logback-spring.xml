@@ -6,9 +6,9 @@
        debug:       当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。
      -->
 
-    <!-- 定义日志文件的存储地址，需要使用监听类完成这个任务，无法systemctl中无法使用 -->
-    <!--<springProperty scope="context" name="LOG_HOME" source="log.path"/>-->
-    <!-- 将监听类加入到xml -->
+    <!-- 定义日志文件的存储地址 -->
+<!--    <springProperty scope="context" name="LOG_HOME" source="log.path"/>-->
+    <!-- 将监听类加入到xml，需要使用监听类完成这个任务，否则无法systemctl中无法使用 -->
     <contextListener class="com.sbvadmin.config.CustomLogContextListener" />
 
     <springProperty scope="context" name="APP_NAME"  source="spring.application.packageName"/>
@@ -39,17 +39,17 @@
 
     <!-- INFO日志 appender: 按照每天生成日志文件 -->
     <appender name="INFO-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!-- 过滤器，记录info级别以上的日志 -->
+        <!-- 过滤器，记录debug级别以上的日志 -->
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
+            <level>DEBUG</level>
         </filter>
         <!-- 写入的日志文件名，可以使相对目录也可以是绝对目录，如果上级目录不存在则自动创建 -->
-        <file>${LOG_HOME}/${APP_NAME}-info.log</file>
+        <file>${LOG_HOME}/${APP_NAME}/admin-info.log</file>
         <!-- 如果为true表示日志被追加到文件结尾，如果是false表示清空文件 -->
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- 日志文件输出的文件名: %d可以包含一个Java.text.SimpleDateFormat指定的时间格式 -->
-            <fileNamePattern>${LOG_HOME}/${APP_NAME}-info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/${APP_NAME}/admin-info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <!-- 日志文件保存历史数量:控制保留的归档文件的最大数量，如果超出数量就删除旧文件 -->
             <maxHistory>30</maxHistory>
             <!-- 文件大小超过100MB归档 -->
@@ -70,12 +70,12 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <!-- 日志名称 -->
-        <file>${LOG_HOME}/${APP_NAME}-error.log</file>
+        <file>${LOG_HOME}/${APP_NAME}/admin-error.log</file>
         <append>true</append>
         <!-- 每天生成一个日志文件，保存30天的日志文件 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- 日志文件输出的文件名:按天回滚 daily -->
-            <fileNamePattern>${LOG_HOME}/${APP_NAME}-error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/${APP_NAME}/admin-error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <!-- 日志文件保留天数 -->
             <maxHistory>30</maxHistory>
             <!-- 文件大小超过100MB归档 -->
@@ -87,7 +87,7 @@
         </encoder>
     </appender>
 
-    <!-- 控制台输出日志级别 -->
+    <!-- 控制台输出日志级别,记录info级别以上的日志,可通过sba动态改成debug -->
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="INFO-APPENDER"/>

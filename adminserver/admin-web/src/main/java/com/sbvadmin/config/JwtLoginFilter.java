@@ -9,6 +9,7 @@ import com.sbvadmin.model.ResultFormat;
 import com.sbvadmin.model.User;
 import com.sbvadmin.service.impl.LogServiceImpl;
 import com.sbvadmin.utils.IpUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.*;
@@ -37,6 +38,7 @@ import java.util.Map;
  * Author: 涛声依旧 likeboat@163.com
  * Time: 2022/7/20 20:28
  */
+@Slf4j
 public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
 
     @Autowired
@@ -91,7 +93,7 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
         out.write(new ObjectMapper().writeValueAsString(ResultFormat.success(tokenMap)));
         out.flush();
         out.close();
-
+        log.info(user.getNickname() + "登录了系统");
         //更新登录信息
         user.setLastLoginAt(LocalDateTime.now());
         // 获取RequestAttributes

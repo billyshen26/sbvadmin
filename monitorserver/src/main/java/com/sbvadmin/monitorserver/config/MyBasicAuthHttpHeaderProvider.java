@@ -29,7 +29,7 @@ public class MyBasicAuthHttpHeaderProvider implements HttpHeadersProvider {
     public HttpHeaders getHeaders(Instance instance) {
         HttpHeaders headers = new HttpHeaders();
         //获取用户名，密码
-        String username = instance.getRegistration().getMetadata().get("user.name");
+        String username = instance.getRegistration().getMetadata().get("user.name"); //使用默认的user账号， 待优化 TODO
         String password = instance.getRegistration().getMetadata().get("user.password");
         String type = instance.getRegistration().getMetadata().get("type");
         String token = instance.getRegistration().getMetadata().get("token");
@@ -40,8 +40,8 @@ public class MyBasicAuthHttpHeaderProvider implements HttpHeadersProvider {
         } else if ("jwt".equalsIgnoreCase(type)) {
             Date expired = jwtTokenService.getExpiredDate();
             Map<String, Object> map = new HashMap<>();
-            map.put("authorities", "admin"); // 配置用户角色
-            map.put("uid",2); // 配置用户id
+            map.put("authorities", "Role_user"); // 配置用户角色
+            map.put("uid",3); // 配置用户id
             String jwt = jwtTokenService.genToken(map,username,expired);
             headers.set(HttpHeaders.AUTHORIZATION, jwt);
         }else if (StringUtils.hasText(username) && StringUtils.hasText(password)) {
