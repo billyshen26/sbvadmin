@@ -44,12 +44,12 @@
             <level>DEBUG</level>
         </filter>
         <!-- 写入的日志文件名，可以使相对目录也可以是绝对目录，如果上级目录不存在则自动创建 -->
-        <file>${LOG_HOME}/${APP_NAME}/mail-info.log</file>
+        <file>${LOG_HOME}/mail-info.log</file>
         <!-- 如果为true表示日志被追加到文件结尾，如果是false表示清空文件 -->
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- 日志文件输出的文件名: %d可以包含一个Java.text.SimpleDateFormat指定的时间格式 -->
-            <fileNamePattern>${LOG_HOME}/${APP_NAME}/mail-info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/mail-info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <!-- 日志文件保存历史数量:控制保留的归档文件的最大数量，如果超出数量就删除旧文件 -->
             <maxHistory>30</maxHistory>
             <!-- 文件大小超过100MB归档 -->
@@ -70,12 +70,12 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <!-- 日志名称 -->
-        <file>${LOG_HOME}/${APP_NAME}/mail-error.log</file>
+        <file>${LOG_HOME}/mail-error.log</file>
         <append>true</append>
         <!-- 每天生成一个日志文件，保存30天的日志文件 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- 日志文件输出的文件名:按天回滚 daily -->
-            <fileNamePattern>${LOG_HOME}/${APP_NAME}/mail-error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/mail-error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <!-- 日志文件保留天数 -->
             <maxHistory>30</maxHistory>
             <!-- 文件大小超过100MB归档 -->
