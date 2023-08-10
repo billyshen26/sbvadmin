@@ -44,7 +44,7 @@ public class DictController extends BaseController<DictServiceImpl, Dict> {
         return itemService.list(queryWrapper);
     }
 
-//    @Override  直接复现不行 item获取不到值，哪位大神解释下 TODO
+//    @Override  直接复写不行 item获取不到值，哪位大神解释下 TODO
 //    public Object addItem(Dict item) {
 //        // 补充typeName
 //        QueryWrapper<Dict> queryWrapper=new QueryWrapper<>();

@@ -3,13 +3,17 @@ package com.sbvadmin.common.utils;
 import org.springframework.boot.system.ApplicationHome;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Notes:
  * Author: 涛声依旧 likeboat@163.com
  * Time: 2023/6/20 17:46
  */
-public class CommonWebUtil {
+public class CommonUtil {
 
     /**
      * Notes:  获取当前jar的执行路径
@@ -31,4 +35,6 @@ public class CommonWebUtil {
         }
         return path;
     }
+
+
 }

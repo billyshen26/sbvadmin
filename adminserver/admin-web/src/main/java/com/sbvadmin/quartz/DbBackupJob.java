@@ -1,6 +1,6 @@
 package com.sbvadmin.quartz;
 
-import com.sbvadmin.common.utils.CommonWebUtil;
+import com.sbvadmin.common.utils.CommonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -48,7 +48,7 @@ public class DbBackupJob extends QuartzJobBean {
         System.out.println(name + "定时任务开始执行：" + now);
 //        String userDir = System.getProperty("user.dir");
         // 判断要backup文件是否存在
-        String backup = CommonWebUtil.getJarPath(DbBackupJob.class) + File.separator + "backup";
+        String backup = CommonUtil.getJarPath(DbBackupJob.class) + File.separator + "backup";
         File file = new File(backup);
         if (!file.exists()) {
             file.mkdirs();

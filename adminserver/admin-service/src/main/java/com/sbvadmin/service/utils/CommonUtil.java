@@ -1,6 +1,7 @@
 package com.sbvadmin.service.utils;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.sbvadmin.utils.TreeUtil;
 import com.sbvadmin.model.Config;
 import com.sbvadmin.model.Dept;
 import com.sbvadmin.model.Dict;
@@ -8,7 +9,6 @@ import com.sbvadmin.model.User;
 import com.sbvadmin.service.impl.ConfigServiceImpl;
 import com.sbvadmin.service.impl.DictServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.system.ApplicationHome;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -48,7 +48,7 @@ public class CommonUtil {
     }
 
     /**
-     * Notes:  找到子部门，TODO 可以优化后复用
+     * Notes:  找到子部门，TODO 可以优化后复用 已经在TreeUtil中实现，稍后整理
      * @param: [id, objectList]
      * @return: java.util.List<com.sbvadmin.model.Dept>
      * Author: 涛声依旧 likeboat@163.com
@@ -124,7 +124,11 @@ public class CommonUtil {
         queryWrapper.eq("type", type);
         queryWrapper.orderByDesc("order_no");
         List<Dict> dictList = dictService.list(queryWrapper);
-        return dictList;
+
+        // 构建成TREE
+        TreeUtil treeUtil = new TreeUtil();
+        List<Dict> dictListTree =  treeUtil.findChildren(0L,dictList);
+        return dictListTree;
     }
 
     /**

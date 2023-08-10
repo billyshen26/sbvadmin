@@ -12,7 +12,7 @@ import ch.qos.logback.classic.spi.LoggerContextListener;
 import ch.qos.logback.core.Context;
 import ch.qos.logback.core.spi.ContextAwareBase;
 import ch.qos.logback.core.spi.LifeCycle;
-import com.sbvadmin.common.utils.CommonWebUtil;
+import com.sbvadmin.common.utils.CommonUtil;
 
 import java.io.File;
 
@@ -25,7 +25,7 @@ public class CustomLogContextListener extends ContextAwareBase implements Logger
     @Override
     public void start() {
         //获取当前jar 的执行路径
-        String path = CommonWebUtil.getJarPath(CustomLogContextListener.class);
+        String path = CommonUtil.getJarPath(CustomLogContextListener.class);
         System.setProperty(LOG_PAHT_KEY, path + File.separator + "logs");
         Context context = getContext();
         context.putProperty(LOG_PAHT_KEY, path + File.separator + "logs");
