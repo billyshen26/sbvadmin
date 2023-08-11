@@ -38,7 +38,7 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
     protected S itemService;
 
     protected String tableName;
-    protected String likeSearch;
+    protected String[] likeSearch;
     protected String equalSearch;
     public S getItemService() {
         return this.itemService;
@@ -69,7 +69,7 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
      * Author: 涛声依旧 likeboat@163.com
      * Time: 2023/6/1 20:37
      **/
-    public String getLikeSearch() {
+    public String[] getLikeSearch() {
         return likeSearch;
     }
     /**
@@ -99,7 +99,15 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
         if (createdAt != null) // 创建日期范围搜索
             queryWrapper.between(this.getTableName()+"created_at",createdAt[0],createdAt[1]);
         if (likeSearch != null) // 自定义模糊内容搜索：比如name等
-            queryWrapper.like(this.getLikeSearch(),likeSearch);
+        {
+            queryWrapper.and(wq ->{
+                for (int i = 0; i < this.getLikeSearch().length - 1; i++) {
+                    wq.like(this.getLikeSearch()[i],likeSearch).or();
+                }
+                wq.like(this.getLikeSearch()[this.getLikeSearch().length - 1],likeSearch);
+            });
+        }
+
         if (equalSearch != null) // 自定义全等内容搜索：比如type等
             queryWrapper.eq(this.getEqualSearch(),equalSearch);
 
