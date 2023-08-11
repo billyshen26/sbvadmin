@@ -22,7 +22,7 @@ public class DictController extends BaseController<DictServiceImpl, Dict> {
 
     public DictController(){
         this.tableName = "sys_dict";
-        this.likeSearch = new String[]{"label","value"}; // 同时模糊搜索
+        this.likeSearch = new String[]{"label","value"}; // TIPS: 同时模糊搜索
     }
 
     /**

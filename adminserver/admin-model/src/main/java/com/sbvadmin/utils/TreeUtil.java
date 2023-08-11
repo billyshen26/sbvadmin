@@ -28,12 +28,6 @@ public class TreeUtil<T extends TreeModel> {
                 children.add(object);
             }
         }
-        // 根据orderNo排序 https://www.cnblogs.com/mr-wuxiansheng/p/7768491.html
-        Collections.sort(children, new Comparator<T>() {
-            public int compare(T o1, T o2) {
-                return o1.getOrderNo().compareTo(o2.getOrderNo());
-            }
-        });
         return children;
     }
 }
