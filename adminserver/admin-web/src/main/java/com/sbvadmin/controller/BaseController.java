@@ -186,9 +186,29 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
     @SbvLog(desc = "新增")
     @CacheEvict(key = "#root.targetClass + #root.methodName + #root.args", allEntries = true)
     public Object addItem(@RequestBody @Valid T item){
-        item.setDid(CommonUtil.getOwnUser().getLoginDeptId()); // 2023-05-27 新增添加机构id，设置数据权限
-        if (this.getItemService().save(item))
-            return item;
-        return "新增失败!";
+        /*
+         * Notes:  在新增item 之前，加入一个切面，可以方便定制化处理新增前的工作；比如判断是否有数据关联性
+         * Time: 2023/8/17 15:41
+         **/
+        ResultFormat resultFormat = ResultFormat.success("OK");
+        try {
+            Class<?> clazz = this.getClass();// 获取类的Class对象
+            Method method = clazz.getMethod("beforeAdd", Long.class);// 获取方法名为methodName，参数类型为paramType的方法
+            if(method != null) { // 判断该方法是否存在
+                System.out.println("该方法存在");
+                String className = StrUtil.lowerFirst(clazz.getSimpleName());
+                resultFormat = (ResultFormat) method.invoke(SpringUtil.getBean(className), item);
+            }
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            System.out.println("该方法不存在");
+        }
+        if (resultFormat.getCode() == 0 ){
+            item.setDid(CommonUtil.getOwnUser().getLoginDeptId()); // 2023-05-27 新增添加机构id，设置数据权限
+            if (this.getItemService().save(item))
+                return item;
+            return "新增失败!";
+        }else {
+            return resultFormat;
+        }
     }
 }
