@@ -193,7 +193,7 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
         ResultFormat resultFormat = ResultFormat.success("OK");
         try {
             Class<?> clazz = this.getClass();// 获取类的Class对象
-            Method method = clazz.getMethod("beforeAdd", Long.class);// 获取方法名为methodName，参数类型为paramType的方法
+            Method method = clazz.getMethod("beforeAdd", item.getClass());// 获取方法名为methodName，参数类型为paramType的方法
             if(method != null) { // 判断该方法是否存在
                 System.out.println("该方法存在");
                 String className = StrUtil.lowerFirst(clazz.getSimpleName());
