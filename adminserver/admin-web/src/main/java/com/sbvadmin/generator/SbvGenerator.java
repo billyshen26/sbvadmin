@@ -227,7 +227,7 @@ public class SbvGenerator {
     public void genFlywaySql() throws IOException, InterruptedException {
 
         Scanner input = new Scanner(System.in);
-        System.out.println("请输入表名，多个英文逗号分隔");
+        System.out.println("请输入迁移描述，多个迁移逗号分隔");
         String tableName = input.nextLine();
 
         inputTables = Arrays.asList(tableName.split(","));

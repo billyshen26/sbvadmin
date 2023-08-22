@@ -26,9 +26,10 @@ public class User implements UserDetails , Serializable {
     private Long id;
     @NotNull(message = "昵称不能为空")
     private String nickname;
+    private String wechat;
+    private String qq;
     private String phone;
     private String email;
-//    @Getter(value = AccessLevel.NONE)
     private Boolean activated;
     @NotNull(message = "用户名不能为空")
     private String username;
@@ -36,13 +37,11 @@ public class User implements UserDetails , Serializable {
     private String password;
     private String avatar;
     private String homePath;
-//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime lastLoginAt;
     private String lastLoginIp;
     private String mpOpenId;
     private String unionId;
     private Boolean locked;
-//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createdAt;
 //    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") // 解决返回带T的问题 改成LocalDateTimeSerializerConfig
