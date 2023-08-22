@@ -25,18 +25,15 @@ public class WeChatTemplateMsgSenderService {
     @Value("${wechat.oa.app-secret}")
     private String APPSECRET;
 
-    // 获取access_token的接口
-    private final String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + APPID + "&secret=" + APPSECRET;
-
     // 发送模板消息的接口
     private final String SEND_TEMPLATE_MSG_URL = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=";
-
 
     // 获取access_token
     public String getAccessToken() {
         String accessToken = "";
         try {
-            URL url = new URL(ACCESS_TOKEN_URL);
+            // 获取access_token的接口
+            URL url = new URL("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + APPID + "&secret=" + APPSECRET);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setDoOutput(true);
