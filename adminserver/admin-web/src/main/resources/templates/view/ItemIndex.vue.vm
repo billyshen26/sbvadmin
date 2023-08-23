@@ -13,7 +13,7 @@
               {
                 icon: 'clarity:note-edit-line',
                 onClick: handleEdit.bind(null, record),
-                auth: '/api/${table.entityPath}s/**|PUT',
+                auth: '/api/${table.entityPath}s/{id:\\d*}|PUT',
               },
               {
                 icon: 'ant-design:delete-outlined',
@@ -23,7 +23,7 @@
                   placement: 'left',
                   confirm: handleDelete.bind(null, record),
                 },
-                auth: '/api/${table.entityPath}s/**|DELETE',
+                auth: '/api/${table.entityPath}s/{id:\\d*}|DELETE',
               },
             ]"
           />
