@@ -2,7 +2,9 @@
   <div>
     <BasicTable @register="registerTable" :searchInfo="searchInfo">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增 </a-button>
+        <Authority :value="'/api/${table.entityPath}s|POST'">
+          <a-button type="primary" @click="handleCreate"> 新增 </a-button>
+        </Authority>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
@@ -11,6 +13,7 @@
               {
                 icon: 'clarity:note-edit-line',
                 onClick: handleEdit.bind(null, record),
+                auth: '/api/${table.entityPath}s/**|PUT',
               },
               {
                 icon: 'ant-design:delete-outlined',
@@ -20,6 +23,7 @@
                   placement: 'left',
                   confirm: handleDelete.bind(null, record),
                 },
+                auth: '/api/${table.entityPath}s/**|DELETE',
               },
             ]"
           />
