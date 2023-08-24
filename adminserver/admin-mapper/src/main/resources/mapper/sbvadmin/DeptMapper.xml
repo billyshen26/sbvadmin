@@ -4,4 +4,7 @@
     <select id="getAllDepts" resultType="com.sbvadmin.model.Dept">
         select * from sys_dept
     </select>
+    <select id="getDeptsByName" resultType="com.sbvadmin.model.Dept">
+        select * from sys_dept  where name = #{name}
+    </select>
 </mapper>
