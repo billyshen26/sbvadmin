@@ -62,7 +62,7 @@
     </select>
 
     <select id="getOwnUserWithRoles" resultMap="UserWithRoles">
-        select u.id, u.nickname, u.phone, u.email, u.activated, u.locked, u.username,u.password, u.avatar,u.last_login_at,
+        select u.id, u.nickname, u.phone,u.wechat,u.qq, u.email, u.activated, u.locked, u.username,u.password, u.avatar,u.last_login_at,
         u.last_login_ip,u.home_path,u.created_at,u.updated_at,r.`id` as rid,r.`name` as rname,r.`name_zh` as rname_zh,
         d.name as dname,d.`id` as did
         from sys_user u left join sys_user_role ur on u.`id`=ur.`uid`
