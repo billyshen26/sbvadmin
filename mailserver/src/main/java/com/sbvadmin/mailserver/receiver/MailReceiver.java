@@ -46,7 +46,7 @@ public class MailReceiver {
             sendHtmlMail("xxxxx@qq.com", // 保持和配置文件中的一致
                     user.getEmail(),
                     "xxxxx@163.com", // 测试抄送
-                    "svbadmin新用户注册邮件",
+                    "新用户注册邮件",
                     mail);
         } catch (Exception e) {
             log.error(e.getMessage());
