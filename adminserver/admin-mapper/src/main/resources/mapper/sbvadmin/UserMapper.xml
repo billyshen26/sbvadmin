@@ -10,6 +10,8 @@
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
         <result column="phone" property="phone" jdbcType="CHAR"/>
+        <result column="wechat" property="wechat" jdbcType="CHAR"/>
+        <result column="qq" property="qq" jdbcType="CHAR"/>
         <result column="email" property="email" jdbcType="VARCHAR"/>
         <result column="activated" property="activated" jdbcType="BIT"/>
         <result column="locked" property="locked" jdbcType="BIT"/>
