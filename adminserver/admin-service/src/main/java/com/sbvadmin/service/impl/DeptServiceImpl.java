@@ -76,50 +76,51 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
     public boolean save(Dept entity) {
 
         // 1. 新增机构
+        boolean saas = false;
         super.save(entity);
+        if (saas){ // 如果是SAAS软件的话，应该再创建机构的时候初始化一些信息 TODO
+            // 2.1 新增默认管理者角色
+            Role role =new Role();
+            role.setDid(entity.getId());
+            role.setNameZh(entity.getName() + "管理员");
+            role.setName("ROLE_" + "admin_" + entity.getId());
+            role.setDescription(entity.getName() + "默认管理员角色");
+            roleMapper.insert(role);
+            // 2.2 新增默认管理者角色-角色和权限的关系
+            QueryWrapper<RolePermission> queryWrapper=new QueryWrapper<>();
+            queryWrapper.eq("rid", 2L); // 取admin的权限点
+            List<RolePermission> adminList = rolePermissionMapper.selectList(queryWrapper);
+            for (RolePermission rp : adminList) {
+                RolePermission rolePermission = new RolePermission();
+                rolePermission.setPid(rp.getPid());
+                rolePermission.setRid(role.getId());
+                rolePermissionMapper.insert(rolePermission);
+            }
 
-        // 2.1 新增默认管理者角色
-        Role role =new Role();
-        role.setDid(entity.getId());
-        role.setNameZh(entity.getName() + "管理员");
-        role.setName("ROLE_" + "admin_" + entity.getId());
-        role.setDescription(entity.getName() + "默认管理员角色");
-        roleMapper.insert(role);
-        // 2.2 新增默认管理者角色-角色和权限的关系
-        QueryWrapper<RolePermission> queryWrapper=new QueryWrapper<>();
-        queryWrapper.eq("rid", 2L); // 取admin的权限点
-        List<RolePermission> adminList = rolePermissionMapper.selectList(queryWrapper);
-        for (RolePermission rp : adminList) {
-            RolePermission rolePermission = new RolePermission();
-            rolePermission.setPid(rp.getPid());
-            rolePermission.setRid(role.getId());
-            rolePermissionMapper.insert(rolePermission);
+            // 3.1 新增默认管理员用户
+            User user = new User();
+            user.setNickname(entity.getName() + "管理员");
+            user.setUsername("admin_" + entity.getId()); // 用户名默认admin_x
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            user.setPassword(passwordEncoder.encode("admin_" + entity.getId())); // 密码同用户名
+            user.setHomePath("/dashboard/analysis");
+            user.setAvatar("avatar.png");
+            userMapper.insert(user);
+
+            // 3.2 新增默认管理员用户-用户和角色关系
+            UserRole userRole = new UserRole();
+            userRole.setRid(role.getId());
+            userRole.setUid(user.getId());
+            userRoleMapper.insert(userRole);
+
+            // 3.3 新增默认管理员用户-用户和角色关系
+            UserDept userDept = new UserDept();
+            userDept.setDid(entity.getId());
+            userDept.setUid(user.getId());
+            userDeptMapper.insert(userDept);
+
+            // 4. 新增默认配置
         }
-
-        // 3.1 新增默认管理员用户
-        User user = new User();
-        user.setNickname(entity.getName() + "管理员");
-        user.setUsername("admin_" + entity.getId()); // 用户名默认admin_x
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        user.setPassword(passwordEncoder.encode("admin_" + entity.getId())); // 密码同用户名
-        user.setHomePath("/dashboard/analysis");
-        user.setAvatar("avatar.png");
-        userMapper.insert(user);
-
-        // 3.2 新增默认管理员用户-用户和角色关系
-        UserRole userRole = new UserRole();
-        userRole.setRid(role.getId());
-        userRole.setUid(user.getId());
-        userRoleMapper.insert(userRole);
-
-        // 3.3 新增默认管理员用户-用户和角色关系
-        UserDept userDept = new UserDept();
-        userDept.setDid(entity.getId());
-        userDept.setUid(user.getId());
-        userDeptMapper.insert(userDept);
-
-        // 4. 新增默认配置 TODO
-
         return true;
     }
 }
