@@ -35,6 +35,8 @@ public class User implements UserDetails , Serializable {
     private String username;
     @NotNull(message = "密码不能为空")
     private String password;
+    @TableField(exist = false)
+    private String rawPassword; // 未加密前的密码
     private String avatar;
     private String homePath;
     private LocalDateTime lastLoginAt;

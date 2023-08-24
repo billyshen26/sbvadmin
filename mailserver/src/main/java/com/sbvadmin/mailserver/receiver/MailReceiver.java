@@ -35,13 +35,12 @@ public class MailReceiver {
 //    @RabbitListener(queues = "add-user")
     public void handler(Message message, Channel channel) throws IOException {
         User user = (User) message.getPayload();
-        System.out.println("有新用户添加进来了:" + user.getNickname());
+        log.info("有新用户添加进来了:" + user.getNickname());
 
         Context ctx = new Context();
         ctx.setVariable("username",user.getUsername());
-        ctx.setVariable("name",user.getNickname());
+        ctx.setVariable("password",user.getRawPassword());
         String mail = templateEngine.process("register.html", ctx);
-
 
         try {
             sendHtmlMail("xxxxx@qq.com", // 保持和配置文件中的一致
