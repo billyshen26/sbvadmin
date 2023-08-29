@@ -40,10 +40,11 @@
   import { get${entity}List, del${entity} } from '/@/api/${packageNameWithSlash}/${entity}';
   import ${entity}Modal from './${entity}Modal.vue';
   import { columns, searchFormSchema } from './${entity}.data';
+  import { Authority } from '/@/components/Authority';
 
   export default defineComponent({
     name: '${entity}Management',
-    components: { BasicTable, ${entity}Modal, TableAction },
+    components: { BasicTable, ${entity}Modal, TableAction, Authority },
     setup() {
       const [registerModal, { openModal }] = useModal();
       const searchInfo = reactive<Recordable>({});

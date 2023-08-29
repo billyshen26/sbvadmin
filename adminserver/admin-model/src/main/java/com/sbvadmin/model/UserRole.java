@@ -1,6 +1,7 @@
 package com.sbvadmin.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
@@ -35,4 +36,10 @@ public class UserRole implements Serializable {
      * 角色外键
      */
     private Long rid;
+
+    /**
+     * Notes: 用户详细信息
+     **/
+    @TableField(exist = false)
+    private User user;
 }

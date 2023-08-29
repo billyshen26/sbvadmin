@@ -45,4 +45,15 @@ public interface UserMapper extends BaseMapper<User> {
      * Time: 2023/5/27 19:39
      **/
     User getOwnUserWithRoles(String username);
+
+    /**
+     * Notes:  根据角色id获取所有用户
+     * @param: [rid]
+     * @return: java.util.List<com.sbvadmin.model.User>
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/8/29 19:49
+     **/
+    @Select("select * from sys_user left join sys_user_role on sys_user.id = sys_user_role.uid " +
+            "where sys_user_role.rid = #{rid}")
+    List<User> getUsersByRoleId(Long rid);
 }

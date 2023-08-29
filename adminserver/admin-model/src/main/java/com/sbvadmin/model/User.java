@@ -42,6 +42,7 @@ public class User implements UserDetails , Serializable {
     private LocalDateTime lastLoginAt;
     private String lastLoginIp;
     private String mpOpenId;
+    private String oaOpenId;
     private String unionId;
     private Boolean locked;
     @TableField(fill = FieldFill.INSERT)
