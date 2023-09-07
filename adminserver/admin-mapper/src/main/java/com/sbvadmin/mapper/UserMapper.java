@@ -9,6 +9,8 @@ import com.sbvadmin.model.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 
@@ -18,6 +20,7 @@ import java.util.List;
  * Time: 2022/7/12 20:09
  */
 @Mapper
+@CacheConfig(cacheNames = "user")
 public interface UserMapper extends BaseMapper<User> {
     /**
      * Notes:
@@ -44,6 +47,7 @@ public interface UserMapper extends BaseMapper<User> {
      * Author: 涛声依旧 likeboat@163.com
      * Time: 2023/5/27 19:39
      **/
+    @Cacheable(key = "#root.args")
     User getOwnUserWithRoles(String username);
 
     /**

@@ -1,8 +1,11 @@
 package com.sbvadmin.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.sbvadmin.model.ResultFormat;
 import com.sbvadmin.service.utils.CommonUtil;
 import com.sbvadmin.utils.SbvLog;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 import com.sbvadmin.model.Dict;
 import com.sbvadmin.service.impl.DictServiceImpl;
@@ -18,6 +21,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/dicts")
+@CacheConfig(cacheNames = "dict")
 public class DictController extends BaseController<DictServiceImpl, Dict> {
 
     public DictController(){
@@ -33,6 +37,7 @@ public class DictController extends BaseController<DictServiceImpl, Dict> {
      * Time: 2023/3/13 15:22
      **/
     @GetMapping("/getDictByType")
+    @Cacheable(key = "#root.methodName +'_'+ #root.args")
     public List<Dict> getDictByType(@RequestParam(value = "type") String type){
         return CommonUtil.getDictByType(type);
     }
@@ -44,6 +49,7 @@ public class DictController extends BaseController<DictServiceImpl, Dict> {
      * Time: 2023/3/21 11:41
      **/
     @GetMapping("/getDictTypes")
+    @Cacheable(key = "#root.methodName")
     public List<Dict> getDictTypes(){
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.select("DISTINCT type, type_name");
@@ -59,19 +65,29 @@ public class DictController extends BaseController<DictServiceImpl, Dict> {
 //        item.setTypeName(dict.getTypeName());
 //        return super.addItem(item);
 //    }
-    @PostMapping("")
-    @SbvLog(desc = "新增")
-    public Object addItem(@RequestBody @Valid Dict item){
+//    @PostMapping("")
+//    @SbvLog(desc = "新增")
+//    public Object addItem(@RequestBody @Valid Dict item){
+//        // 补充typeName
+//        QueryWrapper<Dict> queryWrapper=new QueryWrapper<>();
+//        queryWrapper.eq("type", item.getType());
+//        queryWrapper.last("limit 1");
+//        Dict dict = itemService.getOne(queryWrapper);
+//        item.setTypeName(dict.getTypeName());
+//        item.setDid(CommonUtil.getOwnUser().getLoginDeptId());
+//        if (itemService.save(item))
+//            return "新增成功!";
+//        return "新增失败!";
+//    }
+
+    public ResultFormat beforeAdd(Dict item){
         // 补充typeName
         QueryWrapper<Dict> queryWrapper=new QueryWrapper<>();
         queryWrapper.eq("type", item.getType());
         queryWrapper.last("limit 1");
         Dict dict = itemService.getOne(queryWrapper);
         item.setTypeName(dict.getTypeName());
-        item.setDid(CommonUtil.getOwnUser().getLoginDeptId());
-        if (itemService.save(item))
-            return "新增成功!";
-        return "新增失败!";
+        return ResultFormat.success("可以新增");
     }
 }
 

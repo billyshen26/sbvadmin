@@ -7,6 +7,7 @@ import com.sbvadmin.model.*;
 import com.sbvadmin.service.impl.UserDeptServiceImpl;
 import com.sbvadmin.service.impl.UserRoleServiceImpl;
 import com.sbvadmin.service.impl.UserServiceImpl;
+import com.sbvadmin.service.utils.CommonService;
 import com.sbvadmin.service.utils.CommonUtil;
 import com.sbvadmin.utils.SbvLog;
 import org.springframework.amqp.AmqpConnectException;
@@ -44,6 +45,9 @@ public class UserController {
     @Autowired
     UserDeptServiceImpl userDeptService;
 
+    @Autowired
+    CommonService commonService;
+
     @GetMapping("")
     public List<User> getUsers(@RequestParam(value="deptId" ,required=false) Long did,
                                @RequestParam(value="id" ,required=false) Long id,
@@ -51,7 +55,7 @@ public class UserController {
         if (did == null) did = CommonUtil.getOwnUser().getLoginDeptId(); // 默认获取登录机构的账号
         List<User> users = userService.getUsersWithRoles(did,id,name);
         for (User user : users) {
-            user.setAvatar(CommonUtil.getAvatarUrl(user.getAvatar()));
+            user.setAvatar(commonService.getAvatarUrl(user.getAvatar()));
         }
         return users;
     }

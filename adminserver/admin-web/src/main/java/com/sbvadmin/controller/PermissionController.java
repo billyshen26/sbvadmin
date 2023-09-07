@@ -6,6 +6,10 @@ import com.sbvadmin.service.impl.PermissionServiceImpl;
 import com.sbvadmin.service.impl.RolePermissionServiceImpl;
 import com.sbvadmin.utils.SbvLog;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,6 +24,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/permissions")
+@CacheConfig(cacheNames = "permission")
 public class PermissionController {
     @Autowired
     PermissionServiceImpl permissionService;
@@ -31,6 +36,9 @@ public class PermissionController {
     public List<Map<String, Object>> getPermissions(){
         return permissionService.getAllPermissionsAsTree();
     }
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @PostMapping("")
     @SbvLog(desc = "新增权限点")
@@ -62,5 +70,36 @@ public class PermissionController {
         }
 
         return permissionService.removeById(id);
+    }
+
+
+    /**
+     * Notes:  手动更新所有菜单缓存
+     * @param: []
+     * @return: java.lang.Object
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/9/3 20:50
+     **/
+    @PostMapping("/refreshPermissions")
+    @CacheEvict( allEntries = true)
+    public Object refreshPermissions(){
+        return "ok";
+    }
+
+    /**
+     * Notes:  删除所有缓存
+     * @param: []
+     * @return: java.lang.Object
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/9/7 14:56
+     **/
+    @PostMapping("/refreshAllCache")
+    public Object refreshAllCache(){
+        //基于SpringBoot框架自动配置的redisTemplate,操作redis缓存
+        //获取连接
+        RedisConnection connection = redisTemplate.getConnectionFactory().getConnection();
+        //清空数据库中的所有数据
+        connection.flushDb();
+        return "ok";
     }
 }

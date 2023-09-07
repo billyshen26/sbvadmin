@@ -74,7 +74,7 @@ public class SecurityConfiguration {
                     public void logout(HttpServletRequest req,
                                        HttpServletResponse resp,
                                        Authentication auth) {
-                        System.out.println("test1");
+                        System.out.println("Logout");
 
                     }
                 })
@@ -84,7 +84,7 @@ public class SecurityConfiguration {
                                                 HttpServletResponse resp,
                                                 Authentication auth)
                             throws IOException {
-                        System.out.println("test2");
+                        System.out.println("logoutSuccess");
 //                        resp.sendRedirect("/api/login");
                     }
                 })

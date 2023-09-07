@@ -6,6 +6,7 @@ import com.sbvadmin.model.User;
 import com.sbvadmin.model.UserInfo;
 import com.sbvadmin.service.impl.PermissionServiceImpl;
 import com.sbvadmin.service.impl.UserServiceImpl;
+import com.sbvadmin.service.utils.CommonService;
 import com.sbvadmin.service.utils.CommonUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,9 @@ public class AuthController {
     @Autowired
     JwtTokenService jwtTokenService;
 
+    @Autowired
+    CommonService commonService;
+
     /**
      * Notes:  解决访问必须带index.html的问题
      * @param: []
@@ -70,7 +74,7 @@ public class AuthController {
         userInfo.setUserId(user.getId());
         userInfo.setId(user.getId());
         userInfo.setUsername(user.getUsername());
-        userInfo.setAvatar(CommonUtil.getAvatarUrl(user.getAvatar())); // TIPS: 拼接服务器公网路径
+        userInfo.setAvatar(commonService.getAvatarUrl(user.getAvatar())); // TIPS: 拼接服务器公网路径
         userInfo.setHomePath(user.getHomePath()); // 登录后去到的第一个页面路由
         userInfo.setRealName(user.getNickname());
         userInfo.setNickname(user.getNickname());

@@ -11,6 +11,7 @@ import com.sbvadmin.model.UserDept;
 import com.sbvadmin.model.UserRole;
 import com.sbvadmin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

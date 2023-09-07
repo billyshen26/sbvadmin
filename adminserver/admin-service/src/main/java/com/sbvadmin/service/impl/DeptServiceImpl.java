@@ -6,6 +6,7 @@ import com.sbvadmin.model.*;
 import com.sbvadmin.service.IDeptService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sbvadmin.service.utils.CommonUtil;
+import com.sbvadmin.utils.TreeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -54,10 +55,29 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
         }else {
             QueryWrapper<Dept> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("uid",user.getId());
+            queryWrapper.orderByDesc("order_no");
             deptList = this.list(queryWrapper);
         }
-        List<Dept> treeDepts = CommonUtil.findChildren(0L,deptList);
+//        List<Dept> treeDepts = CommonUtil.findChildren(0L,deptList);
+        // 构建成TREE
+        TreeUtil treeUtil = new TreeUtil();
+        List<Dept> treeDepts =  treeUtil.findChildren(0L,deptList);
         return treeDepts;
+    }
+
+
+    @Override
+    public List<Dept> getDeptsByUserId(Long id){
+        List<Dept> deptList = null;
+        if (id == 1L) { // root
+            deptList = this.baseMapper.getAllDepts();
+        }else {
+            QueryWrapper<Dept> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("uid",id);
+            queryWrapper.orderByDesc("order_no");
+            deptList = this.list(queryWrapper);
+        }
+        return deptList;
     }
 
     @Override

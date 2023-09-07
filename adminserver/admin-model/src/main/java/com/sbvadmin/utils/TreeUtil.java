@@ -1,5 +1,6 @@
 package com.sbvadmin.utils;
 
+import com.sbvadmin.model.Dept;
 import com.sbvadmin.model.TreeModel;
 
 import java.util.ArrayList;
@@ -28,6 +29,13 @@ public class TreeUtil<T extends TreeModel> {
                 children.add(object);
             }
         }
+        // 根据orderNo排序 https://www.cnblogs.com/mr-wuxiansheng/p/7768491.html
+        // 弃用，排序直接在sql语句中排好
+//        Collections.sort(children, new Comparator<Dept>() {
+//            public int compare(Dept o1, Dept o2) {
+//                return o1.getOrderNo().compareTo(o2.getOrderNo());
+//            }
+//        });
         return children;
     }
 }

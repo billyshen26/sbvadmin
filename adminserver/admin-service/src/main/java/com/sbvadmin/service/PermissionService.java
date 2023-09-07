@@ -3,6 +3,7 @@ package com.sbvadmin.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sbvadmin.model.Permission;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 import java.util.Map;
@@ -12,9 +13,9 @@ import java.util.Map;
  * Author: 涛声依旧 likeboat@163.com
  * Time: 2022/7/26 16:55
  */
-@CacheConfig(cacheNames = "permission_cache")
+@CacheConfig(cacheNames = "permission")
 public interface PermissionService extends IService<Permission> {
-//    @Cacheable(key = "#root.methodName")
+    @Cacheable(key = "#root.methodName")
     public List<Permission> getAllPermissions();
 
     /**
@@ -24,6 +25,7 @@ public interface PermissionService extends IService<Permission> {
      * Author: 涛声依旧 likeboat@163.com
      * Time: 2022/9/9 16:30
      **/
+    @Cacheable(key = "#root.methodName +'_'+ #root.args")
     public List<Map<String, Object>> getMenusByUid(Long id);
 
     /**
@@ -33,6 +35,7 @@ public interface PermissionService extends IService<Permission> {
      * Author: 涛声依旧 likeboat@163.com
      * Time: 2022/9/9 16:30
      **/
+    @Cacheable(key = "#root.methodName +'_'+ #root.args")
     public List<String> getCodesByUid(Long id);
 
     /**
@@ -42,7 +45,7 @@ public interface PermissionService extends IService<Permission> {
      * Author: 涛声依旧 likeboat@163.com
      * Time: 2022/9/9 16:54
      **/
-//    @Cacheable(key = "#id")
+    @Cacheable(key = "#root.methodName +'_'+ #root.args")
     public List<Permission> getPermissionsByUid(Long id);
 
     /**
@@ -52,7 +55,7 @@ public interface PermissionService extends IService<Permission> {
      * Author: 涛声依旧 likeboat@163.com
      * Time: 2022/9/9 16:15
      **/
-//    @Cacheable(key = "#root.methodName")
+    @Cacheable(key = "#root.methodName")
     public List<Map<String, Object>> getAllPermissionsAsTree();
 
 

@@ -31,7 +31,6 @@ import java.util.List;
  * Author: 涛声依旧 likeboat@163.com
  * Time: 2022/11/16 21:13
  */
-@CacheConfig(cacheNames = "cache")
 public class BaseController<S extends IService<T>, T extends BaseModel> {
 
     @Autowired
@@ -84,7 +83,6 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
     }
 
     @GetMapping("")
-    @Cacheable(key = "#root.targetClass + #root.methodName + #root.args")
     public IPage<T> getItems(@RequestParam(value="id" ,required=false) Long id,
                              @RequestParam(value="createdAt[]" ,required=false) String[] createdAt,
                              @RequestParam(value="likeSearch" ,required=false) String likeSearch,
@@ -113,7 +111,8 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
 
         // 2023-05-27 根据机构id查询，设置数据权限
         // 2023-06-12 修改成本人所拥有的所有did TODO 可能有bug
-        List<Dept> deptList =  deptService.getAllDepts();
+//        List<Dept> deptList =  deptService.getAllDepts();
+        List<Dept> deptList =  deptService.getDeptsByUserId(CommonUtil.getOwnUser().getId());
         List<Long> deptIdList = new ArrayList<>();
         deptList.forEach(item ->{
             deptIdList.add(item.getId());
@@ -146,7 +145,6 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
 
     @DeleteMapping("/{id}")
     @SbvLog(desc = "删除")
-    @CacheEvict(key = "#root.targetClass + #root.methodName + #root.args", allEntries = true)
     public Object delItem(@PathVariable Long id) {
         /**
          * Notes: 在删除item 之前，加入一个切面，可以方便定制化处理删除前的工作；比如判断是否有数据关联性
@@ -175,7 +173,6 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
 
     @PutMapping("/{id}")
     @SbvLog(desc = "修改")
-    @CacheEvict(key = "#root.targetClass + #root.methodName + #root.args", allEntries = true)
     public Object editItem(@RequestBody T item, @PathVariable Long id) {
         if (this.getItemService().updateById(item))
             return item;
@@ -184,7 +181,6 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
 
     @PostMapping("")
     @SbvLog(desc = "新增")
-    @CacheEvict(key = "#root.targetClass + #root.methodName + #root.args", allEntries = true)
     public Object addItem(@RequestBody @Valid T item){
         /*
          * Notes:  在新增item 之前，加入一个切面，可以方便定制化处理新增前的工作；比如判断是否有数据关联性

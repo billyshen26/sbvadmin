@@ -1,6 +1,7 @@
 package com.sbvadmin.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.sbvadmin.service.utils.CommonService;
 import com.sbvadmin.service.utils.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,9 @@ public class ConfigController extends BaseController<ConfigServiceImpl, Config> 
     @Autowired
     ConfigServiceImpl configService;
 
+    @Autowired
+    CommonService commonService;
+
     /**
      * Notes:  根据标识符获取配置值
      * @param: [symbol]
@@ -30,7 +34,7 @@ public class ConfigController extends BaseController<ConfigServiceImpl, Config> 
      **/
     @GetMapping("/getConfigBySymbol")
     public String getConfigBySymbol(@RequestParam(value = "symbol") String symbol){
-        return CommonUtil.getConfigBySymbol(symbol);
+        return commonService.getConfigBySymbol(symbol);
     }
 }
 

@@ -22,7 +22,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName("sys_dept")
-public class Dept extends BaseModel implements Serializable {
+public class Dept extends TreeModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -58,13 +58,13 @@ public class Dept extends BaseModel implements Serializable {
     private LocalDateTime updatedAt;
 
 
-    /*
-     * Notes:  子部门，形成tree结构
-     * @param:
-     * @return:
-     * Author: 涛声依旧 likeboat@163.com
-     * Time: 2023/3/2 21:19
-     **/
-    @TableField(exist = false)
-    private List<Dept> children;
+//    /*
+//     * Notes:  子部门，形成tree结构
+//     * @param:
+//     * @return:
+//     * Author: 涛声依旧 likeboat@163.com
+//     * Time: 2023/3/2 21:19
+//     **/
+//    @TableField(exist = false)
+//    private List<Dept> children;
 }

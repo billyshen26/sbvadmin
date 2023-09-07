@@ -47,17 +47,27 @@ public class DeptController extends BaseController<DeptServiceImpl, Dept> {
         return "新增失败!";
     }
 
-    @DeleteMapping("/{id}")
-    @SbvLog(desc = "删除")
-    @Override
-    public Object delItem(@PathVariable Long id) {
+//    @DeleteMapping("/{id}")
+//    @SbvLog(desc = "删除")
+//    @Override
+//    public Object delItem(@PathVariable Long id) {
+//        // 如果机构已经分配给了某些用户，无法删除
+//        QueryWrapper<UserDept> userDeptQueryWrapper = new QueryWrapper<>();
+//        userDeptQueryWrapper.eq("did",id);
+//        if (userDeptService.list(userDeptQueryWrapper).size() != 0){
+//            return ResultFormat.fail(ErrorCode.DEPT_CANT_DELETE);
+//        }
+//        return super.delItem(id);
+//    }
+
+    public ResultFormat beforeDel(Long id){
         // 如果机构已经分配给了某些用户，无法删除
         QueryWrapper<UserDept> userDeptQueryWrapper = new QueryWrapper<>();
         userDeptQueryWrapper.eq("did",id);
         if (userDeptService.list(userDeptQueryWrapper).size() != 0){
             return ResultFormat.fail(ErrorCode.DEPT_CANT_DELETE);
         }
-        return super.delItem(id);
+        return ResultFormat.success("可以删除");
     }
 }
 
