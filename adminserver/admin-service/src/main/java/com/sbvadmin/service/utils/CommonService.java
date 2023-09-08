@@ -58,12 +58,14 @@ public class CommonService {
      * Time: 2023/3/23 16:40
      **/
     @Cacheable(value="dict", key = "#root.methodName +'_'+ #root.args")
-    public Map<Long,String> convertDictListToMap(String type){
+    public Map<String,String> convertDictListToMap(String type){
         QueryWrapper<Dict> queryWrapper=new QueryWrapper<>();
         queryWrapper.eq("type", type);
         List<Dict> dictList = dictService.list(queryWrapper);
         Map<Long,String> dicMaps =  dictList.stream().collect(Collectors.toMap(Dict::getId, Dict::getLabel));
-        return dicMaps;
+        Map<String, String> dicStringMaps = dicMaps.entrySet().stream()
+                .collect(Collectors.toMap(e -> String.valueOf(e.getKey()), Map.Entry::getValue));
+        return dicStringMaps;
     }
 
     /*
