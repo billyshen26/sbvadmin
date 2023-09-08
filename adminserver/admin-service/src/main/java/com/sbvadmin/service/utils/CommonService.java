@@ -2,7 +2,9 @@ package com.sbvadmin.service.utils;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sbvadmin.model.Config;
+import com.sbvadmin.model.Dict;
 import com.sbvadmin.service.impl.ConfigServiceImpl;
+import com.sbvadmin.service.impl.DictServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -10,6 +12,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Notes:
@@ -24,6 +29,9 @@ public class CommonService {
 
     @Autowired
     Environment environment;
+
+    @Autowired
+    DictServiceImpl dictService;
     /**
      * Notes:  获取配置项
      * @param: [symbol]
@@ -40,6 +48,22 @@ public class CommonService {
             return config.getValue();
         else
             return Config.defaultConfig;
+    }
+
+    /**
+     * Notes:获取字典列表,并将其转化为MAP数组,从而方便获取字典名
+     * @param: [type]
+     * @return: java.util.Map<java.lang.Long,java.lang.String>
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/3/23 16:40
+     **/
+    @Cacheable(value="dict", key = "#root.methodName +'_'+ #root.args")
+    public Map<Long,String> convertDictListToMap(String type){
+        QueryWrapper<Dict> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("type", type);
+        List<Dict> dictList = dictService.list(queryWrapper);
+        Map<Long,String> dicMaps =  dictList.stream().collect(Collectors.toMap(Dict::getId, Dict::getLabel));
+        return dicMaps;
     }
 
     /*
