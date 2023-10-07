@@ -9,6 +9,7 @@ import com.sbvadmin.service.impl.UserServiceImpl;
 import com.sbvadmin.service.utils.CommonService;
 import com.sbvadmin.service.utils.CommonUtil;
 import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,6 +34,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api")
+@Slf4j
 public class AuthController {
 
     @Autowired
@@ -126,7 +128,7 @@ public class AuthController {
     @PostMapping("/refreshToken")
     public String refreshToken(HttpServletRequest request){
         String jwtToken = request.getHeader("authorization");
-        System.out.println("jwtToken:" + jwtToken);
+        log.info("jwtToken:"+ jwtToken);
         if (jwtToken != null && jwtToken != "") {
             jwtToken = jwtToken.replace("Bearer", "");
 //            if (!jwtTokenUtil.isTokenExpired(jwtToken)) { // 可以随时刷新token，待考虑 TODO
@@ -141,6 +143,7 @@ public class AuthController {
                             .append(",");
                 }
                 Date expired = jwtTokenService.getExpiredDate();
+                log.info("token 过期时间:"+ expired.toString());
                 Map<String, Object> map = new HashMap<>();
                 map.put("authorities", as); // 配置用户角色
                 map.put("uid", user.getId()); // 配置用户id
