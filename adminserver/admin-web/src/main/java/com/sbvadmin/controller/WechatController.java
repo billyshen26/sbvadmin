@@ -53,8 +53,8 @@ public class WechatController {
         if (object.getInt("errcode") != null && object.getInt("errcode") != 0){
             return ResultFormat.fail(ErrorCode.WECHAT_AUTH_FAILED);
         }
-        log.error("jscode2openid:" + object.getStr("openid"));
-        log.error(JSONUtil.toJsonStr(object));
+        log.info("jscode2openid:" + object.getStr("openid"));
+        log.info(JSONUtil.toJsonStr(object));
         return object;
     }
 
@@ -96,6 +96,7 @@ public class WechatController {
         }
         // 生成token
         Date expired = jwtTokenService.getExpiredDate();
+        log.info("token 过期时间:"+ expired.toString());
         Map<String, Object> map = new HashMap<>();
         map.put("authorities", "ROLE_user"); // 配置用户角色
         map.put("uid",user.getId()); // 配置用户id
