@@ -86,7 +86,7 @@ public class JwtTokenUtil {
      * Time: 2023/1/13 09:34
      **/
     public Date getExpiredDate(){
-        Date expired = new Date(System.currentTimeMillis() + expire * 1000); // expire传入的单位是秒，需要乘以1000
+        Date expired = new Date(System.currentTimeMillis() + expire * 1000L); // expire传入的单位是秒，需要乘以1000
         return expired;
     }
 }
