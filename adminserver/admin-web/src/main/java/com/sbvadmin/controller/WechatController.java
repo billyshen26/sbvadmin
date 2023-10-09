@@ -7,12 +7,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sbvadmin.common.service.JwtTokenService;
 import com.sbvadmin.model.ErrorCode;
 import com.sbvadmin.model.ResultFormat;
+import com.sbvadmin.model.Role;
 import com.sbvadmin.model.User;
 import com.sbvadmin.service.impl.UserServiceImpl;
 import com.sbvadmin.utils.JwtTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,7 +76,7 @@ public class WechatController {
             log.error("微信授权openid长度不对: " + user.getMpOpenId());
             return "微信授权openid长度不对";
         }
-
+        StringBuffer as = new StringBuffer(); // 权限
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("mp_open_id",user.getMpOpenId());
         User existUser =  userService.getOne(queryWrapper);
@@ -84,6 +86,11 @@ public class WechatController {
             existUser.setUnionId(user.getUnionId()); // 更新unionid
             userService.updateById(existUser);
             user = existUser;
+            List<Role> roleList = userService.getUserRolesByUid(existUser.getId());
+            for (Role authority : roleList) {
+                as.append(authority.getName())
+                        .append(",");
+            }
         }else{ // 若不存在则直接新增一个用户
             user.setUsername(user.getMpOpenId()); // 默认用户名为openid
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // 密码加密
@@ -93,12 +100,13 @@ public class WechatController {
             List<Long> deptIds = Arrays.asList(1L);
             user.setDeptIds(deptIds);
             userService.save(user);
+            as.append("ROLE_user").append(",");
         }
         // 生成token
         Date expired = jwtTokenService.getExpiredDate();
         log.info("token 过期时间:"+ expired.toString());
         Map<String, Object> map = new HashMap<>();
-        map.put("authorities", "ROLE_user"); // 配置用户角色
+        map.put("authorities", as); // 配置用户角色
         map.put("uid",user.getId()); // 配置用户id
         String token = jwtTokenService.genToken(map,user.getUsername(),expired);
 
