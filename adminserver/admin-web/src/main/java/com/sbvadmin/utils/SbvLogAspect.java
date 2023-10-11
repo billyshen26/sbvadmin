@@ -99,7 +99,6 @@ public class SbvLogAspect {
         log.setUpdatedAt(LocalDateTime.now());
         log.setVersion(version);
         log.setTakeUpTime((int)(System.currentTimeMillis() - takeUpTime.get()));
-        log.setDid(CommonUtil.getOwnUser().getLoginDeptId());
         log.setLevel(Log.ACTION_LEVEL);
 
         logService.save(log);
