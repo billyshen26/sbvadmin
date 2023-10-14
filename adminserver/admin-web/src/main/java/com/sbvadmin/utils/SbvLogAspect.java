@@ -2,7 +2,9 @@ package com.sbvadmin.utils;
 
 import com.alibaba.druid.support.json.JSONUtils;
 import com.sbvadmin.model.Log;
+import com.sbvadmin.model.User;
 import com.sbvadmin.service.impl.LogServiceImpl;
+import com.sbvadmin.service.impl.UserServiceImpl;
 import com.sbvadmin.service.utils.CommonUtil;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -39,6 +41,9 @@ public class SbvLogAspect {
 
     @Value("${application.version}")
     private String version;
+
+    @Autowired
+    UserServiceImpl userService;
 
     // 被增强类中的被增强的方法
     @Pointcut(value = "@annotation(com.sbvadmin.utils.SbvLog)")
@@ -80,7 +85,8 @@ public class SbvLogAspect {
         log.setMethod(className + "." + method.getName());
         log.setReqParam(JSONUtils.toJSONString(converMap(request.getParameterMap())));
         log.setUri(request.getRequestURI());
-        log.setIp(IpUtil.getIpRequest(request));
+        String ip = IpUtil.getIpRequest(request);
+        log.setIp(ip);
 
         // 用户信息
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -92,7 +98,13 @@ public class SbvLogAspect {
             Long uid = (Long) authentication.getDetails();
             log.setUid(uid);
             log.setUsername(authentication.getName());
-            log.setDid(CommonUtil.getOwnUser().getLoginDeptId());
+            User user = CommonUtil.getOwnUser();
+            log.setDid(user.getLoginDeptId());
+
+            // 更新最近活跃时间
+            user.setLastLoginAt(LocalDateTime.now());
+            user.setLastLoginIp(ip);
+            userService.updateById(user);
         }
         // 时间信息
         log.setCreatedAt(LocalDateTime.now());
