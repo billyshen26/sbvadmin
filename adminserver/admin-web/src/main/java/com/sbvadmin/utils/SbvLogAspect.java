@@ -104,6 +104,7 @@ public class SbvLogAspect {
             // 更新最近活跃时间
             user.setLastLoginAt(LocalDateTime.now());
             user.setLastLoginIp(ip);
+            user.setRoleIds(null); // 不用更新组织关系和角色关系
             userService.updateById(user);
         }
         // 时间信息
