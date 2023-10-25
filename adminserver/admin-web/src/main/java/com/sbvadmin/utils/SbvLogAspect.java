@@ -102,10 +102,11 @@ public class SbvLogAspect {
             log.setDid(user.getLoginDeptId());
 
             // 更新最近活跃时间
-            user.setLastLoginAt(LocalDateTime.now());
-            user.setLastLoginIp(ip);
-            user.setRoleIds(null); // 不用更新组织关系和角色关系
-            userService.updateById(user);
+            User updateUser = new User(); // 用一个新的对象更新，防止更新掉密码等其他信息
+            updateUser.setId(user.getId());
+            updateUser.setLastLoginAt(LocalDateTime.now());
+            updateUser.setLastLoginIp(ip);
+            userService.updateById(updateUser);
         }
         // 时间信息
         log.setCreatedAt(LocalDateTime.now());
