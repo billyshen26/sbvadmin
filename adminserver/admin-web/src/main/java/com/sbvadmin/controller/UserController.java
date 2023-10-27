@@ -14,6 +14,7 @@ import org.springframework.amqp.AmqpConnectException;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,9 @@ public class UserController {
 
     @Autowired
     RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    RedisTemplate redisTemplate;
 
     @Autowired
     UserServiceImpl userService;
@@ -141,11 +145,13 @@ public class UserController {
 //            return ResultFormat.fail(ErrorCode.ROOT_CANT_UPDATE);
 //        }
         User user = userService.getById(jsonObject.getShort("id"));
+
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // 密码加密
         if(!passwordEncoder.matches(jsonObject.getStr("passwordOld"),user.getPassword())){
             return "旧密码错误";
         }
         // 修改密码
+        redisTemplate.delete("user::" + user.getUsername()); // 删除缓存
         user.setPassword(passwordEncoder.encode(jsonObject.getStr("passwordNew")));
         return userService.updateById(user);
     }
