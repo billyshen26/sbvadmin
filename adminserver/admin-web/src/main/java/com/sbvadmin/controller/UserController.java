@@ -151,7 +151,7 @@ public class UserController {
             return "旧密码错误";
         }
         // 修改密码
-        redisTemplate.delete("user::" + user.getUsername()); // 删除缓存
+        redisTemplate.delete("user::" + user.getUsername()); // TIPS: 收到删除缓存
         user.setPassword(passwordEncoder.encode(jsonObject.getStr("passwordNew")));
         return userService.updateById(user);
     }

@@ -132,23 +132,28 @@ public class AuthController {
         if (jwtToken != null && jwtToken != "") {
             jwtToken = jwtToken.replace("Bearer", "");
 //            if (!jwtTokenUtil.isTokenExpired(jwtToken)) { // 可以随时刷新token，待考虑 TODO
-                Claims claims = jwtTokenService.parserToken(jwtToken);
-                String username = claims.getSubject();//获取当前登录用户名
-                List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get("authorities"));
-                Long uid = Long.valueOf(String.valueOf(claims.get("uid")));
-                User user = userService.getById(uid);
-                StringBuffer as = new StringBuffer();
-                for (GrantedAuthority authority : authorities) {
-                    as.append(authority.getAuthority())
-                            .append(",");
-                }
-                Date expired = jwtTokenService.getExpiredDate();
-                log.info("token 过期时间:"+ expired.toString());
-                Map<String, Object> map = new HashMap<>();
-                map.put("authorities", as); // 配置用户角色
-                map.put("uid", user.getId()); // 配置用户id
-                String jwt = jwtTokenService.genToken(map, user.getUsername(), expired);
-                return jwt;
+            Claims claims = jwtTokenService.parserToken(jwtToken);
+//                String username = claims.getSubject();//获取当前登录用户名
+//                List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get("authorities"));
+            Long uid = Long.valueOf(String.valueOf(claims.get("uid")));
+            User user = userService.getById(uid);
+            StringBuffer as = new StringBuffer();
+//                for (GrantedAuthority authority : authorities) {
+//                    as.append(authority.getAuthority())
+//                            .append(",");
+//                }
+            List<Role> roleList = userService.getUserRolesByUid(user.getId()); // 刷新token时，同时更新角色信息
+            for (Role authority : roleList) {
+                as.append(authority.getName())
+                        .append(",");
+            }
+            Date expired = jwtTokenService.getExpiredDate();
+            log.info("token 过期时间:"+ expired.toString());
+            Map<String, Object> map = new HashMap<>();
+            map.put("authorities", as); // 配置用户角色
+            map.put("uid", user.getId()); // 配置用户id
+            String jwt = jwtTokenService.genToken(map, user.getUsername(), expired);
+            return jwt;
 //            }
         }
         return "先登录，才能刷新token";
