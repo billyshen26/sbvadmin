@@ -102,17 +102,20 @@ public class SbvGenerator {
                             ).build();
                 })
                 .injectionConfig((scanner, builder) -> {
-                    Map<String,String> customFile = new HashMap<>();
-                    customFile.put("LIST_VIEW",VueFileEnum.LIST_VIEW.getTemplate());
-                    customFile.put("ADD_EDIT_VIEW",VueFileEnum.ADD_EDIT_VIEW.getTemplate());
-                    customFile.put("VIET_DATA",VueFileEnum.VIET_DATA.getTemplate());
-                    customFile.put("API",VueFileEnum.API.getTemplate());
-                    customFile.put("MODEL",VueFileEnum.MODEL.getTemplate());
-                    customFile.put("I18N_EN",VueFileEnum.I18N_EN.getTemplate());
-                    customFile.put("I18N_ZH",VueFileEnum.I18N_ZH.getTemplate());
-                    customFile.put("MENU_SQL",VueFileEnum.MENU_SQL.getTemplate()); // 生成菜单的sql
-                    customFile.put("CONTROLLER",VueFileEnum.CONTROLLER.getTemplate()); // 自定义controller
-                    builder.customFile(customFile);
+                    String genFrontFlag =  scanner.apply("是否生成前端页面等:y/n"); // 因为有些关系表不需要生成前端页面
+                    if (genFrontFlag.equals("y")){
+                        Map<String,String> customFile = new HashMap<>();
+                        customFile.put("LIST_VIEW",VueFileEnum.LIST_VIEW.getTemplate());
+                        customFile.put("ADD_EDIT_VIEW",VueFileEnum.ADD_EDIT_VIEW.getTemplate());
+                        customFile.put("VIET_DATA",VueFileEnum.VIET_DATA.getTemplate());
+                        customFile.put("API",VueFileEnum.API.getTemplate());
+                        customFile.put("MODEL",VueFileEnum.MODEL.getTemplate());
+                        customFile.put("I18N_EN",VueFileEnum.I18N_EN.getTemplate());
+                        customFile.put("I18N_ZH",VueFileEnum.I18N_ZH.getTemplate());
+                        customFile.put("MENU_SQL",VueFileEnum.MENU_SQL.getTemplate()); // 生成菜单的sql
+                        customFile.put("CONTROLLER",VueFileEnum.CONTROLLER.getTemplate()); // 自定义controller
+                        builder.customFile(customFile);
+                    }
                 })
                 .templateEngine(new EnhanceFreemarkerTemplateEngine())
                 .execute();
@@ -147,14 +150,6 @@ public class SbvGenerator {
             }
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime = sdf.format(new Date());
-
-            // 自定义map，主要为了解决flyway sql中主键id的获取
-//            // 创建wapper，查询当前permission表中主键最大值 废弃2023/3/13
-//            QueryWrapper<Permission> wrapper = new QueryWrapper<>();
-//            wrapper.select("max(id) as id");
-//            Permission permission = permissionMapper.selectOne(wrapper);
-//            Long maxid1 = permission.getId();
-//            System.out.println("maxId1=" + maxid1);
 
             /**
              * Notes: 1.在init.sql中预留1-999给sbvamin框架，方便框架升级
