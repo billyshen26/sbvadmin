@@ -12,6 +12,7 @@ import com.sbvadmin.model.UserRole;
 import com.sbvadmin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,6 +29,7 @@ import java.util.List;
  * Time: 2022/7/13 17:53
  */
 @Service
+@CacheConfig(cacheNames = "user")
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService, UserDetailsService {
     @Autowired
     UserMapper userMapper;
@@ -84,6 +86,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public boolean updateById(User entity) {
         // 修改用户 TODO 加入事务 和更多判断
         boolean result = super.updateById(entity);

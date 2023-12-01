@@ -8,6 +8,8 @@ import com.sbvadmin.model.RolePermission;
 import com.sbvadmin.model.User;
 import com.sbvadmin.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.List;
  * Time: 2022/8/31 13:45
  */
 @Service
+@CacheConfig(cacheNames = "permission")
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
 
     @Autowired
@@ -47,6 +50,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
      * Time: 2022/9/17 17:29
      **/
     @Override
+    @CacheEvict(allEntries = true)
     public boolean updateById(Role entity) {
         // 更新该角色的其他信息
         super.updateById(entity);  // TODO 需要进行事务处理

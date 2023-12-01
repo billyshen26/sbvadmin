@@ -24,7 +24,6 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/permissions")
-@CacheConfig(cacheNames = "permission")
 public class PermissionController {
     @Autowired
     PermissionServiceImpl permissionService;

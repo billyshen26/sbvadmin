@@ -6,6 +6,8 @@ import com.sbvadmin.model.Permission;
 import com.sbvadmin.service.PermissionService;
 import com.sbvadmin.service.utils.AuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -16,6 +18,7 @@ import java.util.*;
  * Time: 2022/7/26 17:19
  */
 @Service
+@CacheConfig(cacheNames = "permission")
 public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permission> implements PermissionService {
     @Autowired
     PermissionMapper permissionMapper;
@@ -86,4 +89,10 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
 //        return permissionList;
 //    }
 
+
+    @Override
+    @CacheEvict(allEntries = true)
+    public boolean updateById(Permission entity) {
+        return super.updateById(entity);
+    }
 }
