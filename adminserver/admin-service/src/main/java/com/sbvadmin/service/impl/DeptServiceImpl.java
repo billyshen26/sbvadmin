@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sbvadmin.service.utils.CommonUtil;
 import com.sbvadmin.utils.TreeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,7 @@ import java.util.List;
  * @since 2023-03-02
  */
 @Service
+@CacheConfig(cacheNames = "dept")
 public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements IDeptService {
 
     @Autowired
@@ -81,6 +84,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public boolean removeById(Dept entity) {
         return super.removeById(entity);
     }
@@ -93,6 +97,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
      * Time: 2023/5/27 22:16
      **/
     @Override
+    @CacheEvict(allEntries = true)
     public boolean save(Dept entity) {
 
         // 1. 新增机构
