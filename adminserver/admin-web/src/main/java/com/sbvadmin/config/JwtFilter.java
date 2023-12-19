@@ -65,7 +65,8 @@ public class JwtFilter extends OncePerRequestFilter {
                 List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get("authorities"));
                 Long uid = Long.valueOf(String.valueOf(claims.get("uid")));
 //                User user  = userMapper.selectById(uid);
-                User user = userMapper.getOwnUserWithRoles(username);
+//                User user = userMapper.getOwnUserWithRoles(username);
+                User user = userMapper.getOwnUserWithRolesByUid(uid);
                 user.setLoginDeptId(user.getDeptIds().get(0)); // TODO 目前默认为第一个机构ID
                 UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user, jwtToken, authorities);
                 token.setDetails(uid);

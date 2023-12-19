@@ -73,4 +73,15 @@
         left join sys_dept d on d.`id`=ud.`did`
         where u.username = #{username}
     </select>
+
+    <select id="getOwnUserWithRolesByUid" resultMap="UserWithRoles">
+        select u.id, u.nickname, u.phone,u.wechat,u.qq, u.email, u.activated, u.locked, u.username,u.password, u.avatar,u.last_login_at,
+               u.last_login_ip,u.home_path,u.created_at,u.updated_at,r.`id` as rid,r.`name` as rname,r.`name_zh` as rname_zh,
+               d.name as dname,d.`id` as did
+        from sys_user u left join sys_user_role ur on u.`id`=ur.`uid`
+                        left join sys_role r on ur.`rid`=r.`id`
+                        left join sys_user_dept ud on u.`id`=ud.`uid`
+                        left join sys_dept d on d.`id`=ud.`did`
+        where u.id = #{uid}
+    </select>
 </mapper>

@@ -50,6 +50,17 @@ public interface UserMapper extends BaseMapper<User> {
     @Cacheable(key = "#root.args")
     User getOwnUserWithRoles(String username);
 
+
+    /**
+     * Notes:  用于识别用户 getOwnUserWithRoles有局限，比如用户名被修改了就会出现问题
+     * @param: [username]
+     * @return: com.sbvadmin.model.User
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/5/27 19:39
+     **/
+    @Cacheable(key = "#root.args")
+    User getOwnUserWithRolesByUid(Long uid);
+
     /**
      * Notes:  根据角色id获取所有用户
      * @param: [rid]
