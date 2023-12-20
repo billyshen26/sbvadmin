@@ -17,4 +17,5 @@ public interface UserService extends IService<User> {
 
     public List<Role> getUserRolesByUid(Long id);
 
+    public boolean updateActivatedTimeById(User entity);
 }

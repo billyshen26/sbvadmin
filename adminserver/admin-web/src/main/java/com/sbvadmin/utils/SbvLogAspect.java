@@ -106,7 +106,7 @@ public class SbvLogAspect {
             updateUser.setId(user.getId());
             updateUser.setLastLoginAt(LocalDateTime.now());
             updateUser.setLastLoginIp(ip);
-            userService.updateById(updateUser);
+            userService.updateActivatedTimeById(updateUser);
         }
         // 时间信息
         log.setCreatedAt(LocalDateTime.now());

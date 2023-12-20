@@ -100,6 +100,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /*
+     * Notes:  更新最近活跃时间，不删除user缓存
+     * @param: [entity]
+     * @return: boolean
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/12/20 15:57
+     **/
+    public boolean updateActivatedTimeById(User entity){
+        boolean result = super.updateById(entity);
+        return result;
+    }
+    /*
      * Notes:  修改用户角色关系和用户机构关系
      * @param: [user]
      * @return: boolean
@@ -142,6 +153,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * Time: 2023/4/12 10:07
      **/
     @Override
+    @CacheEvict(allEntries = true)
     public boolean removeById(Serializable id) {
         // 删除用户和角色关系
         QueryWrapper userRoleWrapper = new QueryWrapper<>();
