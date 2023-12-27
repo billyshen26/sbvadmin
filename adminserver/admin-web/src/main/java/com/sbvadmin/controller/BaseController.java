@@ -78,49 +78,35 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
         return condition;
     }
 
+    /*
+     * Notes:  构造函数，初始化搜索条件map等
+     * @param: []
+     * @return:
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2023/12/27 16:28
+     **/
     public BaseController(){
         this.condition = new HashMap<>();
     }
 
     @GetMapping("")
-    public IPage<T> getItems(@RequestParam(value="id" ,required=false) Long id,
-                             @RequestParam(value="createdAt[]" ,required=false) String[] createdAt,
-                             @RequestParam(value="likeSearch[]" ,required=false) String[] likeSearch,
-                             @RequestParam(value="equalSearch" ,required=false) String equalSearch,
-                             @RequestParam(value="field" ,required=false) String field,
-                             @RequestParam(value="order" ,required=false) String order,
-                             @RequestParam(value="page" ,required=false) Integer page,
-                             @RequestParam(value="pageSize" ,required=false) Integer pageSize,
-    @RequestJson Map<String, Object> params ){
+    public IPage<T> getItems( @RequestJson Map<String, Object> params ){
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
-        if (params.get("id") != null) // id精准搜索
+        // id精准搜索
+        if (params.get("id") != null)
             queryWrapper.eq(this.getTableName()+"id",params.get("id"));
+        // 创建日期范围搜索
         if (params.get("createdAt") != null){
             JSONArray createdAtArray = (JSONArray) params.get("createdAt");
             queryWrapper.between(this.getTableName()+"created_at",createdAtArray.get(0),createdAtArray.get(1));
-            // 创建日期范围搜索
         }
-
-//        if (likeSearch != null) // 自定义模糊内容搜索：比如name等
-//        {
-//            queryWrapper.and(wq ->{
-//                for (int i = 0; i < likeSearch.length - 1; i++) {
-//                    wq.like(this.getLikeSearch()[i],likeSearch[i]).or();
-//                }
-//                wq.like(this.getLikeSearch()[likeSearch.length - 1],likeSearch[likeSearch.length - 1]);
-//            });
-//        }
-
+        // 自定义搜索
         this.getCondition().forEach((k, v) -> {
             if(params.get(k) != null){
                 if (v.equals("like")) queryWrapper.like(k,params.get(k));
                 if (v.equals("eq")) queryWrapper.eq(k,params.get(k));
             }
         });
-//
-//
-//        if (equalSearch != null) // 自定义全等内容搜索：比如type等
-//            queryWrapper.eq(this.getEqualSearch(),equalSearch);
 
         // 2023-05-27 根据机构id查询，设置数据权限
         // 2023-06-12 修改成本人所拥有的所有did TODO 可能有bug
@@ -132,16 +118,18 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
         });
         queryWrapper.in(this.getTableName()+"did",deptIdList);
 
-        if (page == null){ // 如果未提供分页信息，则默认读取10000行数据
-            page = 1;
-            pageSize = 10000;
+        long page = 1;
+        long pageSize = 10000;
+        if (params.get("page") != null){ // 如果未提供分页信息，则默认读取10000行数据
+            page = Long.valueOf((Integer) params.get("page"));
+            pageSize = Long.valueOf((Integer) params.get("pageSize"));
         }
         Page<T> itemPage = new Page<>(page,pageSize);
-        if (field != null){ // 排序
-            if (order.equals("ascend"))
-                itemPage.addOrder(OrderItem.asc(field));
+        if (params.get("field") != null){ // 排序
+            if (params.get("order").equals("ascend"))
+                itemPage.addOrder(OrderItem.asc((String) params.get("field")));
             else
-                itemPage.addOrder(OrderItem.desc(field));
+                itemPage.addOrder(OrderItem.desc((String) params.get("field")));
         }
         IPage<T> iPage = this.getItemService().page(itemPage, queryWrapper);
         return iPage;
