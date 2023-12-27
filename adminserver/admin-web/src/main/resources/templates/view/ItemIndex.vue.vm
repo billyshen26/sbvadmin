@@ -41,6 +41,7 @@
   import ${entity}Modal from './${entity}Modal.vue';
   import { columns, searchFormSchema } from './${entity}.data';
   import { Authority } from '/@/components/Authority';
+  import { Base64 } from 'js-base64';
 
   export default defineComponent({
     name: '${entity}Management',
@@ -51,6 +52,9 @@
       const [registerTable, { reload, updateTableDataRecord }] = useTable({
         title: '列表',
         api: get${entity}List,
+        beforeFetch(params) {
+            return '?' + Base64.encode(JSON.stringify(params));
+        },
         rowKey: 'id',
         columns,
         formConfig: {

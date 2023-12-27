@@ -11,6 +11,7 @@ import com.sbvadmin.model.Dict;
 import com.sbvadmin.service.impl.DictServiceImpl;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -25,8 +26,9 @@ import java.util.List;
 public class DictController extends BaseController<DictServiceImpl, Dict> {
 
     public DictController(){
-        this.tableName = "sys_dict";
-        this.likeSearch = new String[]{"label","value"}; // TIPS: 同时模糊搜索
+        this.tableName = "sys_dict"; // TIPS: 解决查询是字段重复问题
+        this.condition.put("label",LIKE); // TIPS: 自定义搜索条件
+        this.condition.put("value",EQ);
     }
 
     /**

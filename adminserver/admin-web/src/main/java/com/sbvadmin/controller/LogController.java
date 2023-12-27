@@ -16,8 +16,8 @@ import com.sbvadmin.service.impl.LogServiceImpl;
 public class LogController extends BaseController<LogServiceImpl, Log> {
     public LogController(){
         this.tableName = "sys_log";
-        this.likeSearch = new String[]{"description"};
-    } // TIPS: 解决查询是字段重复问题
+        this.condition.put("description",LIKE);
+    }
 
 }
 

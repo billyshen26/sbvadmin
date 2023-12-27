@@ -2,6 +2,7 @@ package com.sbvadmin.controller;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import cn.hutool.json.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
@@ -13,6 +14,7 @@ import com.sbvadmin.model.ResultFormat;
 import com.sbvadmin.model.User;
 import com.sbvadmin.service.impl.DeptServiceImpl;
 import com.sbvadmin.service.utils.CommonUtil;
+import com.sbvadmin.utils.RequestJson;
 import com.sbvadmin.utils.SbvLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -24,7 +26,9 @@ import javax.validation.Valid;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Notes:
@@ -33,12 +37,14 @@ import java.util.List;
  */
 public class BaseController<S extends IService<T>, T extends BaseModel> {
 
+    protected static final String LIKE = "like";
+    protected static final String EQ = "eq";
+
     @Autowired
     protected S itemService;
 
     protected String tableName;
-    protected String[] likeSearch;
-    protected String equalSearch;
+    protected Map<String, Object> condition;
     public S getItemService() {
         return this.itemService;
     }
@@ -62,52 +68,59 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
     }
 
     /*
-     * Notes:  模糊搜索字段
+     * Notes:  各类条件字段
      * @param: []
      * @return: java.lang.String
      * Author: 涛声依旧 likeboat@163.com
      * Time: 2023/6/1 20:37
      **/
-    public String[] getLikeSearch() {
-        return likeSearch;
+    public Map<String, Object> getCondition() {
+        return condition;
     }
-    /**
-     * Notes:  全等搜索字段
-     * @param: []
-     * @return: java.lang.String
-     * Author: 涛声依旧 likeboat@163.com
-     * Time: 2023/6/6 15:23
-     **/
-    public String getEqualSearch() {
-        return equalSearch;
+
+    public BaseController(){
+        this.condition = new HashMap<>();
     }
 
     @GetMapping("")
     public IPage<T> getItems(@RequestParam(value="id" ,required=false) Long id,
                              @RequestParam(value="createdAt[]" ,required=false) String[] createdAt,
-                             @RequestParam(value="likeSearch" ,required=false) String likeSearch,
+                             @RequestParam(value="likeSearch[]" ,required=false) String[] likeSearch,
                              @RequestParam(value="equalSearch" ,required=false) String equalSearch,
                              @RequestParam(value="field" ,required=false) String field,
                              @RequestParam(value="order" ,required=false) String order,
                              @RequestParam(value="page" ,required=false) Integer page,
-                             @RequestParam(value="pageSize" ,required=false) Integer pageSize){
+                             @RequestParam(value="pageSize" ,required=false) Integer pageSize,
+    @RequestJson Map<String, Object> params ){
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
-        if (id != null) // id精准搜索
-            queryWrapper.eq(this.getTableName()+"id",id);
-        if (createdAt != null) // 创建日期范围搜索
-            queryWrapper.between(this.getTableName()+"created_at",createdAt[0],createdAt[1]);
-        if (likeSearch != null) // 自定义模糊内容搜索：比如name等
-        {
-            queryWrapper.and(wq ->{
-                for (int i = 0; i < this.getLikeSearch().length - 1; i++) {
-                    wq.like(this.getLikeSearch()[i],likeSearch).or();
-                }
-                wq.like(this.getLikeSearch()[this.getLikeSearch().length - 1],likeSearch);
-            });
+        if (params.get("id") != null) // id精准搜索
+            queryWrapper.eq(this.getTableName()+"id",params.get("id"));
+        if (params.get("createdAt") != null){
+            JSONArray createdAtArray = (JSONArray) params.get("createdAt");
+            queryWrapper.between(this.getTableName()+"created_at",createdAtArray.get(0),createdAtArray.get(1));
+            // 创建日期范围搜索
         }
 
-        if (equalSearch != null) // 自定义全等内容搜索：比如type等
-            queryWrapper.eq(this.getEqualSearch(),equalSearch);
+//        if (likeSearch != null) // 自定义模糊内容搜索：比如name等
+//        {
+//            queryWrapper.and(wq ->{
+//                for (int i = 0; i < likeSearch.length - 1; i++) {
+//                    wq.like(this.getLikeSearch()[i],likeSearch[i]).or();
+//                }
+//                wq.like(this.getLikeSearch()[likeSearch.length - 1],likeSearch[likeSearch.length - 1]);
+//            });
+//        }
+
+        this.getCondition().forEach((k, v) -> {
+            if(params.get(k) != null){
+                if (v.equals("like")) queryWrapper.like(k,params.get(k));
+                if (v.equals("eq")) queryWrapper.eq(k,params.get(k));
+            }
+        });
+//
+//
+//        if (equalSearch != null) // 自定义全等内容搜索：比如type等
+//            queryWrapper.eq(this.getEqualSearch(),equalSearch);
 
         // 2023-05-27 根据机构id查询，设置数据权限
         // 2023-06-12 修改成本人所拥有的所有did TODO 可能有bug
@@ -174,9 +187,30 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
     @PutMapping("/{id}")
     @SbvLog(desc = "修改")
     public Object editItem(@RequestBody T item, @PathVariable Long id) {
-        if (this.getItemService().updateById(item))
-            return item;
-        return "修改失败!";
+
+        /**
+         * Notes:  在修改item 之前，加入一个切面，可以方便定制化处理修改前的工作；比如判断是否有数据关联性
+         * Time: 2023/12/21 13:32
+         **/
+        ResultFormat resultFormat = ResultFormat.success("OK");
+        try {
+            Class<?> clazz = this.getClass();// 获取类的Class对象
+            Method method = clazz.getMethod("beforeEdit", item.getClass());// 获取方法名为methodName，参数类型为paramType的方法
+            if(method != null) { // 判断该方法是否存在
+                System.out.println("该方法存在");
+                String className = StrUtil.lowerFirst(clazz.getSimpleName());
+                resultFormat = (ResultFormat) method.invoke(SpringUtil.getBean(className), item);
+            }
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            System.out.println("该方法不存在");
+        }
+        if (resultFormat.getCode() == 0 ){
+            if (this.getItemService().updateById(item))
+                return item;
+            return "修改失败!";
+        }else {
+            return resultFormat;
+        }
     }
 
     @PostMapping("")

@@ -1,12 +1,15 @@
 package com.sbvadmin.config;
 
+import com.sbvadmin.utils.HandlerRequestJsonArgumentResolver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Notes:
@@ -31,5 +34,13 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
                     .addResourceLocations("file:///" + dirPath,
                             "file:///" + dirPath); //  file后面的“///” 是了解决后面路径不生效问题
         }
+    }
+
+    /**
+     * 注册自定义参数解析器
+     */
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(new HandlerRequestJsonArgumentResolver());
     }
 }
