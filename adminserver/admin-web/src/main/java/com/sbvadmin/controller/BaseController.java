@@ -103,8 +103,8 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
         // 自定义搜索
         this.getCondition().forEach((k, v) -> {
             if(params.get(k) != null){
-                if (v.equals("like")) queryWrapper.like(k,params.get(k));
-                if (v.equals("eq")) queryWrapper.eq(k,params.get(k));
+                if (v.equals(LIKE)) queryWrapper.like(k,params.get(k));
+                if (v.equals(EQ)) queryWrapper.eq(k,params.get(k));
             }
         });
 
@@ -139,7 +139,7 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
          **/
         try {
             Class<?> clazz = this.getClass();
-            Method method = clazz.getMethod("afterGetItems", Long.class);
+            Method method = clazz.getMethod("afterGetItems", IPage.class);
             if(method != null) { // 判断该方法是否存在
                 System.out.println("该方法存在");
                 String className = StrUtil.lowerFirst(clazz.getSimpleName());
