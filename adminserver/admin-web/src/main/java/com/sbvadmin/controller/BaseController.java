@@ -132,8 +132,24 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
                 itemPage.addOrder(OrderItem.desc((String) params.get("field")));
         }
         IPage<T> iPage = this.getItemService().page(itemPage, queryWrapper);
+
+        /**
+         * Notes: 在获取items之后，加入一个切面，可以方便定制化处理返回的数据
+         * Time: 2023/12/28 11:39
+         **/
+        try {
+            Class<?> clazz = this.getClass();
+            Method method = clazz.getMethod("afterGetItems", Long.class);
+            if(method != null) { // 判断该方法是否存在
+                System.out.println("该方法存在");
+                String className = StrUtil.lowerFirst(clazz.getSimpleName());
+                iPage = (IPage) method.invoke(SpringUtil.getBean(className), iPage);
+            }
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            System.out.println("该方法不存在");
+        }
+
         return iPage;
-//        return this.getItemService().list();
     }
 
     @GetMapping("/{id}")
