@@ -103,11 +103,11 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
         // 自定义搜索
         this.getCondition().forEach((k, v) -> {
             if(params.get(k) != null){
-                if (v.equals(LIKE)) queryWrapper.like(k,params.get(k));
-                if (v.equals(EQ)) queryWrapper.eq(k,params.get(k));
+                String column = k.replaceAll("-", "."); // 解决连表查询需要用.运算符
+                if (v.equals(LIKE)) queryWrapper.like(column,params.get(k));
+                if (v.equals(EQ)) queryWrapper.eq(column,params.get(k));
             }
         });
-
         // 2023-05-27 根据机构id查询，设置数据权限
         // 2023-06-12 修改成本人所拥有的所有did TODO 可能有bug
 //        List<Dept> deptList =  deptService.getAllDepts();
@@ -154,7 +154,7 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
 
     @GetMapping("/{id}")
     @SbvLog(desc = "获取详情")
-    public T getItem(@PathVariable Long id) {
+    public Object getItem(@PathVariable Long id) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(this.getTableName()+"id",id);
         return this.getItemService().getOne(queryWrapper);
