@@ -38,24 +38,33 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     @Override
     public List<Map<String, Object>> getMenusByUid(Long id) {
         List<Permission> permissionList = getPermissionsByUid(id);
+
+        // 去掉按钮
+        List<Permission> dirAndMenuList = new ArrayList<Permission>();
+        for (Permission permission : permissionList) {
+            if (permission.getType() != 2){
+                dirAndMenuList.add(permission);
+            }
+        }
+
         List<Permission> allPermissionList = getAllPermissions();
         List<Permission> fathers = new ArrayList<>();
 
         // 找到所有父节点菜单
-        for (Permission permission : permissionList) {
+        for (Permission permission : dirAndMenuList) {
             AuthUtil.findFathers(permission,allPermissionList,fathers);
         }
 
-        // 去掉按钮
-        List<Permission> menuList = new ArrayList<Permission>();
-        for (Permission permission : fathers) {
-            if (permission.getType() != 2){
-                menuList.add(permission);
-            }
-        }
+        // 去掉按钮 提到43行了
+//        List<Permission> menuList = new ArrayList<Permission>();
+//        for (Permission permission : fathers) {
+//            if (permission.getType() != 2){
+//                menuList.add(permission);
+//            }
+//        }
 
         // 生成目录结构
-        List<Map<String, Object>> treeMenu = AuthUtil.findChildren(0L,menuList);
+        List<Map<String, Object>> treeMenu = AuthUtil.findChildren(0L,fathers);
         return treeMenu;
     }
 
