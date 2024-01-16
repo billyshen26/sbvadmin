@@ -16,9 +16,9 @@ public enum VueFileEnum {
     VIET_DATA("view",".data.ts","templates/view/Item.data.ts.vm"), // view页数据模型
     API("api",".ts","templates/api/Item.ts.vm"), // 请求接口
     MODEL("model","Model.ts","templates/model/ItemModel.ts.vm"), // 表模型
-    I18N_EN("i18nEN",".ts","templates/i18n/i18n.ts.vm"), // i18n 菜单名称 英文
+    I18N_EN("i18nEN",".json", "templates/i18n/i18n.json.vm"), // i18n 菜单名称 英文
 
-    I18N_ZH("i18nZH",".ts","templates/i18n/i18nZh.ts.vm"),// i18n 菜单名称 中文
+    I18N_ZH("i18nZH",".json", "templates/i18n/i18nZh.json.vm"),// i18n 菜单名称 中文
 
     MENU_SQL("sql","Menu.sql","templates/sql/menu.sql.vm"),// 生成菜单的sql
 
