@@ -1,6 +1,8 @@
 package com.sbvadmin.controller;
 
 import com.sbvadmin.common.utils.CommonUtil;
+import com.sbvadmin.service.utils.CommonService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,6 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Notes: 上传文件
@@ -21,8 +25,11 @@ public class UploadController {
     @Value("${application.uploadsPath}")
     private String uploadsPath;
 
+    @Autowired
+    CommonService commonService;
+
     @PostMapping("/upload")
-    public String create(@RequestPart MultipartFile file, @RequestPart(value="dir" ,required=false) String dir) throws IOException {
+    public Object create(@RequestPart MultipartFile file, @RequestPart(value="dir" ,required=false) String dir) throws IOException {
 //    public String create(@RequestPart MultipartFile file, @RequestPart String dir) throws IOException {
         String fileName = file.getOriginalFilename();
 
@@ -38,6 +45,10 @@ public class UploadController {
         if (!dest.exists()){ //如果不存在
             Files.copy(file.getInputStream(), dest.toPath()); //创建文件
         }
-        return uploadsPath + File.separator + dir + File.separator +fileName; // 只存相对地址
+        Map<String,Object> result = new HashMap<>();
+        String relativeUrl = uploadsPath + File.separator + dir + File.separator +fileName;
+        result.put("url",relativeUrl); // 相对地址
+        result.put("absoluteUrl",commonService.getAvatarUrl(relativeUrl)); // 绝对地址
+        return result;
     }
 }

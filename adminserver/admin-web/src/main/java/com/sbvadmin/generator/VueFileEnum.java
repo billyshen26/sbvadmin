@@ -12,6 +12,7 @@ import lombok.Getter;
 public enum VueFileEnum {
 
     LIST_VIEW("view","Index.vue","templates/view/ItemIndex.vue.vm"), // 列表页
+    DETAIL_VIEW("view","Detail.vue","templates/view/ItemDetail.vue.vm"), //详情页，也用于复杂页面的新增
     ADD_EDIT_VIEW("view","Modal.vue","templates/view/ItemModal.vue.vm"), //新增修改页
     VIET_DATA("view",".data.ts","templates/view/Item.data.ts.vm"), // view页数据模型
     API("api",".ts","templates/api/Item.ts.vm"), // 请求接口

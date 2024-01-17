@@ -42,18 +42,20 @@
   import { columns, searchFormSchema } from './${entity}.data';
   import { Authority } from '/@/components/Authority';
   import { Base64 } from 'js-base64';
+  import { useGo } from '/@/hooks/web/usePage';
 
   export default defineComponent({
     name: '${entity}Management',
     components: { BasicTable, ${entity}Modal, TableAction, Authority },
     setup() {
+      const go = useGo();
       const [registerModal, { openModal }] = useModal();
       const searchInfo = reactive<Recordable>({});
       const [registerTable, { reload, updateTableDataRecord }] = useTable({
         title: '列表',
         api: get${entity}List,
         beforeFetch(params) {
-            return '?' + Base64.encode(JSON.stringify(params));
+          return '?' + Base64.encode(JSON.stringify(params));
         },
         rowKey: 'id',
         columns,
@@ -82,6 +84,8 @@
         openModal(true, {
           isUpdate: false,
         });
+        // 以下跳转到新的页面新增，完成复杂页面的新增
+        // go('/${table.entityPath}/${table.entityPath}_detail/' + 0);
       }
 
       function handleEdit(record: Recordable) {
@@ -89,6 +93,8 @@
           record,
           isUpdate: true,
         });
+        // 以下跳转到新的页面新增，完成复杂页面的新增
+        // go('/${table.entityPath}/${table.entityPath}_detail/' + record.id);
       }
 
       function handleDelete(record: Recordable) {

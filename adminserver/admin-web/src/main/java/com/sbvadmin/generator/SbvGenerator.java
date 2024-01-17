@@ -106,6 +106,7 @@ public class SbvGenerator {
                     if (genFrontFlag.equals("y")){
                         Map<String,String> customFile = new HashMap<>();
                         customFile.put("LIST_VIEW",VueFileEnum.LIST_VIEW.getTemplate());
+                        customFile.put("DETAIL_VIEW",VueFileEnum.DETAIL_VIEW.getTemplate());
                         customFile.put("ADD_EDIT_VIEW",VueFileEnum.ADD_EDIT_VIEW.getTemplate());
                         customFile.put("VIET_DATA",VueFileEnum.VIET_DATA.getTemplate());
                         customFile.put("API",VueFileEnum.API.getTemplate());
