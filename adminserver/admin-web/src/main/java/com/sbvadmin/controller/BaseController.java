@@ -157,7 +157,24 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
     public Object getItem(@PathVariable Long id) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(this.getTableName()+"id",id);
-        return this.getItemService().getOne(queryWrapper);
+        T item = this.getItemService().getOne(queryWrapper);
+
+        /**
+         * Notes:  在获取item之后，加入一个切面，可以方便定制化处理返回的数据，比如头像补充访问路径等
+         * Time: 2024/1/18 14:58
+         **/
+        try {
+            Class<?> clazz = this.getClass();
+            Method method = clazz.getMethod("afterGetItem", Object.class);
+            if(method != null) { // 判断该方法是否存在
+                String className = StrUtil.lowerFirst(clazz.getSimpleName());
+                item = (T) method.invoke(SpringUtil.getBean(className), item);
+            }
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            System.out.println("该方法不存在");
+        }
+
+        return item;
     }
 
     @DeleteMapping("/{id}")
