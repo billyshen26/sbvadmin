@@ -122,7 +122,11 @@ public class CommonUtil {
     public static User getOwnUser(){
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
-        return user;
+        if (authentication.getPrincipal().equals("anonymousUser")){
+            return null;
+        }else{
+            User user = (User) authentication.getPrincipal();
+            return user;
+        }
     }
 }

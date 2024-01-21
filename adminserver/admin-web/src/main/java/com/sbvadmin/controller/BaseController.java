@@ -45,6 +45,9 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
 
     protected String tableName;
     protected Map<String, Object> condition;
+
+    protected boolean didFilterFlag; // 是否加入机构筛选
+
     public S getItemService() {
         return this.itemService;
     }
@@ -87,6 +90,7 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
      **/
     public BaseController(){
         this.condition = new HashMap<>();
+        this.didFilterFlag = true; //默认筛选机构，只能读取本机构的数据
     }
 
     @GetMapping("")
@@ -108,15 +112,15 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
                 if (v.equals(EQ)) queryWrapper.eq(column,params.get(k));
             }
         });
-        // 2023-05-27 根据机构id查询，设置数据权限
-        // 2023-06-12 修改成本人所拥有的所有did TODO 可能有bug
-//        List<Dept> deptList =  deptService.getAllDepts();
-        List<Dept> deptList =  deptService.getDeptsByUserId(CommonUtil.getOwnUser().getId());
-        List<Long> deptIdList = new ArrayList<>();
-        deptList.forEach(item ->{
-            deptIdList.add(item.getId());
-        });
-        queryWrapper.in(this.getTableName()+"did",deptIdList);
+        // 数据权限限定
+        if (this.didFilterFlag){
+            List<Dept> deptList =  deptService.getDeptsByUserId(CommonUtil.getOwnUser().getId());
+            List<Long> deptIdList = new ArrayList<>();
+            deptList.forEach(item ->{
+                deptIdList.add(item.getId());
+            });
+            queryWrapper.in(this.getTableName()+"did",deptIdList);
+        }
 
         long page = 1;
         long pageSize = 10000;
