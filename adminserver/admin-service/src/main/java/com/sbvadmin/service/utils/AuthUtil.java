@@ -43,7 +43,7 @@ public class AuthUtil {
                 metaChildMap.put("title",permission.getTitle());
                 metaChildMap.put("icon",permission.getIcon());
                 metaChildMap.put("hideMenu",permission.getShowFlag()==0?true:false);
-
+                metaChildMap.put("ignoreKeepAlive",false); // TODO 先写死
                 menuChildMap.put("meta",metaChildMap);
                 menuChildMap.put("children",findChildren(permission.getId(),permissionList));
                 children.add(menuChildMap);
