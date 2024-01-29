@@ -129,11 +129,13 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
             pageSize = Long.valueOf((Integer) params.get("pageSize"));
         }
         Page<T> itemPage = new Page<>(page,pageSize);
-        if (params.get("field") != null){ // 排序
+        String field = (String)params.get("field");
+        if (field != null){ // 排序
+            field = StrUtil.toUnderlineCase(field);
             if (params.get("order").equals("ascend"))
-                itemPage.addOrder(OrderItem.asc((String) params.get("field")));
+                itemPage.addOrder(OrderItem.asc(field));
             else
-                itemPage.addOrder(OrderItem.desc((String) params.get("field")));
+                itemPage.addOrder(OrderItem.desc(field));
         }
         IPage<T> iPage = this.getItemService().page(itemPage, queryWrapper);
 
