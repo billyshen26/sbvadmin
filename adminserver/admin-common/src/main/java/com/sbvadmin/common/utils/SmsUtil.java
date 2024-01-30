@@ -61,13 +61,13 @@ public class SmsUtil {
                 .setTemplateParam(params); //"{\"time\":\"3333\",\"title\":\"4444\"}"
         try {
             // 复制代码运行请自行打印 API 的返回值
-           SendSmsResponse sendSmsResponse =  client.sendSmsWithOptions(sendSmsRequest, new com.aliyun.teautil.models.RuntimeOptions());
-           if(sendSmsResponse.getBody().getCode().equals("OK")){
-               log.info("短信发送成功================" + sendSmsResponse.getBody().getMessage());
-           }else{
-               log.error("短信code================" + sendSmsResponse.getBody().getCode());
-               log.error("短信内容================" + sendSmsResponse.getBody().getMessage());
-           }
+            SendSmsResponse sendSmsResponse =  client.sendSmsWithOptions(sendSmsRequest, new com.aliyun.teautil.models.RuntimeOptions());
+            if(sendSmsResponse.getBody().getCode().equals("OK")){
+                log.info("短信发送成功=="+ phone +"=============" + sendSmsResponse.getBody().getMessage());
+            }else{
+                log.error("短信code================" + sendSmsResponse.getBody().getCode());
+                log.error("短信内容================" + sendSmsResponse.getBody().getMessage());
+            }
         } catch (TeaException error) {
             log.error(error.message);
             // 如有需要，请打印 error

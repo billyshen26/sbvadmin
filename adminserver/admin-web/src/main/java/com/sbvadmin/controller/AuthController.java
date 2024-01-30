@@ -1,6 +1,8 @@
 package com.sbvadmin.controller;
 
+import cn.hutool.core.util.RandomUtil;
 import com.sbvadmin.common.service.JwtTokenService;
+import com.sbvadmin.common.utils.SmsUtil;
 import com.sbvadmin.model.Role;
 import com.sbvadmin.model.User;
 import com.sbvadmin.model.UserInfo;
@@ -11,17 +13,16 @@ import com.sbvadmin.service.utils.CommonUtil;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +49,9 @@ public class AuthController {
 
     @Autowired
     CommonService commonService;
+
+    @Autowired
+    RedisTemplate redisTemplate;
 
     /**
      * Notes:  解决访问必须带index.html的问题
@@ -157,5 +161,20 @@ public class AuthController {
 //            }
         }
         return "先登录，才能刷新token";
+    }
+
+    /**
+     * Notes:  获取验证码
+     * @param: [phone]
+     * @return: java.lang.String
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2024/1/30 18:33
+     **/
+    @GetMapping ("/getAuthCode")
+    public String getAuthCode(@RequestParam(value = "phone") String phone) throws Exception {
+        String code = RandomUtil.randomNumbers(4);
+        redisTemplate.opsForValue().set(phone, code, Duration.ofMinutes(5));
+        SmsUtil.sendSMS(phone,"SAPHUB","SMS_465050401",code);
+        return code;
     }
 }
