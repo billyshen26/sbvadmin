@@ -13,6 +13,7 @@ import com.sbvadmin.service.utils.CommonUtil;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -53,6 +54,11 @@ public class AuthController {
     @Autowired
     RedisTemplate redisTemplate;
 
+    @Value("${spring.sms.sign}")
+    private String sign;
+
+    @Value("${spring.sms.template}")
+    private String template;
     /**
      * Notes:  解决访问必须带index.html的问题
      * @param: []
@@ -174,7 +180,8 @@ public class AuthController {
     public String getAuthCode(@RequestParam(value = "phone") String phone) throws Exception {
         String code = RandomUtil.randomNumbers(4);
         redisTemplate.opsForValue().set(phone, code, Duration.ofMinutes(5));
-        SmsUtil.sendSMS(phone,"SAPHUB","SMS_465050401",code);
+        String params = "{\"code\":\""+code+"\"}";
+        SmsUtil.sendSMS(phone,sign,template,params);
         return code;
     }
 }
