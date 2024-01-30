@@ -1,6 +1,8 @@
-package com.sbvadmin.mailserver.utils;
+package com.sbvadmin.common.utils;
 
+import com.aliyun.dysmsapi20170525.models.SendSmsResponse;
 import com.aliyun.tea.TeaException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Component;
  * Time: 2023/4/23 22:25
  */
 @Component
+@Slf4j
 public class SmsUtil {
     private static String accessKeyId;
     private static String accessKeySecret;
@@ -58,13 +61,21 @@ public class SmsUtil {
                 .setTemplateParam(params); //"{\"time\":\"3333\",\"title\":\"4444\"}"
         try {
             // 复制代码运行请自行打印 API 的返回值
-            client.sendSmsWithOptions(sendSmsRequest, new com.aliyun.teautil.models.RuntimeOptions());
+           SendSmsResponse sendSmsResponse =  client.sendSmsWithOptions(sendSmsRequest, new com.aliyun.teautil.models.RuntimeOptions());
+           if(sendSmsResponse.getBody().getCode().equals("OK")){
+               log.info("短信发送成功================" + sendSmsResponse.getBody().getMessage());
+           }else{
+               log.error("短信code================" + sendSmsResponse.getBody().getCode());
+               log.error("短信内容================" + sendSmsResponse.getBody().getMessage());
+           }
         } catch (TeaException error) {
+            log.error(error.message);
             // 如有需要，请打印 error
             com.aliyun.teautil.Common.assertAsString(error.message);
         } catch (Exception _error) {
             TeaException error = new TeaException(_error.getMessage(), _error);
             // 如有需要，请打印 error
+            log.error(error.message);
             com.aliyun.teautil.Common.assertAsString(error.message);
         }
     }
