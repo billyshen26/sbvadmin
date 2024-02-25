@@ -10,6 +10,8 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 自定义参数解析器，请求参数使用该注解 {@link RequestJson} 就会使用以下解析方式。
@@ -44,10 +46,13 @@ public class HandlerRequestJsonArgumentResolver implements HandlerMethodArgument
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         try {
             String json = Base64.decodeStr(request.getQueryString());
-            return JSONUtil.toBean(json, parameter.getGenericParameterType(),false);
+            Object toBean = JSONUtil.toBean(json, parameter.getGenericParameterType(),false);
+            return toBean;
         } catch (Exception e) {
             log.error("请求参数解析失败，请检查！" + e.getMessage());
-            throw new Exception(e);
+            Map<String, Object> params = new HashMap<>(); // TODO
+            return params;
+//            throw new Exception(e);
         }
     }
 }

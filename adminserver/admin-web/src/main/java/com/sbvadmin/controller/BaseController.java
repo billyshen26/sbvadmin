@@ -39,6 +39,7 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
 
     protected static final String LIKE = "like";
     protected static final String EQ = "eq";
+    protected static final String BETWEEN = "between";
 
     @Autowired
     protected S itemService;
@@ -110,6 +111,10 @@ public class BaseController<S extends IService<T>, T extends BaseModel> {
                 String column = k.replaceAll("-", "."); // 解决连表查询需要用.运算符
                 if (v.equals(LIKE)) queryWrapper.like(column,params.get(k));
                 if (v.equals(EQ)) queryWrapper.eq(column,params.get(k));
+                if (v.equals(BETWEEN)){
+                    JSONArray betweenArray = (JSONArray) params.get(k);
+                    queryWrapper.between(column,betweenArray.get(0),betweenArray.get(1));
+                }
             }
         });
         // 数据权限限定
