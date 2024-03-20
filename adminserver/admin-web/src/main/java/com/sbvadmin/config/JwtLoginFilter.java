@@ -90,6 +90,7 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
         tokenMap.put("roles",authorities);
         tokenMap.put("username", authResult.getName());
         tokenMap.put("name", user.getNickname()); // 获得登录用户的其他信息
+        tokenMap.put("uid", user.getId()); // 获得登录用户的id
         out.write(new ObjectMapper().writeValueAsString(ResultFormat.success(tokenMap)));
         out.flush();
         out.close();
