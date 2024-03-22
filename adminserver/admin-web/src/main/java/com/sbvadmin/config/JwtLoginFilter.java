@@ -149,7 +149,7 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
             resultFormat.setMessage("账号已经被禁用,请联系管理员");
         } else {
             resultFormat.setCode(FAILED.getCode());
-            resultFormat.setMessage("请先用户认证失败,请检查后重试登录");
+            resultFormat.setMessage("用户认证失败,请检查后重新登录");
         }
         writer.write(new ObjectMapper().writeValueAsString(resultFormat));
         writer.flush();
