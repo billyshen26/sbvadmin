@@ -33,6 +33,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.sbvadmin.model.ErrorCode.FAILED;
+
 /**
  * Notes:
  * Author: 涛声依旧 likeboat@163.com
@@ -137,12 +139,16 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
         PrintWriter writer = resp.getWriter();
         ResultFormat resultFormat = ResultFormat.success(ErrorCode.SUCCESS);
         if (failed instanceof InsufficientAuthenticationException) {
+            resultFormat.setCode(FAILED.getCode());
             resultFormat.setMessage("请先登录");
         } else if (failed instanceof BadCredentialsException) {
+            resultFormat.setCode(FAILED.getCode());
             resultFormat.setMessage("用户名或密码错误");
         } else if (failed.getCause() instanceof DisabledException) {
+            resultFormat.setCode(FAILED.getCode());
             resultFormat.setMessage("账号已经被禁用,请联系管理员");
         } else {
+            resultFormat.setCode(FAILED.getCode());
             resultFormat.setMessage("请先用户认证失败,请检查后重试登录");
         }
         writer.write(new ObjectMapper().writeValueAsString(resultFormat));
