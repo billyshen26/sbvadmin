@@ -80,7 +80,7 @@ public class PermissionController {
      * Time: 2023/9/3 20:50
      **/
     @PostMapping("/refreshPermissions")
-    @CacheEvict( allEntries = true)
+    @CacheEvict(value = "permission", allEntries = true)
     public Object refreshPermissions(){
         return "ok";
     }
