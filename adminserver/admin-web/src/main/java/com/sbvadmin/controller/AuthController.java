@@ -1,8 +1,10 @@
 package com.sbvadmin.controller;
 
+import cn.hutool.core.util.PhoneUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.sbvadmin.common.service.JwtTokenService;
 import com.sbvadmin.common.utils.SmsUtil;
+import com.sbvadmin.model.ResultFormat;
 import com.sbvadmin.model.Role;
 import com.sbvadmin.model.User;
 import com.sbvadmin.model.UserInfo;
@@ -28,6 +30,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.sbvadmin.model.ErrorCode.PHONE_ERROR;
 
 /**
  * Notes: 权限，用户信息相关
@@ -177,7 +181,9 @@ public class AuthController {
      * Time: 2024/1/30 18:33
      **/
     @GetMapping ("/getAuthCode")
-    public String getAuthCode(@RequestParam(value = "phone") String phone) throws Exception {
+    public Object getAuthCode(@RequestParam(value = "phone") String phone) throws Exception {
+        boolean isValid = PhoneUtil.isMobile(phone);
+        if (!isValid) return ResultFormat.fail(PHONE_ERROR);
         String code = RandomUtil.randomNumbers(4);
         redisTemplate.opsForValue().set(phone, code, Duration.ofMinutes(5));
         String params = "{\"code\":\""+code+"\"}";

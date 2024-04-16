@@ -49,19 +49,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-//        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-//        queryWrapper.eq("username",username);
-//        User user = userMapper.selectOne(queryWrapper);
         User user = userMapper.getOwnUserWithRoles(username);
-        user.setLoginDeptId(user.getDeptIds().get(0)); // TODO 目前默认为第一个机构ID
         if (user == null){
             throw new UsernameNotFoundException("账户不存在");
         }
         if (!user.isEnabled()){
             throw new DisabledException("账号被禁用了");
         }
-//        user.setRoles(userMapper.getUserRolesByUid(user.getId()));
+        user.setLoginDeptId(user.getDeptIds().get(0)); // TODO 目前默认为第一个机构ID
         return user;
     }
 

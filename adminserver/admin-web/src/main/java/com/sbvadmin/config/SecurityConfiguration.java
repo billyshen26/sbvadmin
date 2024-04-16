@@ -6,12 +6,15 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -23,6 +26,7 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -39,10 +43,6 @@ public class SecurityConfiguration {
 
     @Autowired
     private AuthenticationConfiguration auth;
-    @Bean
-    public AuthenticationManager authenticationManager() throws Exception {
-        return auth.getAuthenticationManager();
-    }
 
     @Autowired
     private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
@@ -50,6 +50,26 @@ public class SecurityConfiguration {
     @Autowired
     CustomAccessDeniedHandler accessDeniedHandler;
 
+     @Autowired
+     UserDetailsService userServiceDetails;
+    @Autowired
+    SmsAuthenticationProvider smsAuthenticationProvider;
+
+     @Bean
+     DaoAuthenticationProvider daoAuthenticationProvider(){
+         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+         daoAuthenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder());
+         daoAuthenticationProvider.setUserDetailsService(userServiceDetails);
+         return daoAuthenticationProvider;
+     }
+    @Bean
+     protected AuthenticationManager authenticationManager() throws Exception {
+        smsAuthenticationProvider.setUserDetailsService(userServiceDetails);
+        // 加入两个provider
+        ProviderManager authenticationManager = new ProviderManager(Arrays.asList(daoAuthenticationProvider(),smsAuthenticationProvider));
+        authenticationManager.setEraseCredentialsAfterAuthentication(false);
+        return authenticationManager;
+     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -92,8 +112,8 @@ public class SecurityConfiguration {
                 .addFilterBefore(jwtLoginFilter(), UsernamePasswordAuthenticationFilter.class)
 //                .addFilterBefore(new JwtLoginFilter("/api/login",authenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtFilter(),UsernamePasswordAuthenticationFilter.class)
-                .csrf().disable()
-                .userDetailsService(userService);
+                .csrf().disable();
+//                .userDetailsService(userService);
         // 禁用缓存
         http.headers().cacheControl();
         //添加自定义未授权和未登录结果返回

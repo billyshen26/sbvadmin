@@ -143,7 +143,7 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
             resultFormat.setMessage("请先登录");
         } else if (failed instanceof BadCredentialsException) {
             resultFormat.setCode(FAILED.getCode());
-            resultFormat.setMessage("用户名或密码错误");
+            resultFormat.setMessage("用户名或密码或验证码错误");
         } else if (failed.getCause() instanceof DisabledException) {
             resultFormat.setCode(FAILED.getCode());
             resultFormat.setMessage("账号已经被禁用,请联系管理员");
