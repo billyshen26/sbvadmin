@@ -47,7 +47,6 @@ public interface UserMapper extends BaseMapper<User> {
      * Author: 涛声依旧 likeboat@163.com
      * Time: 2023/5/27 19:39
      **/
-    @Cacheable(key = "#root.args")
     User getOwnUserWithRoles(String username);
 
 
