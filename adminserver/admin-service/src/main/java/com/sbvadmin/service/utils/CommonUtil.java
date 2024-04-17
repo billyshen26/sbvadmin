@@ -92,7 +92,7 @@ public class CommonUtil {
 
 
     /**
-     * Notes:  获取字典列表
+     * Notes:  获取字典列表，以树形结构返回
      * @param: [type]
      * @return: java.util.List<com.sbvadmin.model.Dict>
      * Author: 涛声依旧 likeboat@163.com
@@ -110,6 +110,20 @@ public class CommonUtil {
         return dictListTree;
     }
 
+    /**
+     * Notes:  获取字典列表,非树形结构返回
+     * @param: [type]
+     * @return: java.util.List<com.sbvadmin.model.Dict>
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2024/4/17 15:45
+     **/
+    public static List<Dict> getDictByTypePlain(String type){
+        QueryWrapper<Dict> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("type", type);
+        queryWrapper.orderByDesc("order_no");
+        List<Dict> dictList = dictService.list(queryWrapper);
+        return dictList;
+    }
 
 
     /*
