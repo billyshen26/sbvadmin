@@ -22,7 +22,7 @@ import org.springframework.boot.system.ApplicationHome;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;

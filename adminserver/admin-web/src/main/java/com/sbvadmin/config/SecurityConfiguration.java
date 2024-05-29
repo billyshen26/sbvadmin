@@ -23,8 +23,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -130,7 +130,7 @@ public class SecurityConfiguration {
     @Bean
     WebSecurityCustomizer webSecurityCustomizer() {
         // 忽略 /error 页面
-        return web -> web.ignoring().antMatchers("/","/error","/index.html","/avatar.png","/logo.png","/uploads/**","/assets/**","/_app.config.js","/resource/**")
+        return web -> web.ignoring().requestMatchers("/","/error","/index.html","/avatar.png","/logo.png","/uploads/**","/assets/**","/_app.config.js","/resource/**")
                 // 忽略常见的静态资源路径
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }

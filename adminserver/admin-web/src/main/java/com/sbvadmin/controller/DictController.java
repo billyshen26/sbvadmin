@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.sbvadmin.model.Dict;
 import com.sbvadmin.service.impl.DictServiceImpl;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 
