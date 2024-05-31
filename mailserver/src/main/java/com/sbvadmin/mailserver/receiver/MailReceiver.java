@@ -33,8 +33,8 @@ public class MailReceiver {
     TemplateEngine templateEngine;
 
 //    @RabbitListener(queues = "add-user")
-    public void handler(Message message, Channel channel) throws IOException {
-        User user = (User) message.getPayload();
+    public void handler(User user, Channel channel) throws IOException {
+//        User user = (User) message.getPayload();
         log.info("有新用户添加进来了:" + user.getNickname());
 
         Context ctx = new Context();
