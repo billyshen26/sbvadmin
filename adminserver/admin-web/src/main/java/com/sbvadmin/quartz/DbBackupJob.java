@@ -43,7 +43,7 @@ public class DbBackupJob extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
         String now = df.format(System.currentTimeMillis());
         System.out.println(name + "定时任务开始执行：" + now);
 //        String userDir = System.getProperty("user.dir");
