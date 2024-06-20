@@ -18,9 +18,6 @@ import java.io.IOException;
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-        httpServletResponse.setCharacterEncoding("UTF-8");
-        httpServletResponse.setContentType("application/json");
-        httpServletResponse.getWriter().println(401);
-        httpServletResponse.getWriter().flush();
+        httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized access");
     }
 }
