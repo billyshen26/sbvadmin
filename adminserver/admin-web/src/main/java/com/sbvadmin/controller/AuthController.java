@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.sbvadmin.model.ErrorCode.PHONE_ERROR;
+import static com.sbvadmin.model.ErrorCode.*;
 
 /**
  * Notes: 权限，用户信息相关
@@ -140,7 +140,7 @@ public class AuthController {
      * Time: 2023/4/11 10:26
      **/
     @PostMapping("/refreshToken")
-    public String refreshToken(HttpServletRequest request){
+    public Object refreshToken(HttpServletRequest request){
         String jwtToken = request.getHeader("authorization");
         log.info("jwtToken:"+ jwtToken);
         if (jwtToken != null && jwtToken != "") {
@@ -170,7 +170,7 @@ public class AuthController {
             return jwt;
 //            }
         }
-        return "先登录，才能刷新token";
+        return ResultFormat.fail(LOGIN_FAILED);
     }
 
     /**
