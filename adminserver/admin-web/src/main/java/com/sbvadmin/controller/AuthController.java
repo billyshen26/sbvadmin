@@ -170,7 +170,7 @@ public class AuthController {
             return jwt;
 //            }
         }
-        return ResultFormat.fail(LOGIN_FAILED);
+        return ResultFormat.fail(REFRESH_TOKEN_NEED_LOGIN);
     }
 
     /**

@@ -26,6 +26,7 @@ public enum ErrorCode {
     USERNAME_DUPLICATED(20012, "用户名重复"),
     ROLE_NAME_DUPLICATED(20013, "角色值重复"),
     PHONE_ERROR(20014, "手机号码不正确"),
+    REFRESH_TOKEN_NEED_LOGIN(20015, "先登录，才能刷新token"),
     FAILED(20001, "操作失败"),
     ROOT_CANT_DELETE(20002, "超级管理员不能被删除"),
     ROOT_CANT_UPDATE(20003, "超级管理员不能被修改"),
