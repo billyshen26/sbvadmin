@@ -29,10 +29,11 @@ public class UploadController {
     CommonService commonService;
 
     @PostMapping("/upload")
-    public Object create(@RequestPart MultipartFile file, @RequestPart(value="dir" ,required=false) String dir) throws IOException {
-//    public String create(@RequestPart MultipartFile file, @RequestPart String dir) throws IOException {
-        String fileName = file.getOriginalFilename();
-
+    public Object create(@RequestPart MultipartFile file
+            , @RequestPart(value="dir" ,required=false) String dir
+            , @RequestPart(value="fileName" ,required=false) String fileName) throws IOException {
+        // 获取文件名
+        fileName = fileName!=null?fileName:file.getOriginalFilename();
         // 创建uploads 文件夹
         if (dir == null) dir = "other";
         String uploadsDirPath = CommonUtil.getJarPath(UploadController.class) + File.separator + uploadsPath+ File.separator +dir;
