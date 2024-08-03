@@ -3,6 +3,7 @@ package com.sbvadmin.controller;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sbvadmin.model.*;
 import com.sbvadmin.service.impl.UserDeptServiceImpl;
 import com.sbvadmin.service.impl.UserRoleServiceImpl;
@@ -30,7 +31,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/users")
-public class UserController {
+public class UserController extends BaseController<UserServiceImpl, User> {
     @Autowired
     Environment environment;
 
@@ -52,21 +53,38 @@ public class UserController {
     @Autowired
     CommonService commonService;
 
-    @GetMapping("")
-    public List<User> getUsers(@RequestParam(value="deptId" ,required=false) Long did,
-                               @RequestParam(value="id" ,required=false) Long id,
-                               @RequestParam(value="name" ,required=false) String name) {
-        if (did == null) did = CommonUtil.getOwnUser().getLoginDeptId(); // 默认获取登录机构的账号
-        List<User> users = userService.getUsersWithRoles(did,id,name);
-        for (User user : users) {
+//    @GetMapping("")
+//    public List<User> getUsers(@RequestParam(value="deptId" ,required=false) Long did,
+//                               @RequestParam(value="id" ,required=false) Long id,
+//                               @RequestParam(value="name" ,required=false) String name,
+//                               @RequestParam(value="page" ,required=false) Integer page,
+//                               @RequestParam(value="pageSize" ,required=false) Integer pageSize) {
+//
+//        if (did == null) did = CommonUtil.getOwnUser().getLoginDeptId(); // 默认获取登录机构的账号
+//        List<User> users = userService.getUsersWithRoles(did,id,name);
+//        for (User user : users) {
+//            user.setAvatar(commonService.getAvatarUrl(user.getAvatar()));
+//        }
+//        return users;
+//    }
+
+    /**
+     * Notes:  格式化头像
+     * @param: [iPage]
+     * @return: com.baomidou.mybatisplus.core.metadata.IPage<com.sbvadmin.model.User>
+     * Author: 涛声依旧 likeboat@163.com
+     * Time: 2024/8/3 10:14
+     **/
+    public IPage<User> afterGetItems(IPage<User> iPage){
+        // 格式化图片列表
+        for (User user : iPage.getRecords()) {
             user.setAvatar(commonService.getAvatarUrl(user.getAvatar()));
         }
-        return users;
+        return iPage;
     }
-
     @PostMapping("")
     @SbvLog(desc = "新增用户")
-    public Object addUser(@RequestBody @Valid User user) {
+    public Object addItem(@RequestBody @Valid User user) {
         String message = null;
         // 密码不能为空
         if (user.getPassword() == null||user.getPassword().equals("")) return ResultFormat.fail(ErrorCode.PASSWORD_CANT_BLANK);
@@ -92,7 +110,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     @SbvLog(desc = "修改用户")
-    public boolean editUser(@RequestBody User user, @PathVariable Long id) {
+    public Object editItem(@RequestBody User user, @PathVariable Long id) {
         user.setId(id);
         // 修改密码
         if (user.getPassword() != null) {
@@ -130,7 +148,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @SbvLog(desc = "删除用户")
-    public Object delUser(@PathVariable Long id) {
+    public Object delItem(@PathVariable Long id) {
         if (id == 1L) {
             return ResultFormat.fail(ErrorCode.ROOT_CANT_DELETE);
         }

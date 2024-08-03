@@ -23,7 +23,7 @@ import java.util.List;
 @Data
 @TableName("sys_user")
 @JsonIgnoreProperties({"enabled","accountNonExpired", "accountNonLocked", "credentialsNonExpired", "authorities"})
-public class User implements UserDetails , Serializable {
+public class User extends BaseModel implements UserDetails , Serializable {
     @TableId(type = IdType.AUTO)
     private Long id;
     @NotNull(message = "昵称不能为空")

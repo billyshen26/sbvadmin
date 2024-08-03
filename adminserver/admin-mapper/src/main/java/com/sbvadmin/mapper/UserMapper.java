@@ -6,9 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sbvadmin.model.Log;
 import com.sbvadmin.model.Role;
 import com.sbvadmin.model.User;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 
@@ -22,6 +20,34 @@ import java.util.List;
 @Mapper
 @CacheConfig(cacheNames = "user")
 public interface UserMapper extends BaseMapper<User> {
+
+    String wrapperSql = "select DISTINCT sys_user.*,sud.did from sys_user " +
+            "left join sys_user_dept sud on sys_user.id = sud.uid ${ew.customSqlSegment}";
+    @Override
+    @Select(wrapperSql)
+    @Results(id="userMap", value = {
+            @Result(property = "id", column = "id", id = true),
+            @Result(property = "depts", column = "id",
+                    javaType = List.class,
+                    many = @Many(select = "com.sbvadmin.mapper.UserDeptMapper.returnDepts")
+            ),
+            @Result(property = "deptIds", column = "id",
+                    javaType = List.class,
+                    many = @Many(select = "com.sbvadmin.mapper.UserDeptMapper.returnDeptIds")
+            ),
+            @Result(property = "roles", column = "id",
+                    javaType = List.class,
+                    many = @Many(select = "com.sbvadmin.mapper.UserRoleMapper.returnRoles")
+            ),
+            @Result(property = "roleIds", column = "id",
+                    javaType = List.class,
+                    many = @Many(select = "com.sbvadmin.mapper.UserRoleMapper.returnRoleIds")
+            ),
+    })
+    <P extends IPage<User>> P selectPage(P page, @Param("ew") Wrapper<User> queryWrapper);
+
+
+
     /**
      * Notes:
      * @param: 根据用户id，获得他所有的角色

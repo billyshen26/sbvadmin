@@ -3,6 +3,8 @@ package com.sbvadmin.mapper;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.sbvadmin.model.Dept;
+import com.sbvadmin.model.Role;
 import com.sbvadmin.model.User;
 import com.sbvadmin.model.UserRole;
 import org.apache.ibatis.annotations.*;
@@ -38,4 +40,10 @@ public interface UserRoleMapper extends BaseMapper<UserRole> {
     })
     @Select("select * from sys_user_role ${ew.customSqlSegment}") // 这个必须加，否则无法获取user信息
     List<UserRole> selectList(@Param(Constants.WRAPPER) Wrapper<UserRole> queryWrapper);
+
+
+    @Select("select sys_role.* from sys_role, sys_user_role where sys_user_role.uid = #{uid} and sys_role.id = sys_user_role.rid")
+    List<Role> returnRoles(@Param("uid") String id);
+    @Select("select sys_role.id from sys_role, sys_user_role where sys_user_role.uid = #{uid} and sys_role.id = sys_user_role.rid")
+    List<Long> returnRoleIds(@Param("uid") String id);
 }
