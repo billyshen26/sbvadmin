@@ -1,15 +1,21 @@
 package com.sbvadmin.controller;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sbvadmin.model.*;
 import com.sbvadmin.service.impl.UserDeptServiceImpl;
 import com.sbvadmin.service.impl.UserRoleServiceImpl;
 import com.sbvadmin.service.impl.UserServiceImpl;
 import com.sbvadmin.service.utils.CommonService;
 import com.sbvadmin.service.utils.CommonUtil;
+import com.sbvadmin.utils.RequestJson;
 import com.sbvadmin.utils.SbvLog;
 import org.springframework.amqp.AmqpConnectException;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -20,9 +26,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Notes: 用户管理控制器
@@ -31,7 +41,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/users")
-public class UserController extends BaseController<UserServiceImpl, User> {
+public class UserController {
     @Autowired
     Environment environment;
 
@@ -56,10 +66,7 @@ public class UserController extends BaseController<UserServiceImpl, User> {
 //    @GetMapping("")
 //    public List<User> getUsers(@RequestParam(value="deptId" ,required=false) Long did,
 //                               @RequestParam(value="id" ,required=false) Long id,
-//                               @RequestParam(value="name" ,required=false) String name,
-//                               @RequestParam(value="page" ,required=false) Integer page,
-//                               @RequestParam(value="pageSize" ,required=false) Integer pageSize) {
-//
+//                               @RequestParam(value="name" ,required=false) String name){
 //        if (did == null) did = CommonUtil.getOwnUser().getLoginDeptId(); // 默认获取登录机构的账号
 //        List<User> users = userService.getUsersWithRoles(did,id,name);
 //        for (User user : users) {
@@ -67,6 +74,26 @@ public class UserController extends BaseController<UserServiceImpl, User> {
 //        }
 //        return users;
 //    }
+
+    @GetMapping("")
+    public IPage<User> getItems( @RequestParam(value="deptId" ,required=false) Long did,
+                                 @RequestParam(value="id" ,required=false) Long id,
+                                 @RequestParam(value="page" ,required=false) Long page,
+                                 @RequestParam(value="pageSize" ,required=false) Long pageSize,
+                                 @RequestParam(value="name" ,required=false) String name ){
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        // id精准搜索
+        if (id != null)
+            queryWrapper.eq("sys_user.id",id);
+        // 昵称搜索
+        if (name != null)
+            queryWrapper.like("sys_user.nickname",name);
+        // 数据权限限定
+        if (did == null) did = CommonUtil.getOwnUser().getLoginDeptId(); // 默认获取登录机构的账号
+        Page<User> itemPage = new Page<>(page,pageSize);
+        IPage<User> iPage = userService.page(itemPage, queryWrapper);
+        return iPage;
+    }
 
     /**
      * Notes:  格式化头像

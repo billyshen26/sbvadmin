@@ -47,6 +47,9 @@ public interface UserMapper extends BaseMapper<User> {
     <P extends IPage<User>> P selectPage(P page, @Param("ew") Wrapper<User> queryWrapper);
 
 
+//    @Override
+//    @Select(wrapperSql)
+//    User selectOne(@Param("ew") Wrapper<User> queryWrapper);
 
     /**
      * Notes:

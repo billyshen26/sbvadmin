@@ -23,7 +23,7 @@ import java.util.List;
 @Data
 @TableName("sys_user")
 @JsonIgnoreProperties({"enabled","accountNonExpired", "accountNonLocked", "credentialsNonExpired", "authorities"})
-public class User extends BaseModel implements UserDetails , Serializable {
+public class User implements UserDetails , Serializable {
     @TableId(type = IdType.AUTO)
     private Long id;
     @NotNull(message = "昵称不能为空")
@@ -43,13 +43,13 @@ public class User extends BaseModel implements UserDetails , Serializable {
     private String homePath;
     private LocalDateTime lastLoginAt;
     private String lastLoginIp;
-    private String mpOpenId;
-    private String oaOpenId;
-    private String unionId;
+    private String mpOpenId; // 微信小程序id
+    private String oaOpenId; // 公众号id
+    private String unionId; // 开放平台id
     private Boolean locked;
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createdAt;
-//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") // 解决返回带T的问题 改成LocalDateTimeSerializerConfig
+    //    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") // 解决返回带T的问题 改成LocalDateTimeSerializerConfig
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updatedAt;
 
@@ -100,6 +100,6 @@ public class User extends BaseModel implements UserDetails , Serializable {
 
     @Override
     public boolean isEnabled() {
-            return activated;
+        return activated;
     }
 }
