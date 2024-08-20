@@ -90,6 +90,8 @@ public class UserController {
             queryWrapper.like("sys_user.nickname",name);
         // 数据权限限定
         if (did == null) did = CommonUtil.getOwnUser().getLoginDeptId(); // 默认获取登录机构的账号
+        // 机构搜索
+        queryWrapper.eq("sud.did",did);
         Page<User> itemPage = new Page<>(page,pageSize);
         IPage<User> iPage = userService.page(itemPage, queryWrapper);
         return iPage;
