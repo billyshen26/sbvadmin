@@ -94,6 +94,9 @@ public class UserController {
         queryWrapper.eq("sud.did",did);
         Page<User> itemPage = new Page<>(page,pageSize);
         IPage<User> iPage = userService.page(itemPage, queryWrapper);
+        for (User user : iPage.getRecords()) {
+            user.setAvatar(commonService.getAvatarUrl(user.getAvatar()));
+        }
         return iPage;
     }
 
