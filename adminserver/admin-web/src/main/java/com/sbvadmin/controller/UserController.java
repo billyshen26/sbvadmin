@@ -87,7 +87,7 @@ public class UserController {
             queryWrapper.eq("sys_user.id",id);
         // 昵称搜索
         if (name != null)
-            queryWrapper.like("sys_user.nickname",name);
+            queryWrapper.like("sys_user.username",name);
         // 数据权限限定
         if (did == null) did = CommonUtil.getOwnUser().getLoginDeptId(); // 默认获取登录机构的账号
         // 机构搜索
